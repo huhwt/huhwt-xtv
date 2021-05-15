@@ -26,6 +26,15 @@ msgstr "Verknüpfungen in der Ansicht"
 msgid "Generations in view"
 msgstr "Generationen in der Ansicht"
 
+msgid "Chart dimensions"
+msgstr "Diagramm Abmessungen"
+
+msgid "Width:"
+msgstr "Breite:"
+
+msgid "Height:"
+msgstr "Höhe:"
+
 msgid "Expand next links"
 msgstr "Nächste Verknüpfungen erweitern"
 
