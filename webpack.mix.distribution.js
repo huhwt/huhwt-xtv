@@ -41,7 +41,7 @@ mix
     .copyDirectory(config.public_dir + '/views', dist_dir + '/resources/views')
     .copy(config.public_dir + '/*.php', dist_dir + '/resources')
     .copyDirectory(config.app_dir, dist_dir)
-    .copy(config.dev_dir + '/js/huhwt-treeviewXT.js', dist_dir + '/resources/js/huhwt.min.js')
+    .copy(config.dev_dir + '/js/huhwt-treeviewXT.js', dist_dir + '/resources/js/huhwtXT.min.js')
     .copy(config.dev_dir + '/js/html2canvas.js', dist_dir + '/resources/js/html2canvas.js')
     .copy(config.dev_dir + '/lang/de/messages.po', dist_dir + '/resources/lang/de/messages.po')
     .copy('autoload.php', dist_dir)
