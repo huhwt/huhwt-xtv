@@ -52,6 +52,7 @@ mix
     .copy('LICENSE.md', dist_dir)
     .copy('README.md', dist_dir)
     .copy('README.de.md', dist_dir)
+    .copy('latest-version.txt', dist_dir)
     .webpackConfig({
         plugins: [
           new FileManagerPlugin({
