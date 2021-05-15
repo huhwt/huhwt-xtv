@@ -375,13 +375,14 @@ class TreeViewXTmod
             $html_tb = '<td align="left"><table class="tv_tree"><tbody>';
 
             if ($parent instanceof Individual) {
-                $this->glevel += 1;
                 $u = $unique ? 'c' : 't';
                 if ($gen > 0) {
                     $html .= $html_HlineC;
                     $html .= $html_tb;
                     $html .= '<tr><td>';
+                    $this->glevel += 1;
                     $html .= $this->drawPerson($parent, $earmark, $gen - 1, 1, $primaryChildFamily, $u, false);             # EW.H - MOD
+                    $this->glevel -= 1;
                     $html .= '</td></tr>';
                     $html_tb = '';
                     $html_HlineE = '';
@@ -394,7 +395,6 @@ class TreeViewXTmod
                     $html_tb = '';
                     $html_HlineE = '';
                 }
-                $this->glevel -= 1;
             }
 
             if (count($fop)) {
@@ -403,17 +403,17 @@ class TreeViewXTmod
                 $html .= $html_HlineE;
                 $html .= $html_tb;
                 foreach ($fop as $p) {
-                    $this->glevel += 1;
                     $n++;
                     $u = $unique ? 'c' : ($n == $nb || empty($p[1]) ? 'b' : 'h');
                     if ($gen > 0) {
+                        $this->glevel += 1;
                         $html .= '<tr><td>' . $this->drawPerson($p[0], $earmark, $gen - 1, 1, $p[1], $u, false) . '</td></tr>';      # EW.H - MOD
+                        $this->glevel -= 1;
                     } else {
                         $snext = $this->glevel + 1;
                         $finis = ' abbr="p' . $p[1]->xref() . '@' . $u . '" state="' . $snext . '" align="left"';
                         $html .= '<tr><td ' . $finis . '></td></tr>';                           # EW.H - MOD
                     }
-                $this->glevel -= 1;
                 }
             }
             $html .= '</tbody></table></td>';
