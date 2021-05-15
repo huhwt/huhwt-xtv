@@ -3,7 +3,7 @@
  *
  * Output:
  * 		- dist
- *      - huhwt-mult-tv
+ *      - huhwt-xtv
  *          - app
  *          - resources
  *              - css (minified)
@@ -14,7 +14,7 @@
  *        module.php
  *        LICENSE.md
  *        README.md
- *      - justlight-x.zip
+ *      - huhwt-xtv.zip
  *
  */
 

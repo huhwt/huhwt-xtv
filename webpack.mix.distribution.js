@@ -3,7 +3,7 @@
  *
  * Output:
  * 		- dist
- *      - huhwt-mult-tv
+ *      - huhwt-xtv
  *          - app
  *              - Http
  *                  - RequestHandlers
