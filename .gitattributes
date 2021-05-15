@@ -1,0 +1,10 @@
+# Exclude files from archive
+.gitattributes  export-ignore
+.gitignore      export-ignore
+*.map           export-ignore
+.vscode/        export-ignore
+.assets/        export-ignore
+build/          export-ignore
+dist/           export-ignore
+node_modules/   export-ignore
+vendor/         export-ignore

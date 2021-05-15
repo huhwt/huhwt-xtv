@@ -1,0 +1,13 @@
+# IDE-files
+.vscode
+# 
+mix-manifest.json
+mix.js.map
+# working-directories
+/build/
+/dist/
+/node_modules/
+/vendor/
+# others
+/_assets/
+/src/sass/images/

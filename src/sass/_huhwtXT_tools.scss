@@ -1,0 +1,226 @@
+/**
+* huhwt-xtv - Manage the actions in viewport
+* tv_tools     - main button-block
+* tv_shownext  - controls expanding the tree
+* tv_showstats - shows number of names and links visible in viewport
+* tv_namelist  - holds the list of names visible in viewport
+*/
+.tv_tools {
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    z-index: 90;
+}
+
+[dir] .tv_tools,
+[dir] .tv_shownext,
+[dir] .tv_showstats {
+    padding: 0;
+    margin: 0;
+    background-color: #efefef;
+    border: 1px outset #dfdfdf;
+    border-radius: 4px;
+}
+
+[dir=ltr] .tv_tools,
+[dir=ltr] .tv_shownext,
+[dir=ltr] .tv_showstats {
+    box-shadow: 1px 1px 2px #cfcfdf;
+}
+
+[dir=ltr] .tv_tools {
+    left: 0;
+}
+
+[dir=rtl] .tv_tools,
+[dir=ltr] .tv_shownext,
+[dir=rtl] .tv_showstats {
+    box-shadow: -1px 1px 2px #cfcfdf;
+}
+
+[dir=rtl] .tv_tools {
+    right: 0;
+}
+
+/**
+* tv_shownext
+*/
+.tv_shownext {
+    display: block;
+    position: absolute;
+    top: 26px;
+    z-index: 91;
+}
+[dir=ltr] .tv_shownext {
+    left: 23px;
+}
+[dir=rtl] .tv_shownext {
+    right: 23px;
+}
+.tv_shownext {
+    display: inline-block;
+}
+.tv_shownext ul {
+    width: 24px;
+}
+.tv_shownext li {
+    display: block;
+    float: left;
+}
+
+/**
+* tv_showstats
+*/
+.tv_showstats {
+    display: none;
+    width: 400px;
+}
+.tv_showstats {
+    position: absolute;
+    top: 26px;
+    z-index: 91;
+}
+[dir=ltr] .tv_showstats {
+    left: 46px;
+}
+[dir=rtl] .tv_showstats {
+    right: 46px;
+}
+[dir] .tv_showstats {
+    overflow: hidden;
+}
+.tv_showstats > ul > li {
+      width: 90vh;
+}
+
+/**
+* tv_namelist
+*/
+.tv_namelist {
+    display: none;
+}
+
+.tv_namelist {
+    position: absolute;
+    top: 26px;
+    z-index: 92;
+}
+.tv_namelistheader {
+    cursor: move;
+    background-color: #a9c2d6;
+    color: rgb(226, 225, 225);
+    z-index: 93;
+}
+
+[dir=ltr] .tv_namelist {
+    left: 68px;
+}
+
+[dir=rtl] .tv_namelist {
+    right: 68px;
+}
+
+.tv_namelist {
+    display: block;
+    width: 320px;
+}
+[dir] .tv_namelist p,
+[dir] .tv_showstats p {
+    padding: 0;
+    margin: 0;
+    text-align: left;
+    font-size: 0.8rem;
+    line-height: 1;
+}
+[dir] .tv_namelist li,
+[dir] .tv_showstats li {
+    text-align: left;
+    font-size: 0.8rem;
+    font-weight: 300;
+    line-height: 1;
+}
+
+[dir] .tv_namelist li:hover {
+    font-size: 0.9rem;
+    font-weight: 400;
+    border: thin outset #fdfffd;
+}
+[dir] .tv_namelist ul{
+    overflow-x: hidden; 
+    overflow-y: scroll !important;
+}
+.tv_namelistheader {
+    display: flex;
+    flex-direction: row;
+    align-content: space-between;
+    width: 100%;
+}
+.tv_namelistheader:hover {
+    color:rgb(2, 37, 112);
+}
+.tv_namelistul {
+    padding-left: 5%;
+}
+
+.tv_tools ul ,
+.tv_shownext ul ,
+.tv_namelist ul ,
+.tv_showstats ul {
+    list-style: none;
+}
+
+[dir] .tv_tools ul,
+[dir] .tv_shownext ul {
+    margin: 0;
+    padding: 0;
+}
+
+.tv_tools li.tv_button,
+.tv_shownext li.tv_button {
+    position: relative;
+    width: 24px;
+    height: 24px;
+    vertical-align: middle;
+}
+
+[dir] .tv_tools li.tv_button,
+[dir] .tv_shownext li.tv_button {
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    border: thin solid #efefef;
+    background-color: #efefef;
+    border-radius: 4px;
+}
+
+[dir=ltr] .tv_tools li.tv_button,
+[dir=ltr] .tv_shownext li.tv_button {
+    float: left;
+}
+
+[dir=rtl] .tv_tools li.tv_button,
+[dir=rtl] .tv_shownext li.tv_button {
+    float: right;
+}
+
+
+[dir] .tv_tools li.tv_button:hover {
+    border: thin outset #fdfffd;
+    cursor: pointer;
+}
+[dir] .tv_tools li.tvPressed {
+    border: thin inset #fff;
+}
+
+.tv_tools ul li img {
+    width: 22px;
+    height: 22px;
+    vertical-align: middle;
+}
+[dir] .tv_tools ul li img {
+    border: none;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+    text-align: center;
+}

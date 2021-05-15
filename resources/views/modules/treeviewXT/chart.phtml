@@ -1,0 +1,73 @@
+<?php
+
+namespace HuHwt\WebtreesMods\InteractiveTreeXT;
+
+// use HuHwt\WebtreesMods\InteractiveTreeXT\Module\TreeViewXTmod;
+
+use Fisharebest\Webtrees\I18N;
+
+/**
+ * @var Individual    $individual
+ * @var Tree          $tree
+ */
+?>
+
+<div id="<?= $name ?>_out" class="tv_out" data-url-details="<?= e(route(InteractiveTreeXTmod::class, ['module' => $module, 'action' => 'Details', 'tree' => $tree->name(), 'dummy' => 'dummy'])) ?>" data-url-individuals="<?= e(route(InteractiveTreeXTmod::class, ['module' => $module, 'action' => 'Individuals', 'tree' => $tree->name(), 'dummy' => 'dummy'])) ?>" style="height: 300px">
+    <div id="<?= $name ?>_tools" class="tv_tools">
+        <ul>
+            <li id="<?= $name ?>bCompact" class="tv_button tvbcompact" title="<?= I18N::translate('Use compact layout') ?>">
+            </li>
+            <li id="<?= $name ?>bShowNext" class="tv_button tvbshownext" title="<?= I18N::translate('Expand next links') ?>">
+            </li>
+            <li id="<?= $name ?>bShowStats" class="tv_button tvbshowstats" title="<?= I18N::translate('Current state') ?>">
+            </li>
+            <li id="<?= $name ?>bNamelist" class="tv_button tvbnamelist" title="<?= I18N::translate('Show name list') ?>">
+            </li>
+            <li id="<?= $name ?>bfs" class="tv_button tvfs-switch-full-screen" title="<?= I18N::translate('Toggle FullScreen View') ?>">
+            </li>
+            <li id="<?= $name ?>bexportPNG" class="tv_button tvbexportpng" title="<?= I18N::translate('Export to PNG') ?>">
+            </li>
+            <li id="<?= $name ?>_loading" class="tv_button">
+                <i class="icon-loading-small"></i>
+            </li>
+        </ul>
+    </div>
+    <div id="<?= $name ?>_shownext" class="tv_shownext">
+        <ul>
+            <li id="<?= $name ?>bShowNext1" class="tv_button tvbshownext1" title="<?=I18N::translate('+1 Level')?>">
+            </li>
+            <li id="<?= $name ?>bShowNextAll" class="tv_button tvbshownextAll" title="<?=I18N::translate('Show all')?>">
+            </li>
+        </ul>
+    </div>
+    <div id="<?= $name ?>_showstats" class="tv_showstats">
+        <ul>
+            <li id="<?= $name ?>sNames" > <span><?= I18N::translate('Names in view') ?></span> <span>0</span>
+            </li>
+            <li id="<?= $name ?>sLinks" > <span><?= I18N::translate('Links in view') ?></span> <span>0</span>
+            </li>
+            <li id="<?= $name ?>sStates" > <span></span><?= I18N::translate('Generations in view') ?></span>&nbsp;<span>0</span>-<span>0</span>
+            </li>
+        </ul>
+    </div>
+    <div id="<?= $name ?>_namelist" class="tv_namelist">
+        <div id="<?= $name ?>_namelistheader" class="tv_namelistheader">
+            <div><?= I18N::translate('Click here to move')?></div>
+            <div class="huhwt_button_tr"></div>
+            <div class="huhwt_button_tr"></div>
+            <div class="huhwt_button_tr"></div>
+            <div id="<?= $name ?>_namelistSave" class="huhwt_save bdownload_save_txt huhwt_button" title="<?= I18N::translate('Download as textfile') ?>"></div>
+            <div class="huhwt_button_tr"></div>
+            <div id="<?= $name ?>_namelistClose" class="huhwt_close bClose huhwt_button"></div>
+        </div>
+        <p id="<?= $name ?>lNames" > <span><?= I18N::translate('Names in view') ?></span> <span>0</span>
+        </p>
+        <p id="<?= $name ?>lLinks" > <span><?= I18N::translate('Links in view') ?></span> <span>0</span>
+        </p>
+        <ul id="<?= $name ?>_namelistul" class="tv_namelistul">
+        </ul>
+    </div>
+    <div id="<?= $name ?>_in" class="tv_in" dir="ltr">
+        <?= $individual ?>
+    </div>
+</div>

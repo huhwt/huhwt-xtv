@@ -1,0 +1,108 @@
+<?php
+
+use Fisharebest\Webtrees\I18N;
+use Fisharebest\Webtrees\View;
+use HuHwt\WebtreesMods\InteractiveTreeXT\Configuration;
+
+/**
+ * @var array         $individuals - [0] first individual, [1] second individual, ... up to [4]
+ * @var int           $showpatri
+ * @var int           $generations
+ * @var array         $htmls - [0] first treeview, [1] second treeview, ... up to [4]
+ * @var array         $jsimp - relevant only when first treeview is shown -> links to own scripts
+ * @var array         $jss   - [0] first treeview, [1] second treeview, ... up to [4]
+ * @var string        $module   - this module's name
+ * @var string        $title
+ * @var array         $subtitles - [0] first treeview, [1] second treeview, ... up to [4]
+ */
+?>
+
+<h3 class="wt-page-title">
+    <?= $title ?>
+</h3>
+
+<form method="post" class="wt-page-options wt-page-options-compact-chart d-print-none">
+    <?= csrf_field() ?>
+
+    <?php $tviE = count($individuals) - 1; ?>
+    <?php $indiRequired = true; ?>
+    <?php for ($tvi = 0; $tvi <= $tviE; $tvi++) { ?>
+        <?php $individual = $individuals[$tvi]; ?>
+    <div class="row form-group">
+        <label class="col-sm-3 col-form-label wt-page-options-label" for="xref">
+            <?= I18N::translate('Individual') ?>
+        </label>
+        <div class="col-sm-9 wt-page-options-value">
+            <?= view('components/select-individual', ['name' => 'xref', 'individual' => $individuals[$tvi], 'tree' => $individuals[$tvi]->tree(), 'required' => $indiRequired]) ?>
+        </div>
+    </div>
+    <?php   $indiRequired = false; ?>
+    <?php } ?>
+
+    <div class="row form-group">
+        <div class="col-sm-3 wt-page-options-label"></div>
+        <div class="col-sm-1 wt-page-options-value">
+            <input class="btn btn-primary" type="submit" value="<?= I18N::translate('view') ?>">
+        </div>
+        <div class="col-sm-3 wt-page-options-value" id="shownext">
+                <span> <?= I18N::translate('Paternal side takes precedence') ?> &nbsp;&nbsp; </span>
+            <?=
+                view('components/radios-inline', [
+                'name' => 'showpatri',
+                    'options' => [
+                        I18N::translate('Yes'),
+                        I18N::translate('No'),
+                    ],
+                    'selected' => $showpatri,
+                ])
+            ?>
+        </div>
+        <div class="col-sm-3 huhwt_buttongroup">
+            <span> <?= I18N::translate('Generations in first view') ?> &nbsp;&nbsp; </span>
+            <div id="showgens" class="huhwt_buttongroup">
+                <div class="huhwt_button"><i id="showgensSub" class="bMinus huhwt_button" title="<?= I18N::translate('Decrement') ?>"></i>&nbsp;</div>
+                <input
+                    class="form-control"
+                    id="generations"
+                    name="generations"
+                    min="<?=Configuration::MIN_GENERATIONS ?>"
+                    max="<?=Configuration::MAX_GENERATIONS ?>"
+                    required
+                    type="number"
+                    value="<?= e($generations) ?>"
+                >
+                <div class="huhwt_button"><i<i id="showgensAdd" class="bPlus huhwt_button" title="<?= I18N::translate('Increment') ?>"></i></div>
+            </div>
+        </div>
+        <div class="col-sm-2 wt-page-options-value">
+        </div>
+    </div>
+</form>
+<?php if (count($jsimp) > 0) {  ?>
+    <?php for ( $i = 0, $iE = count($jsimp); $i < $iE; ++$i) : ?>
+        <?php $jsi = $jsimp[$i] ?>
+        <?php View::push('javascript') ?>
+            <?= $jsi ?>
+        <?php View::endpush() ?>
+    <?php endfor ?>
+<?php } ?>
+<?= View::push('javascript') ?>
+<script>
+  showgensPrep();
+</script>
+<?= View::endpush() ?>
+
+<?php for ( $i = 0, $iE = count($htmls); $i < $iE; ++$i) : ?>
+    <?php $html = $subtitles[$i] ?>
+        <?= $html ?>
+    <?php $html = $htmls[$i] ?>
+    <div class="wt-page-content wt-chart wt-chart-interactive">
+        <?= $html ?>
+    </div>
+    <?php $js = $jss[$i] ?>
+    <?php View::push('javascript') ?>
+    <script>
+        <?= $js ?>
+    </script>
+    <?php View::endpush() ?>
+<?php endfor ?>
