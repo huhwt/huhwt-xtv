@@ -79,38 +79,38 @@ function TreeViewHandlerXT (tv_kenn, doFullScreen = false) {
     let drag_start_y;
 
     tv.treeview.on('mousedown touchstart', function (event) {
-      event.preventDefault();
+    event.preventDefault();
 
-      let pageX = (event.type === 'touchstart') ? event.touches[0].pageX : event.pageX;
-      let pageY = (event.type === 'touchstart') ? event.touches[0].pageY : event.pageY;
+    let pageX = (event.type === 'touchstart') ? event.touches[0].pageX : event.pageX;
+    let pageY = (event.type === 'touchstart') ? event.touches[0].pageY : event.pageY;
 
-      drag_start_x = tv.treeview.offset().left - pageX;
-      drag_start_y = tv.treeview.offset().top - pageY;
-      dragging = true;
+    drag_start_x = tv.treeview.offset().left - pageX;
+    drag_start_y = tv.treeview.offset().top - pageY;
+    dragging = true;
     });
 
     $(document).on('mousemove touchmove', function (event) {
-      if (dragging) {
+    if (dragging) {
         event.preventDefault();
 
         let pageX = (event.type === 'touchmove') ? event.touches[0].pageX : event.pageX;
         let pageY = (event.type === 'touchmove') ? event.touches[0].pageY : event.pageY;
 
         tv.treeview.offset({
-          left: pageX + drag_start_x,
-          top: pageY + drag_start_y,
+        left: pageX + drag_start_x,
+        top: pageY + drag_start_y,
         });
-      }
+    }
     });
 
     $(document).on('mouseup touchend', function (event) {
-      if (dragging) {
+    if (dragging) {
         event.preventDefault();
         dragging = false;
 //        tv.updateTree(false);         // EW.H - MOD ... dropped Autoexpand
-      }
+    }
     });
-  })();
+})();
 //
 // Add click handlers to buttons
 //
@@ -196,10 +196,9 @@ function TreeViewHandlerXT (tv_kenn, doFullScreen = false) {
       tv.namelist(tv_kenn);
     };
   });
-
   // fire ajax update if needed, which call setComplete() when all is loaded
   tv.centerOnRoot();
-  
+
   //
   if (doFullScreen) {
     tv.container.parent().toggleClass('tvfs-full-screen');
@@ -233,10 +232,6 @@ TreeViewHandlerXT.prototype.getSize = function () {
   tv.leftMax = tv.leftMin + container.innerWidth();
   tv.topMin = offset.top;
   tv.topMax = tv.topMin + container.innerHeight();
-  /*
-	 var frm = $("#tvTreeBorder");
-	 tv.treeview.css("width", frm.width());
-	 tv.treeview.css("height", frm.height()); */
 };
 
 /**
@@ -319,9 +314,6 @@ TreeViewHandlerXT.prototype.updateTreeDo = function (tv, center, button, doall, 
         for (var i = 0; i < nb; i++) {
           let _elts = elts[i];
           _elts.removeAttr('abbr');
-        //   let _eltsn = _elts.next().children[0];
-        //   _eltsn.removeClass('tv_expand');
-        //   _eltsn.addClass('tv_collapsed');
           _elts.html(ret[i]);
         }
         // repositionning
@@ -393,10 +385,10 @@ TreeViewHandlerXT.prototype.compact = function (tv_kenn) {
   tv.setComplete();
   return false;
 };
-
+  
 /**
-* Class TreeView show/hide shownext panel
-*/
+ * Class TreeView show/hide shownext panel
+ */
 TreeViewHandlerXT.prototype.shownext  = function (tv_kenn, auto_close) {
   var tv = this;
   var b = $('#' + tv_kenn + 'bShowNext', tv.toolbox);
@@ -415,7 +407,7 @@ TreeViewHandlerXT.prototype.shownext  = function (tv_kenn, auto_close) {
   tv.setComplete();
   return false;
 };
-
+  
 /**
  * Class TreeView shownext method
  * @param tv_kenn   string      Prefix for IDs to identify individual elements
@@ -431,17 +423,17 @@ TreeViewHandlerXT.prototype.shownextDo = function (tv_kenn, nextXXX) {
   if (!tv.updating) {
     tv.updateTree(true, b, true, tv.shownext_all);
     if (tv.shownext_all) {
-        tv.shownext(tv_kenn, true);
+      tv.shownext(tv_kenn, true);
     }
   }
   tv.setComplete();
   return false;
 };
-
+  
 /**
  * Class TreeView showstats method
  */
- TreeViewHandlerXT.prototype.showstats  = function (tv, auto_close) {
+TreeViewHandlerXT.prototype.showstats  = function (tv, auto_close) {
   var b = $('#' + tv.tv_kenn + 'bShowStats', tv.toolbox);
   tv.setLoading();
   if (auto_close) {
@@ -462,49 +454,59 @@ TreeViewHandlerXT.prototype.shownextDo = function (tv_kenn, nextXXX) {
 };
 
 /**
-* Class TreeView showstatsExec method
-*/
+ * Class TreeView showstatsExec method
+ */
 TreeViewHandlerXT.prototype.showstatsExec  = function (tv) {
-    tv_kenn = tv.tv_kenn;
-    var n_listCount = 0;
-    var to_loadCount = 0;
-    // check which div with tv_box attribute are within the container bounding box
-    // - they are carrying names
-    var tds = tv.treeview.find('td');
-    for (let tdx of tds) {
-      let doBreak = false;
-      if (tdx.firstChild && !tdx.hidden) {
-        var boxes = $(tdx).find('.tv_box:visible');
-        boxes.each(function (index, bx) {
-          let elb = $(bx, tv.treeview);
-          let elNf = elb.find('.NAME');
-          elNf.each(function (index,elx) {
-            n_listCount += 1;
-          });
-          let bs = parseInt(bx.getAttribute('state'));
-          if (bs < tv.stateMin) { tv.stateMin = bs; }
-          if (bs > tv.stateMax) { tv.stateMax = bs; }
+  tv_kenn = tv.tv_kenn;
+  var n_listCount = 0;
+  var to_loadCount = 0;
+  // check which div with tv_box attribute are within the container bounding box
+  // - they are carrying names
+  var tds = tv.treeview.find('td');
+  for (let tdx of tds) {
+    let doBreak = false;
+    if (tdx.firstChild && !tdx.hidden) {
+      var boxes = $(tdx).find('.tv_box:visible');
+      boxes.each(function (index, bx) {
+        let elb = $(bx, tv.treeview);
+        let elNf = elb.find('.NAME');
+        elNf.each(function (index,elx) {
+          n_listCount += 1;
         });
-        break;
-      }
+        let bs = parseInt(bx.getAttribute('state'));
+        if (bs < tv.stateMin) { tv.stateMin = bs; }
+        if (bs > tv.stateMax) { tv.stateMax = bs; }
+      });
+      break;
     }
-    // check which td with datafld attribute are within the container
-    // and therefore would need to be dynamically loaded
-    tv.treeview.find('td[abbr]').each(function (index, el) {
-      to_loadCount += 1;
-    });
-    // update stats-form-elements
-    let elN = $( '#' + tv_kenn + 'sNames');
-    let elNt = elN.children();
-    elNt[1].textContent = n_listCount;
-    let elL = $( '#' + tv_kenn + 'sLinks');
-    let elLt = elL.children();
-    let slLt = (to_loadCount > 0) ? String(to_loadCount) : '-keine-';
-    elLt[1].textContent = slLt;
-    let elS = $( '#' + tv_kenn + 'sStates');
-    let elSt = elS.children();
-    elSt[1].textContent = tv.stateMin;
-    elSt[2].textContent = tv.stateMax;
+  }
+  // check which td with datafld attribute are within the container
+  // and therefore would need to be dynamically loaded
+  tv.treeview.find('td[abbr]').each(function (index, el) {
+    to_loadCount += 1;
+  });
+  // get the viewport's canvas
+  var theChart = $('#' + tv_kenn + '_in');
+  theChart = theChart[0];
+  theChart = theChart.children[0];
+  let tCw = theChart.clientWidth;
+  let tCh = theChart.clientHeight;
+  // update stats-form-elements
+  let elN = $( '#' + tv_kenn + 'sNames');
+  let elNt = elN.children();
+  elNt[1].textContent = n_listCount;
+  let elL = $( '#' + tv_kenn + 'sLinks');
+  let elLt = elL.children();
+  let slLt = (to_loadCount > 0) ? String(to_loadCount) : '-keine-';
+  elLt[1].textContent = slLt;
+  let elS = $( '#' + tv_kenn + 'sStates');
+  let elSt = elS.children();
+  elSt[1].textContent = tv.stateMin;
+  elSt[2].textContent = tv.stateMax;
+  let elD = $( '#' + tv_kenn + 'sDims');
+  let elDt = elD.children();
+  elDt[2].textContent = tCw;
+  elDt[4].textContent = tCh;
 };
 
 /**
@@ -516,18 +518,27 @@ TreeViewHandlerXT.prototype.exportPNG = function (tv_kenn) {
   var b = $('#' + tv_kenn + 'bexportPNG', tv.toolbox);
   b.addClass('tvPressed');
   tv.setLoading();
+  // get the rootPerson-Name as filename
+  var ftv = tv.treeview[0];
+  var fBox = ftv.getElementsByClassName('rootPerson');
+  var fName = fBox[0].firstChild.innerText;
+  // get the viewport inner elements
   var _tvtree = tv.treeview;
   _tvtree = _tvtree[0];
   var el = _tvtree.children[0];
+  // export viewport's content as png
+  // html2canvas    -> Base64
+  // dataURItoBlob  -> PNG-file format
   if ( el ) {
     html2canvas(el, { allowTaint: true }).then(function (canvas) {
-      var link = document.createElement("a");
-      document.body.appendChild(link);
-      link.download = "html_image.png";
-      link.href = canvas.toDataURL();
-      link.target = '_blank';
-      link.click();
-      document.body.removeChild(link); // remove the link when done
+      var a = document.createElement('a');
+      var file = dataURItoBlob(canvas.toDataURL(), 'image/png');
+      var filename = fName + '.png';
+      a.href= URL.createObjectURL(file);
+      a.download = filename;
+      a.click();
+
+      URL.revokeObjectURL(a.href);
     });
   }
   tv.setComplete();
@@ -568,11 +579,11 @@ TreeViewHandlerXT.prototype.namelist = function (tv_kenn) {
   tv.setComplete();
   return false;
 };
-  
+
 /**
  * Class TreeView namelist method
  */
- TreeViewHandlerXT.prototype.namelistul = function (event) {
+TreeViewHandlerXT.prototype.namelistul = function (event) {
   var tv = this;
   let bIDoff = null;
   let tvBox = null;
@@ -627,11 +638,11 @@ TreeViewHandlerXT.prototype.namelist = function (tv_kenn) {
         inline: "center",
       });
     }
-}
+  }
   return false;
 };
 
-  /**
+/**
  * Class TreeView centerOnRoot method
  */
 TreeViewHandlerXT.prototype.centerOnRoot = function () {
@@ -794,7 +805,7 @@ function createCookie (name, value, days) {
     document.cookie = name + '=' + value + '; path=/';
   }
 }
-
+  
 /**
  * Creates a sorted overview from the names displayed in the treeview.
  * 
@@ -817,8 +828,8 @@ function makeNList(tv) {
       var sNs = eNs.innerText;
       let pNs = sNv.indexOf(sNs);               // unter Umständen Zunamen bereits mitgegeben ...
       if (pNs > 0) {                                // dann rausschneiden
-          sNv = sNv.replace(sNs, '');
-          sNv = sNv.trim();
+        sNv = sNv.replace(sNs, '');
+        sNv = sNv.trim();
       }
       elNsp = elNf.parentElement;               // EW.H - MOD ... surrounding DIV carries the personal ID
       sID = elNsp.getAttribute('pID');
@@ -854,8 +865,7 @@ function makeNList(tv) {
   tv.namesul.outerHeight(hnl);
 }
 
-function dumpNlist_txt(tv)
-{
+function dumpNlist_txt(tv) {
   nStringAr = [];
   nl = $('#' + tv.tv_kenn + '_namelistul')[0];
   nlc = nl.children;
@@ -866,75 +876,92 @@ function dumpNlist_txt(tv)
   downloadToFile(nString, 'webtrees-treeviewXT-NameList.txt', 'text/plain');
   return true;
 }
-function downloadToFile(content, filename, contentType) 
-{
-    const a = document.createElement('a');
-    const file = new Blob([content], {type: contentType});
-    
-    a.href= URL.createObjectURL(file);
-    a.download = filename;
-    a.click();
-  
-    URL.revokeObjectURL(a.href);
+function downloadToFile(content, filename, contentType) {
+  var a = document.createElement('a');
+  var file = new Blob([content], {type: contentType});
+
+  a.href= URL.createObjectURL(file);
+  a.download = filename;
+  a.click();
+
+  URL.revokeObjectURL(a.href);
 }
-  
+
+function dataURItoBlob(dataURI, type) {
+  // convert base64 to raw binary data held in a string
+  var byteString = atob(dataURI.split(',')[1]);
+
+  // separate out the mime component
+  var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+
+  // write the bytes of the string to an ArrayBuffer
+  var ab = new ArrayBuffer(byteString.length);
+  var ia = new Uint8Array(ab);
+  for (var i = 0; i < byteString.length; i++) {
+    ia[i] = byteString.charCodeAt(i);
+  }
+
+  // write the ArrayBuffer to a blob, and you're done
+  var bb = new Blob([ab], { type: type });
+  return bb;
+}
 
 /**
  * Add event-handler to Plus-/Minus-Buttons in page.html-showgens
  * 
  * @param {object} tv
  */
- function showgensPrep() {
+function showgensPrep() {
   $('#showgensSub').click(function () {
     showgensMinus();
-});
-   $('#showgensAdd').click(function () {
+  });
+  $('#showgensAdd').click(function () {
     showgensPlus();
-});
+  });
 }
 function showgensMinus() {
-    var esgV = $("#generations");
-    let vsgV = parseInt(esgV[0].value);
-    let esgVmin = parseInt(esgV[0].getAttribute("min"));
-    let esgVmax = parseInt(esgV[0].getAttribute("max"));
-    vsgV -= 1;
-    if (esgVmin > 0 && vsgV < esgVmin ) { vsgV = esgVmin; }
-    if (esgVmax > 0 && vsgV > esgVmax ) { vsgV = esgVmax; }
-    esgV[0].value = vsgV.toString();
-    return false;
+  var esgV = $("#generations");
+  let vsgV = parseInt(esgV[0].value);
+  let esgVmin = parseInt(esgV[0].getAttribute("min"));
+  let esgVmax = parseInt(esgV[0].getAttribute("max"));
+  vsgV -= 1;
+  if (esgVmin > 0 && vsgV < esgVmin ) { vsgV = esgVmin; }
+  if (esgVmax > 0 && vsgV > esgVmax ) { vsgV = esgVmax; }
+  esgV[0].value = vsgV.toString();
+  return false;
 }
 function showgensPlus() {
-    var esgV = $("#generations");
-    let vsgV = parseInt(esgV[0].value);
-    let esgVmin = parseInt(esgV[0].getAttribute("min"));
-    let esgVmax = parseInt(esgV[0].getAttribute("max"));
-    vsgV += 1;
-    if (esgVmin > 0 && vsgV < esgVmin ) { vsgV = esgVmin; }
-    if (esgVmax > 0 && vsgV > esgVmax ) { vsgV = esgVmax; }
-    esgV[0].value = vsgV.toString();
-    return false;
+  var esgV = $("#generations");
+  let vsgV = parseInt(esgV[0].value);
+  let esgVmin = parseInt(esgV[0].getAttribute("min"));
+  let esgVmax = parseInt(esgV[0].getAttribute("max"));
+  vsgV += 1;
+  if (esgVmin > 0 && vsgV < esgVmin ) { vsgV = esgVmin; }
+  if (esgVmax > 0 && vsgV > esgVmax ) { vsgV = esgVmax; }
+  esgV[0].value = vsgV.toString();
+  return false;
 }
 
 function isInViewport(el) {
-    const rect = el.getBoundingClientRect();
-    return (
-        rect.top >= 0 &&
-        rect.left >= 0 &&
-        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-        rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-    );
+  var rect = el.getBoundingClientRect();
+  return (
+    rect.top >= 0 &&
+    rect.left >= 0 &&
+    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+    rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+  );
 }
-
-function dragElement(elmnt) {
-    var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-    if (document.getElementById(elmnt.id + "header")) {
-      // the header is where you move the DIV from:
-      document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
-    } else {
-      // otherwise, move the DIV from anywhere inside the DIV:
-      elmnt.onmousedown = dragMouseDown;
-    }
   
+function dragElement(elmnt) {
+  var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+  if (document.getElementById(elmnt.id + "header")) {
+    // the header is where you move the DIV from:
+    document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
+  } else {
+    // otherwise, move the DIV from anywhere inside the DIV:
+    elmnt.onmousedown = dragMouseDown;
+  }
+
     function dragMouseDown(e) {
       e = e || window.event;
       e.preventDefault();
@@ -945,7 +972,7 @@ function dragElement(elmnt) {
       // call a function whenever the cursor moves:
       document.onmousemove = elementDrag;
     }
-  
+
     function elementDrag(e) {
       e = e || window.event;
       e.preventDefault();
@@ -958,10 +985,10 @@ function dragElement(elmnt) {
       elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
       elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
     }
-  
+
     function closeDragElement() {
       // stop moving when mouse button is released:
       document.onmouseup = null;
       document.onmousemove = null;
     }
-  }
+}

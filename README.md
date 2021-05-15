@@ -61,7 +61,7 @@ folded ones are colored green when hovering)
 * You can export the state of the view as a PNG.
     - The current view is translated into a PNG. Caution: Depending on the browser, the image
 may be incomplete or certain elements are missing (depends on size and width of the
-viewport, from a height of approx. 10,000 pixels it becomes critical.) 
+viewport, from a height of 16,384 pixels it becomes critical.) 
 
 * Viewport is scrollable.
 

@@ -73,12 +73,16 @@
 */
 .tv_showstats {
     display: none;
-    width: 400px;
+    width: 360px;
 }
 .tv_showstats {
     position: absolute;
     top: 26px;
     z-index: 91;
+}
+[dir] .tv_showstats {
+    overflow: hidden;
+    padding: 5px;
 }
 [dir=ltr] .tv_showstats {
     left: 46px;
@@ -88,9 +92,19 @@
 }
 [dir] .tv_showstats {
     overflow: hidden;
+    padding: 5px;
 }
-.tv_showstats > ul > li {
-      width: 90vh;
+.tv_showstats_li {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+[dir] .tv_showstats_li {
+    padding: 0;
+    margin: 2px;
+    text-align: left;
+    font-size: 0.9rem;
+    line-height: 1;
 }
 
 /**

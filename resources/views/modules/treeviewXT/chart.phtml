@@ -41,14 +41,16 @@ use Fisharebest\Webtrees\I18N;
         </ul>
     </div>
     <div id="<?= $name ?>_showstats" class="tv_showstats">
-        <ul>
-            <li id="<?= $name ?>sNames" > <span><?= I18N::translate('Names in view') ?></span> <span>0</span>
-            </li>
-            <li id="<?= $name ?>sLinks" > <span><?= I18N::translate('Links in view') ?></span> <span>0</span>
-            </li>
-            <li id="<?= $name ?>sStates" > <span></span><?= I18N::translate('Generations in view') ?></span>&nbsp;<span>0</span>-<span>0</span>
-            </li>
-        </ul>
+        <div>
+            <div id="<?= $name ?>sNames" class="tv_showstats_li"><div><?= I18N::translate('Names in view') ?></div><div>0</div>
+            </div>
+            <div id="<?= $name ?>sLinks" class="tv_showstats_li"><div><?= I18N::translate('Links in view') ?></div><div>0</div>
+            </div>
+            <div id="<?= $name ?>sStates" class="tv_showstats_li"><div><?= I18N::translate('Generations in view') ?></div>&nbsp;<div>0</div>-<div>0</div>
+            </div>
+            <div id="<?= $name ?>sDims" class="tv_showstats_li"><div><?= I18N::translate('Chart dimensions') ?></div><div><?= I18N::translate('Width:') ?></div><div>0</div><div><?= I18N::translate('Height:') ?></div><div>0</div>
+            </div>
+        </div>
     </div>
     <div id="<?= $name ?>_namelist" class="tv_namelist">
         <div id="<?= $name ?>_namelistheader" class="tv_namelistheader">

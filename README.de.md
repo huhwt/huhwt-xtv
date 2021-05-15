@@ -62,7 +62,7 @@ eingeklappte werden beim Hovern grünlich eingefärbt)
 * Man kann den Zustand der Ansicht als PNG exportieren lassen.
     - Es wird die aktuelle Ansicht in ein PNG übersetzt. Vorsicht: Je nach Browser kann das Abbild
 unvollständig sein bzw. es fehlen gewisse Elemente (Das ist abhängig von Größe und Breite des 
-Viewports, ab ca. 10.000 Pixeln Höhe wird es kritisch.)
+Viewports, ab 16.384 Pixeln Höhe wird es kritisch.)
 
 * Der Viewport ist scrollfähig.
 
