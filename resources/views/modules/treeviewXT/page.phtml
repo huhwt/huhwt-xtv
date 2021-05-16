@@ -60,14 +60,15 @@ use HuHwt\WebtreesMods\InteractiveTreeXT\Configuration;
         <div class="col-sm-3 huhwt_buttongroup">
             <span> <?= I18N::translate('Generations in first view') ?> &nbsp;&nbsp; </span>
             <div id="showgens" class="huhwt_buttongroup">
-                <div class="huhwt_button"><i id="showgensSub" class="bMinus huhwt_button" title="<?= I18N::translate('Decrement') ?>"></i>&nbsp;</div>
+                <div class="huhwt_button"><i id="showgensSub" class="bMinus huhwt_button" title="<?= I18N::translate('Decrement') ?>"></i></div>
                 <input
                     class="form-control"
                     id="generations"
                     name="generations"
                     min="<?=Configuration::MIN_GENERATIONS ?>"
                     max="<?=Configuration::MAX_GENERATIONS ?>"
-                    required
+                    step="0"
+                    readonly="true"
                     type="number"
                     value="<?= e($generations) ?>"
                 >

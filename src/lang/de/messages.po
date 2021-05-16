@@ -68,6 +68,9 @@ msgstr "Vermindern"
 msgid "Increment"
 msgstr "Hochzählen"
 
+msgid "till"
+msgstr "bis"
+
 msgid "Click here to move"
 msgstr "Hier Klicken und Ziehen"
 

@@ -71,18 +71,14 @@
 
 .huhwt_buttongroup>input[type=number] {
     -moz-appearance:textfield;
+    appearance:textfield;
+    padding: 0.25rem;
     height: 26px;
     width: 46px;
+    text-align: center;
     margin: 0;
 }
-.huhwt_buttongroup>input[type=number]::-webkit-inner-spin-button, 
-.huhwt_buttongroup>input[type=number]::-webkit-outer-spin-button { 
-    -webkit-appearance: none; 
-    margin: 0; 
-    height: 26px;
-    width: 46px;
-}
-  
+
 .huhwt_button {
     width: 24px;
     height: 24px;
