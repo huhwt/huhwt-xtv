@@ -179,7 +179,7 @@ class TreeViewXTmod
         ]);
 
         $html = $this->getThumbnail($individual);
-        $icon_indi = ($individual->sex() == 'F' ? 'wt-icon-huhwtF' : 'wt-icon-huhwtM');
+        $icon_indi = ($individual->sex() == 'F' ? 'huhwt-iconF' : 'huhwt-iconM');
         $html .= '<a class="tv_link" href="' . e($individual->url()) . '">' . $individual->fullName() . '</a>';
         $html .= '<a href="' . e($chart_url) . '" title="' . I18N::translate('Interactive tree of %s', strip_tags($individual->fullName())) . '" class="' . $icon_indi . ' tv_link tv_treelink" ></a>';
         foreach ($individual->facts(Gedcom::BIRTH_EVENTS, true) as $fact) {
