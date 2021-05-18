@@ -19,17 +19,40 @@ $rlevels:
     min-height: 100vh !important;
 }
 
-[dir] div.tvfs-full-screen>.tv_out>.tv_in {
+[dir] div.tvfs-full-screen>.tv_out>.tvXT_in {
     width: 180vh !important;
     min-width: 180vh !important;
     display: flex;
 }
 
-.tv_in {
+.tvXT_in {
     max-height: 98vh !important;
     overflow-y: auto !important;
     overflow-x: auto !important;
 }
+.tvXT_in {
+    clear: both;
+    cursor: move;
+    display: inline-block; /* prevent from blinking on IE */
+}
+
+.tvXT_in table.tv_tree,
+.tvXT_in table.tv_tree tbody,
+.tvXT_in table.tv_tree tr,
+.tvXT_in table.tv_tree td {
+    border: 0 none;
+    padding: 0;
+    margin: 0;
+    background: none;
+    font-size: 11px;
+}
+.tvXT_in table.tv_tree {
+    border-collapse: collapse;
+}
+.tvXT_in table.tv_tree td.tv_vline_h {
+    vertical-align: middle;
+}
+
 
 .tvXT_box_glevel {
     text-align: center;
