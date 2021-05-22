@@ -73,11 +73,14 @@ Viewports, ab 16.384 Pixeln Höhe wird es kritisch.)
 * Die Erweiterung 'Tree-View-Full-Screen' von UksusoFF wird vorausgesetzt.
 * (https://github.com/UksusoFF/webtrees-tree_view_full_screen)
 
+## Caveat
+
 * Es wurde unter Firefox entwickelt und unter Chrome getestet. Für andere Browser kann die erwartete Funktion 
 u.U. nicht vorhanden sein.
 * Entwicklung und Test erfolgten mit minimal- und webtrees-Thema. Bei anderen Themen kann es zu Einschränkungen
 kommen.
 * Es wird ein möglichst großer Bildschirm vorausgesetzt - FullHD oder besser noch 1900x1200 ...
+* Handy und Tablet werden bisher nicht berücksichtigt, es handelt sich um ein Desktop-Modul mit Mouse-Bedienung. Andere Umgebungen unterstützen bestimmte Feature nur eingeschränkt, u.U. auch gar nicht. Die sich daraus ergebende Komplexität liegt noch nicht im Fokus bzw. außerhalb meiner Reichweite, Unterstützung hier wäre hoch willkommen!
 
 ## Danksagung
 
