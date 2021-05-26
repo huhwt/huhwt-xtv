@@ -87,6 +87,10 @@ other theme.
 *   ( https://html2canvas.hertzen.com/ | Apache License, Version 2.0 )
 * The library is automatically copied with the HuHwt installation.
 
+* Special thanks to Hermann Harthentaler for test, suggestion and criticism. -> https://github.com/hartenthaler
+
+* Translation into Dutch - thanks to TheDutchJewel. 
+
 ## Installation and upgrading
 --------------------------
 

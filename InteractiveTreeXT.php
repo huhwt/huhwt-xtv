@@ -106,7 +106,7 @@ class InteractiveTreeXT extends AbstractModule implements ModuleGlobalInterface,
      * @return string
      */
     public function customModuleVersion(): string {
-        return '1.0.6';
+        return '1.0.7';
     }
 
     /**
@@ -148,17 +148,14 @@ class InteractiveTreeXT extends AbstractModule implements ModuleGlobalInterface,
      */
     public function customTranslations(string $language): array
     {
-        switch ($language) {
-            case 'de':
-            case 'de_DE':
-            // Arrays are preferred, and faster.
-            // If your module uses .MO files, then you can convert them to arrays like this.
-            $Tpath = $this->resourcesFolder() . 'lang/de/messages.po';
-            return (new Translation($Tpath))->asArray();
-
-        default:
-            return [];
-            }
+        // no differentiation according to language variants
+        $_language = substr($language, 0, 2);
+        $ret = [];
+        $languageFile = $this->resourcesFolder() . 'lang/' . $_language . '.po';
+        if (file_exists($languageFile)) {
+            $ret = (new Translation($languageFile))->asArray();
+        }
+        return $ret;
     }
 
     /**

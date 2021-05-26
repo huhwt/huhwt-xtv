@@ -1,0 +1,131 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.0\n"
+"POT-Creation-Date: 22.10.2020\n"
+"PO-Revision-Date: \n"
+"Last-Translator: TheDutchJewel <thedutchjewel@gmail.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: nl\n"
+"X-Generator: Poedit 2.4.3\n"
+
+msgid "Add a person"
+msgstr "Een persoon toevoegen"
+
+#: InteractiveTreeView.php:126
+msgid "Interactive tree XT"
+msgstr "Interactieve boom XT"
+
+msgid "Show all relatives"
+msgstr "Toon alle familieleden"
+
+msgid "Show name list"
+msgstr "Toon namenlijst"
+
+msgid "Current status"
+msgstr "Huidige status"
+
+msgid "Names in view"
+msgstr "Namen in beeld"
+
+msgid "Links in view"
+msgstr "Koppelingen in beeld"
+
+msgid "Generations in view"
+msgstr "Generaties in beeld"
+
+msgid "Chart dimensions"
+msgstr "Diagramafmetingen"
+
+msgid "Width:"
+msgstr "Breedte:"
+
+msgid "Height:"
+msgstr "Hoogte:"
+
+msgid "Expand next links"
+msgstr "Volgende links uitvouwen"
+
+msgid "Expand +1 Level"
+msgstr "Uitvouwen +1 niveau"
+
+msgid "Expand all"
+msgstr "Alles uitvouwen"
+
+msgid "Expand here"
+msgstr "Hier uitvouwen"
+
+msgid "Click here to expand/collapse subtree"
+msgstr "Klik hier om subboom uit te vouwen / in te klappen"
+
+msgid "Export to PNG"
+msgstr "Exporteren als PNG"
+
+msgid "Paternal side takes precedence"
+msgstr "Vaderlijke kant heeft voorrang"
+
+msgid "Generations in first view"
+msgstr "Generaties in eerste weergave"
+
+msgid "Toggle FullScreen View"
+msgstr "Weergave op volledig scherm in-/uitschakelen"
+
+msgid "Decrement"
+msgstr "Verlagen"
+
+msgid "Increment"
+msgstr "Verhogen"
+
+msgid "till"
+msgstr "tot"
+
+msgid "Click here to move"
+msgstr "Klik hier om te verplaatsen"
+
+msgid "Missing dependency - Install UksusoFF/webtrees-tree_view_full_screen!"
+msgstr "Ontbrekende afhankelijkheid - Installeer UksusoFF/webtrees-tree_view_full_screen!"
+
+msgid "Download as textfile"
+msgstr "Downloaden als tekstbestand"
+
+#: app/Http/RequestHandlers/InteractiveTreeViewRH.php:87
+msgid "Check tree of %s"
+msgstr "Controleer boom van %s"
+
+#: app/Http/RequestHandlers/InteractiveTreeViewRH.php:94
+msgid "Tree of %s"
+msgstr "Boom van %s"
+
+#: app/Http/RequestHandlers/InteractiveTreeViewRH.php:94
+msgid "List of Individuals"
+msgstr "Lijst van personen"
+
+#: resources/views/admin/trees-duplicates.phtml:45
+msgid "Interactive check"
+msgstr "Interactieve controle"
+
+#: resources/views/layouts/default.phtml:210
+msgid "previous "
+msgstr "vorige "
+
+#: resources/views/layouts/default.phtml:211
+msgid "next "
+msgstr "volgende "
+
+#: resources/views/layouts/default.phtml:212
+msgid "Play "
+msgstr "Afspelen "
+
+#: resources/views/layouts/default.phtml:213
+msgid "Stop "
+msgstr "Stop "
+
+#: resources/views/layouts/default.phtml:214
+msgid "close "
+msgstr "sluiten "
+
+#: resources/views/layouts/trees-duplicates.phtml:21
+msgid "count"
+msgstr "aantal"

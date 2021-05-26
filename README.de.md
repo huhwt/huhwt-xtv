@@ -88,6 +88,10 @@ kommen.
 *   ( https://html2canvas.hertzen.com/ | Apache License, Version 2.0 )
 * Die Bibliothek wird bei der HuHwt-Installation automatisch mit kopiert.
 
+* Für Test, Anregung und Kritik besonderen Dank an Hermann Harthentaler. -> https://github.com/hartenthaler
+
+* Übersetzung in Niederländische - Dank an TheDutchJewel
+
 ## Installation and upgrading
 --------------------------
 

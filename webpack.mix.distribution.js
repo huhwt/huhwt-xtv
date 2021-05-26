@@ -28,7 +28,7 @@ let mix = require('laravel-mix');
 let config = require('./webpack.mix.config');
 require('laravel-mix-clean');
 
-const version  = '1.0.6';
+const version  = '1.0.7';
 const dist_dir = 'dist/huhwt-xtv';
 const dist_root = 'dist';
 
@@ -43,7 +43,7 @@ mix
     .copyDirectory(config.app_dir, dist_dir)
     .copy(config.dev_dir + '/js/huhwt-treeviewXT.js', dist_dir + '/resources/js/huhwtXT.min.js')
     .copy(config.dev_dir + '/js/html2canvas.js', dist_dir + '/resources/js/html2canvas.js')
-    .copy(config.dev_dir + '/lang/de/messages.po', dist_dir + '/resources/lang/de/messages.po')
+    .copy(config.dev_dir + '/lang', dist_dir + '/resources/lang')
     .copy('autoload.php', dist_dir)
     .copy('module.php', dist_dir)
     .copy('InteractiveTreeXT.php', dist_dir)
