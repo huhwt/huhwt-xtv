@@ -38,7 +38,7 @@
  *      adding Drag-and-Drop to Namelist
  */
 
- function TreeViewHandlerXT (tv_kenn, doFullScreen = false) {
+function TreeViewHandlerXT (tv_kenn, doFullScreen = false) {
     var tv = this; // Store "this" for usage within jQuery functions where "this" is not this ;-)
     this.tv_kenn = tv_kenn;
   
@@ -111,9 +111,9 @@
         }
       });
     })();
-  //
-  // Add click handlers to buttons
-  //
+    //
+    // Add click handlers to buttons
+    //
     // Toggle arranging boxes in columns or condensed
     tv.toolbox.find('#' + tv_kenn + 'bCompact').each(function (index, tvCompact) {
       tvCompact.onclick = function () {
@@ -795,213 +795,213 @@
     return false;
   };
   
-  /**
-   * @param {string} name
-   * @param {string} value
-   * @param {number} days
-   */
-  function createCookie (name, value, days) {
-    if (days) {
-      var date = new Date();
-      date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-      document.cookie = name + '=' + value + '; expires=' + date.toGMTString() + '; path=/';
+/**
+ * @param {string} name
+ * @param {string} value
+ * @param {number} days
+ */
+function createCookie (name, value, days) {
+if (days) {
+    var date = new Date();
+    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+    document.cookie = name + '=' + value + '; expires=' + date.toGMTString() + '; path=/';
+} else {
+    document.cookie = name + '=' + value + '; path=/';
+}
+}
+
+/**
+ * Creates a sorted overview from the names displayed in the treeview.
+ * 
+ * @param {object} tv
+ */
+function makeNList(tv) {
+var n_list = [];
+var to_load = [];
+var elts = [];
+// check which div with tv_box attribute are within the container bounding box
+// - they are carrying names
+var boxes = tv.treeview.find('.tv_box:visible');
+boxes.each(function (index, el) {
+    var elb = $(el, tv.treeview);
+    var elNs = elb.find('.NAME');
+    var sID = '';
+    elNs.each(function (index, elNf) {
+    var sNv = elNf.innerText;                 // Vorname
+    var eNs = elNf.children[0];               // Zuname in eigenem SPAN-Element
+    var sNs = eNs.innerText;
+    let pNs = sNv.indexOf(sNs);               // unter Umständen Zunamen bereits mitgegeben ...
+    if (pNs > 0) {                                // dann rausschneiden
+        sNv = sNv.replace(sNs, '');
+        sNv = sNv.trim();
+    }
+    elNsp = elNf.parentElement;               // EW.H - MOD ... surrounding DIV carries the personal ID
+    sID = elNsp.getAttribute('pID');
+    sID = ''.concat(' (', sID, ')');
+    var lN = sNs.concat(', ', sNv, sID);      // Listeneintrag zusammenstellen
+    n_list.push(lN);
+    });
+});
+// check which td with datafld attribute are within the container
+// and therefore would need to be dynamically loaded
+tv.treeview.find('td[abbr]').each(function (index, el) {
+    el = $(el, tv.treeview);
+    to_load.push(el.attr('abbr'));
+});
+let elN = $( '#' + tv.tv_kenn + 'lNames');    // Anzahl Listeneinträge 
+let elNt = elN.children();
+elNt[1].textContent = n_list.length;
+let elL = $( '#' + tv.tv_kenn + 'lLinks');    // Anzahl noch offene Links
+let elLt = elL.children();
+let slLt = (to_load.length > 0) ? String(to_load.length) : '-keine-';
+elLt[1].textContent = slLt;
+n_list.sort(function (l,u) {
+    return l.toLowerCase().localeCompare(u.toLowerCase());
+});
+nl = $('#' + tv.tv_kenn + '_namelistul');
+nl.empty();
+for(const lN of n_list) {
+    nl.append('<li>' + lN + '</li>');
+}
+var etvp = tv.container;
+let htv = etvp.outerHeight();
+let hnl = htv - 60;
+tv.namesul.outerHeight(hnl);
+}
+
+function dumpNlist_txt(tv)
+{
+nStringAr = [];
+nl = $('#' + tv.tv_kenn + '_namelistul')[0];
+nlc = nl.children;
+for(const lNe of nlc) {
+    nStringAr.push(lNe.textContent);
+}
+nString = nStringAr.join('\r\n');
+downloadToFile(nString, 'webtrees-treeviewXT-NameList.txt', 'text/plain');
+return true;
+}
+function downloadToFile(content, filename, contentType) 
+{
+    const a = document.createElement('a');
+    const file = new Blob([content], {type: contentType});
+    
+    a.href= URL.createObjectURL(file);
+    a.download = filename;
+    a.click();
+
+    URL.revokeObjectURL(a.href);
+}
+
+function dataURItoBlob(dataURI, type) {
+    // convert base64 to raw binary data held in a string
+    var byteString = atob(dataURI.split(',')[1]);
+
+    // separate out the mime component
+    var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+    // write the bytes of the string to an ArrayBuffer
+    var ab = new ArrayBuffer(byteString.length);
+    var ia = new Uint8Array(ab);
+    for (var i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+    }
+
+    // write the ArrayBuffer to a blob, and you're done
+    var bb = new Blob([ab], { type: type });
+    return bb;
+}
+
+/**
+ * Add event-handler to Plus-/Minus-Buttons in page.html-showgens
+ * 
+ * @param {object} tv
+ */
+function showgensPrep() {
+$('#showgensSub').click(function () {
+    showgensMinus();
+});
+    $('#showgensAdd').click(function () {
+    showgensPlus();
+});
+}
+function showgensMinus() {
+    var esgV = $("#generations");
+    let vsgV = parseInt(esgV[0].value);
+    let esgVmin = parseInt(esgV[0].getAttribute("min"));
+    let esgVmax = parseInt(esgV[0].getAttribute("max"));
+    vsgV -= 1;
+    if (esgVmin > 0 && vsgV < esgVmin ) { vsgV = esgVmin; }
+    if (esgVmax > 0 && vsgV > esgVmax ) { vsgV = esgVmax; }
+    esgV[0].value = vsgV.toString();
+    return false;
+}
+function showgensPlus() {
+    var esgV = $("#generations");
+    let vsgV = parseInt(esgV[0].value);
+    let esgVmin = parseInt(esgV[0].getAttribute("min"));
+    let esgVmax = parseInt(esgV[0].getAttribute("max"));
+    vsgV += 1;
+    if (esgVmin > 0 && vsgV < esgVmin ) { vsgV = esgVmin; }
+    if (esgVmax > 0 && vsgV > esgVmax ) { vsgV = esgVmax; }
+    esgV[0].value = vsgV.toString();
+    return false;
+}
+  
+function isInViewport(el) {
+    const rect = el.getBoundingClientRect();
+    return (
+        rect.top >= 0 &&
+        rect.left >= 0 &&
+        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+}
+  
+function dragElement(elmnt, tv) {
+    var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+    var tv_out = tv.container[0];
+    if (document.getElementById(elmnt.id + "header")) {
+    // the header is where you move the DIV from:
+    document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
     } else {
-      document.cookie = name + '=' + value + '; path=/';
+    // otherwise, move the DIV from anywhere inside the DIV:
+    elmnt.onmousedown = dragMouseDown;
     }
-  }
-  
-  /**
-   * Creates a sorted overview from the names displayed in the treeview.
-   * 
-   * @param {object} tv
-   */
-  function makeNList(tv) {
-    var n_list = [];
-    var to_load = [];
-    var elts = [];
-    // check which div with tv_box attribute are within the container bounding box
-    // - they are carrying names
-    var boxes = tv.treeview.find('.tv_box:visible');
-    boxes.each(function (index, el) {
-      var elb = $(el, tv.treeview);
-      var elNs = elb.find('.NAME');
-      var sID = '';
-      elNs.each(function (index, elNf) {
-        var sNv = elNf.innerText;                 // Vorname
-        var eNs = elNf.children[0];               // Zuname in eigenem SPAN-Element
-        var sNs = eNs.innerText;
-        let pNs = sNv.indexOf(sNs);               // unter Umständen Zunamen bereits mitgegeben ...
-        if (pNs > 0) {                                // dann rausschneiden
-            sNv = sNv.replace(sNs, '');
-            sNv = sNv.trim();
-        }
-        elNsp = elNf.parentElement;               // EW.H - MOD ... surrounding DIV carries the personal ID
-        sID = elNsp.getAttribute('pID');
-        sID = ''.concat(' (', sID, ')');
-        var lN = sNs.concat(', ', sNv, sID);      // Listeneintrag zusammenstellen
-        n_list.push(lN);
-      });
-    });
-    // check which td with datafld attribute are within the container
-    // and therefore would need to be dynamically loaded
-    tv.treeview.find('td[abbr]').each(function (index, el) {
-      el = $(el, tv.treeview);
-      to_load.push(el.attr('abbr'));
-    });
-    let elN = $( '#' + tv.tv_kenn + 'lNames');    // Anzahl Listeneinträge 
-    let elNt = elN.children();
-    elNt[1].textContent = n_list.length;
-    let elL = $( '#' + tv.tv_kenn + 'lLinks');    // Anzahl noch offene Links
-    let elLt = elL.children();
-    let slLt = (to_load.length > 0) ? String(to_load.length) : '-keine-';
-    elLt[1].textContent = slLt;
-    n_list.sort(function (l,u) {
-      return l.toLowerCase().localeCompare(u.toLowerCase());
-    });
-    nl = $('#' + tv.tv_kenn + '_namelistul');
-    nl.empty();
-    for(const lN of n_list) {
-      nl.append('<li>' + lN + '</li>');
+
+    function dragMouseDown(e) {
+    e = e || window.event;
+    e.preventDefault();
+    // get the mouse cursor position at startup:
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    document.onmouseup = closeDragElement;
+    // call a function whenever the cursor moves:
+    document.onmousemove = elementDrag;
     }
-    var etvp = tv.container;
-    let htv = etvp.outerHeight();
-    let hnl = htv - 60;
-    tv.namesul.outerHeight(hnl);
-  }
-  
-  function dumpNlist_txt(tv)
-  {
-    nStringAr = [];
-    nl = $('#' + tv.tv_kenn + '_namelistul')[0];
-    nlc = nl.children;
-    for(const lNe of nlc) {
-      nStringAr.push(lNe.textContent);
+
+    function elementDrag(e) {
+    e = e || window.event;
+    e.preventDefault();
+    // calculate the new cursor position:
+    pos1 = pos3 - e.clientX;
+    pos2 = pos4 - e.clientY;
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    // set the element's new position:
+    let _top = elmnt.offsetTop - pos2;
+    if (_top < 1) { _top = 1; }
+    if (_top > tv_out.clientHeight) { _top = (tv_out.clientHeight - 24);}
+    let _left = elmnt.offsetLeft - pos1;
+    if (_left < 1) { _left = 1; }
+    if (_left > (tv_out.clientWidth - elmnt.offsetWidth)) { _left = (tv_out.clientWidth - elmnt.offsetWidth);}
+    elmnt.style.top = _top + "px";
+    elmnt.style.left = _left + "px";
     }
-    nString = nStringAr.join('\r\n');
-    downloadToFile(nString, 'webtrees-treeviewXT-NameList.txt', 'text/plain');
-    return true;
-  }
-  function downloadToFile(content, filename, contentType) 
-  {
-      const a = document.createElement('a');
-      const file = new Blob([content], {type: contentType});
-      
-      a.href= URL.createObjectURL(file);
-      a.download = filename;
-      a.click();
-    
-      URL.revokeObjectURL(a.href);
-  }
-    
-  function dataURItoBlob(dataURI, type) {
-      // convert base64 to raw binary data held in a string
-      var byteString = atob(dataURI.split(',')[1]);
-  
-      // separate out the mime component
-      var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-  
-      // write the bytes of the string to an ArrayBuffer
-      var ab = new ArrayBuffer(byteString.length);
-      var ia = new Uint8Array(ab);
-      for (var i = 0; i < byteString.length; i++) {
-          ia[i] = byteString.charCodeAt(i);
-      }
-  
-      // write the ArrayBuffer to a blob, and you're done
-      var bb = new Blob([ab], { type: type });
-      return bb;
-  }
-  
-  /**
-   * Add event-handler to Plus-/Minus-Buttons in page.html-showgens
-   * 
-   * @param {object} tv
-   */
-   function showgensPrep() {
-    $('#showgensSub').click(function () {
-      showgensMinus();
-  });
-     $('#showgensAdd').click(function () {
-      showgensPlus();
-  });
-  }
-  function showgensMinus() {
-      var esgV = $("#generations");
-      let vsgV = parseInt(esgV[0].value);
-      let esgVmin = parseInt(esgV[0].getAttribute("min"));
-      let esgVmax = parseInt(esgV[0].getAttribute("max"));
-      vsgV -= 1;
-      if (esgVmin > 0 && vsgV < esgVmin ) { vsgV = esgVmin; }
-      if (esgVmax > 0 && vsgV > esgVmax ) { vsgV = esgVmax; }
-      esgV[0].value = vsgV.toString();
-      return false;
-  }
-  function showgensPlus() {
-      var esgV = $("#generations");
-      let vsgV = parseInt(esgV[0].value);
-      let esgVmin = parseInt(esgV[0].getAttribute("min"));
-      let esgVmax = parseInt(esgV[0].getAttribute("max"));
-      vsgV += 1;
-      if (esgVmin > 0 && vsgV < esgVmin ) { vsgV = esgVmin; }
-      if (esgVmax > 0 && vsgV > esgVmax ) { vsgV = esgVmax; }
-      esgV[0].value = vsgV.toString();
-      return false;
-  }
-  
-  function isInViewport(el) {
-      const rect = el.getBoundingClientRect();
-      return (
-          rect.top >= 0 &&
-          rect.left >= 0 &&
-          rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-          rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-      );
-  }
-  
-  function dragElement(elmnt, tv) {
-      var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-      var tv_out = tv.container[0];
-      if (document.getElementById(elmnt.id + "header")) {
-        // the header is where you move the DIV from:
-        document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
-      } else {
-        // otherwise, move the DIV from anywhere inside the DIV:
-        elmnt.onmousedown = dragMouseDown;
-      }
-    
-      function dragMouseDown(e) {
-        e = e || window.event;
-        e.preventDefault();
-        // get the mouse cursor position at startup:
-        pos3 = e.clientX;
-        pos4 = e.clientY;
-        document.onmouseup = closeDragElement;
-        // call a function whenever the cursor moves:
-        document.onmousemove = elementDrag;
-      }
-    
-      function elementDrag(e) {
-        e = e || window.event;
-        e.preventDefault();
-        // calculate the new cursor position:
-        pos1 = pos3 - e.clientX;
-        pos2 = pos4 - e.clientY;
-        pos3 = e.clientX;
-        pos4 = e.clientY;
-        // set the element's new position:
-        let _top = elmnt.offsetTop - pos2;
-        if (_top < 1) { _top = 1; }
-        if (_top > tv_out.clientHeight) { _top = (tv_out.clientHeight - 24);}
-        let _left = elmnt.offsetLeft - pos1;
-        if (_left < 1) { _left = 1; }
-        if (_left > (tv_out.clientWidth - elmnt.offsetWidth)) { _left = (tv_out.clientWidth - elmnt.offsetWidth);}
-        elmnt.style.top = _top + "px";
-        elmnt.style.left = _left + "px";
-      }
-    
-      function closeDragElement() {
-        // stop moving when mouse button is released:
-        document.onmouseup = null;
-        document.onmousemove = null;
-      }
+
+    function closeDragElement() {
+    // stop moving when mouse button is released:
+    document.onmouseup = null;
+    document.onmousemove = null;
     }
+}

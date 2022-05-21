@@ -106,7 +106,7 @@ class InteractiveTreeXT extends AbstractModule implements ModuleGlobalInterface,
      * @return string
      */
     public function customModuleVersion(): string {
-        return '1.0.7';
+        return '2.1.1.0';
     }
 
     /**
@@ -136,7 +136,7 @@ class InteractiveTreeXT extends AbstractModule implements ModuleGlobalInterface,
      * @return string
      */
     public function resourcesFolder(): string {
-        return __DIR__ . '/resources/';
+        return __DIR__ . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR;
     }
 
     /**
@@ -151,7 +151,7 @@ class InteractiveTreeXT extends AbstractModule implements ModuleGlobalInterface,
         // no differentiation according to language variants
         $_language = substr($language, 0, 2);
         $ret = [];
-        $languageFile = $this->resourcesFolder() . 'lang/' . $_language . '.po';
+        $languageFile = $this->resourcesFolder() . 'lang' . DIRECTORY_SEPARATOR . $_language . '.po';
         if (file_exists($languageFile)) {
             $ret = (new Translation($languageFile))->asArray();
         }

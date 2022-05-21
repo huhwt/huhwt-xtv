@@ -2,12 +2,12 @@
 ==========================================================
 
 [![Latest Release](https://img.shields.io/github/v/release/huhwt/huhwt-xtv)][1]
-[![webtrees major version](https://img.shields.io/badge/webtrees-v2.x-green)][2]
-[![Downloads](https://img.shields.io/github/downloads/huhwt/huhwt-xtv/v1.0/total)]()
+[![webtrees major version](https://img.shields.io/badge/webtrees-v2.1-green)][2]
+[![Downloads](https://img.shields.io/github/downloads/huhwt/huhwt-xtv/v2.1/total)]()
 
 # Extensions for web trees to check and display the contents in the database.
 
-This is a webtrees 2.x module - It cannot be used with webtrees 1.x.
+This is a webtrees 2.1 module - It cannot be used with webtrees 1.x.
 
 ## Introduction
 -------------

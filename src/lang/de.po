@@ -62,6 +62,12 @@ msgstr "Generationen in Ausgangs-Ansicht"
 msgid "Toggle FullScreen View"
 msgstr "Im Vollbild anzeigen/Zurück"
 
+msgid "Current state"
+msgstr "Aktueller Zustand"
+
+msgid "Show all"
+msgstr "Alle erweitern"
+
 msgid "Decrement"
 msgstr "Vermindern"
 
