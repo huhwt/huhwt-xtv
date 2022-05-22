@@ -28,7 +28,7 @@ let mix = require('laravel-mix');
 let config = require('./webpack.mix.config');
 require('laravel-mix-clean');
 
-const version  = '2.1.1.0';
+const version  = '2.1.1.0.1';
 const dist_dir = 'dist/huhwt-xtv';
 const dist_root = 'dist';
 

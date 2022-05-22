@@ -75,11 +75,11 @@ trait ModuleChartTrait
 
         if ($individual->isDead()) {
             // If dead, show age at death
-            $age = (new Age($bdate, $ddate))->ageAtEvent(false);
+            $age = (string) new Age($individual->getBirthDate(), $individual->getDeathDate());
         } else {
             // If living, show age today
-            $today = strtoupper(date('d M Y'));
-            $age   = (new Age($bdate, new Date($today)))->ageAtEvent(true);
+            $today = new Date(strtoupper(date('d M Y')));
+            $age   = (string) new Age($individual->getBirthDate(), $today);
         }
 
         $htmlTOP = view('modules/treeviewXT/pageh2', [
