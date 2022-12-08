@@ -13,6 +13,10 @@
  * GNU General Public License for more details.
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * HuH Extensions for webtrees - Extended Treeview
+ * Extension for webtrees - a Treeview with single step expand and fold on/fold off a branch 
+ * Copyright (C) 2020-2022 EW.Heinrich
  */
 
 declare(strict_types=1);
@@ -30,6 +34,7 @@ use Fisharebest\Webtrees\Individual;
 use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Session;
 use Fisharebest\Webtrees\Tree;
+use Fisharebest\Webtrees\Validator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -78,11 +83,11 @@ class TreeViewXTrh implements RequestHandlerInterface
 
         if ($individual->isDead()) {
             // If dead, show age at death
-            $age = (new Age($bdate, $ddate))->ageAtEvent(false);
+            $age = (string) new Age($bdate, $ddate);
         } else {
             // If living, show age today
             $today = strtoupper(date('d M Y'));
-            $age   = (new Age($bdate, new Date($today)))->ageAtEvent(true);
+            $age   = (string) new Age($bdate, new Date($today));
         }
 
         $htmlTOP = view('modules/treeviewXT/pageh2', [
@@ -138,10 +143,9 @@ class TreeViewXTrh implements RequestHandlerInterface
     {
         // $this->layout = 'layouts/adminMTV';
 
-        $tree = $request->getAttribute('tree');
-        assert($tree instanceof Tree);
+        $tree = Validator::attributes($request)->tree();
 
-        $xref_s = $request->getQueryParams()['xrefs'] ?? '';
+        $xref_s = Validator::queryParams($request)->string('xrefs', '');
         $xrefs = explode(",", $xref_s);
         $xref1 = $xrefs[0];
         $xref2 = $xrefs[1];
@@ -171,6 +175,8 @@ class TreeViewXTrh implements RequestHandlerInterface
 
         $earmarks = [ "M", "U", "L", "T", "V" ];         // EW.H - MOD ... up to 5 Indi which are viewed as possible duplicates
 
+        $module   = Validator::queryParams($request)->string('module');
+
         $htmlAr = [];
         $jsAr = [];
         for ($i = 0, $iE = count($xrefs); $i < $iE ; ++$i) {
@@ -183,7 +189,7 @@ class TreeViewXTrh implements RequestHandlerInterface
             $htmlTOP = $this->chartSubTitle($individual);
     
             $earmark = $earmarks[$i];
-            $tv = new TreeViewXTmod('tv' . $earmark);          // EW.H - MOD ... we need a private instance for each treeview
+            $tv = new TreeViewXTmod('tv' . $earmark, $module);          // EW.H - MOD ... we need a private instance for each treeview
 
             [$html, $js] = $tv->drawViewport($individual, $earmark, 3);
     

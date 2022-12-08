@@ -1,7 +1,9 @@
 <?php
 
 /**
- * See LICENSE.md file for further details.
+ * HuH Extensions for webtrees - Extended Treeview
+ * Extension for webtrees - a Treeview with single step expand and fold on/fold off a branch 
+ * Copyright (C) 2020-2022 EW.Heinrich
  */
 
 declare(strict_types=1);

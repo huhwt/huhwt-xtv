@@ -1,7 +1,9 @@
 <?php
 
 /**
- * See LICENSE.md file for further details.
+ * HuH Extensions for webtrees - Extended Treeview
+ * Extension for webtrees - a Treeview with single step expand and fold on/fold off a branch 
+ * Copyright (C) 2020-2022 EW.Heinrich
  */
 
 declare(strict_types=1);
@@ -13,6 +15,7 @@ use Fisharebest\Webtrees\Exceptions\IndividualNotFoundException;
 use Fisharebest\Webtrees\Module\AbstractModule;
 use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Tree;
+use Fisharebest\Webtrees\Validator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -50,10 +53,7 @@ class InteractiveTreeXTmod extends AbstractModule implements RequestHandlerInter
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $tree = $request->getAttribute('tree');
-        assert($tree instanceof Tree);
-
-        $action = $request->getQueryParams()['action'];
+        $action = Validator::queryParams($request)->string('action');
 
         if ( $action == 'Details' ) {
             return $this->getDetailsAction($request);
@@ -73,10 +73,9 @@ class InteractiveTreeXTmod extends AbstractModule implements RequestHandlerInter
      */
     public function getDetailsAction(ServerRequestInterface $request): ResponseInterface
     {
-        $tree = $request->getAttribute('tree');
-        assert($tree instanceof Tree);
+        $tree = Validator::attributes($request)->tree();
+        $pid  = Validator::queryParams($request)->string('pid');
 
-        $pid        = $request->getQueryParams()['pid'];
         $individual = Registry::individualFactory()->make($pid, $tree);
 
         if ($individual === null) {
@@ -87,8 +86,9 @@ class InteractiveTreeXTmod extends AbstractModule implements RequestHandlerInter
             throw new IndividualAccessDeniedException();
         }
 
-        $instance = $request->getQueryParams()['instance'];
-        $treeview = new TreeViewXTmod($instance, $request->getQueryParams()['module']);
+        $instance = Validator::queryParams($request)->string('instance');
+        $module   = Validator::queryParams($request)->string('module');
+        $treeview = new TreeViewXTmod($instance, $module);
 
         return response($treeview->getDetails($individual));
     }
@@ -100,13 +100,13 @@ class InteractiveTreeXTmod extends AbstractModule implements RequestHandlerInter
      */
     public function getIndividualsAction(ServerRequestInterface $request): ResponseInterface
     {
-        $tree = $request->getAttribute('tree');
-        assert($tree instanceof Tree);
+        $tree = Validator::attributes($request)->tree();
 
-        $q        = $request->getQueryParams()['q'];
-        $instance = $request->getQueryParams()['instance'];
+        $q        = Validator::queryParams($request)->string('q');
+        $instance = Validator::queryParams($request)->string('instance');
         $earmark  = substr($instance, 2);
-        $treeview = new TreeViewXTmod($instance, $request->getQueryParams()['module']);
+        $module   = Validator::queryParams($request)->string('module');
+        $treeview = new TreeViewXTmod($instance, $module);
 
         return response($treeview->getIndividuals($tree, $earmark, $q));
     }

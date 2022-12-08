@@ -13,6 +13,10 @@
  * GNU General Public License for more details.
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ * 
+ * HuH Extensions for webtrees - Extended Treeview
+ * Extension for webtrees - a Treeview with single step expand and fold on/fold off a branch 
+ * Copyright (C) 2020-2022 EW.Heinrich
  */
 
 declare(strict_types=1);

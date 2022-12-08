@@ -1,12 +1,14 @@
 <?php
 
 /**
- * See LICENSE.md file for further details.
+ * HuH Extensions for webtrees - Extended Treeview
+ * Extension for webtrees - a Treeview with single step expand and fold on/fold off a branch 
+ * Copyright (C) 2020-2022 EW.Heinrich
  */
 
 declare(strict_types=1);
 
-namespace HuHwt\WebtreesMods\InteractiveTreeXT;
+namespace HuHwt\WebtreesMods\InteractiveTreeXT; 
 
 use Aura\Router\RouterContainer;
 use Aura\Router\Map;
@@ -30,6 +32,7 @@ use Fisharebest\Webtrees\Module\ModuleCustomInterface;
 use Fisharebest\Webtrees\Module\ModuleThemeInterface;
 use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Tree;
+use Fisharebest\Webtrees\Validator;
 use Fisharebest\Webtrees\View;
 use Fisharebest\Webtrees\Module\ModuleCustomTrait;
 use Psr\Http\Message\ResponseInterface;
@@ -106,7 +109,7 @@ class InteractiveTreeXT extends AbstractModule implements ModuleGlobalInterface,
      * @return string
      */
     public function customModuleVersion(): string {
-        return '2.1.1.0';
+        return '2.1.12.0';
     }
 
     /**
@@ -258,10 +261,9 @@ class InteractiveTreeXT extends AbstractModule implements ModuleGlobalInterface,
      */
     public function getChartAction(ServerRequestInterface $request): ResponseInterface
     {
-        $tree = $request->getAttribute('tree');
-        assert($tree instanceof Tree);
+        $tree = Validator::attributes($request)->tree();
 
-        $xref = $request->getQueryParams()['xref'];
+        $xref = Validator::queryParams($request)->isXref()->string('xref');
 
         $this->configuration = new Configuration($request);
 
@@ -276,12 +278,17 @@ class InteractiveTreeXT extends AbstractModule implements ModuleGlobalInterface,
             $individual = Auth::checkIndividualAccess($individual, false, true);
             $individualAr[] = $individual;
         }
-        $user = $request->getAttribute('user');
+        $user = Validator::attributes($request)->user();
 
         Auth::checkComponentAccess($this, ModuleChartInterface::class, $tree, $user);
 
-        $showpatri = intval($request->getQueryParams()['showpatri'] ?? $this->configuration->getPatriPrio());
-        $generations = intval($request->getQueryParams()['generations'] ?? $this->configuration->getGenerations());
+        $patri_prio = (string) Configuration::PATRI_PRIO;
+        $s_showpatri = Validator::parsedBody($request)->string('showpatri', $patri_prio);
+        $showpatri = intval($s_showpatri ?? $this->configuration->getPatriPrio());
+        $s_generations = Validator::parsedBody($request)->string('generations', '4');
+        $generations = intval($s_generations ?? $this->configuration->getGenerations());
+
+        $module = Validator::attributes($request)->string('module');
 
         $tvPrefix = $this->configuration->getTvPrefix();
         $htmlAr = [];
@@ -292,7 +299,7 @@ class InteractiveTreeXT extends AbstractModule implements ModuleGlobalInterface,
         for ( $tvi = 0; $tvi < count($individualAr); $tvi++) {
             $individual = $individualAr[$tvi];
             $tvPref = 'tv' . $tvPrefix[$tvi];
-            $tv = new TreeViewXTmod($tvPref, $request->getAttribute('module'), $showpatri);
+            $tv = new TreeViewXTmod($tvPref, $module, $showpatri);
 
             $subtitleAr[] = $this->chartSubTitle($individual);
             [$html, $js] = $tv->drawViewport($individual, $tvPrefix[$tvi], $generations);
@@ -332,18 +339,20 @@ class InteractiveTreeXT extends AbstractModule implements ModuleGlobalInterface,
      */
     public function postChartAction(ServerRequestInterface $request): ResponseInterface
     {
-        $tree = $request->getAttribute('tree');
-        assert($tree instanceof Tree);
+        $tree = Validator::attributes($request)->tree();
 
-        $params = (array) $request->getParsedBody();
+        $xref = Validator::parsedBody($request)->string('xref', '');
+        $generations = Validator::parsedBody($request)->string('generations', '4');
+        $patri_prio = (string) Configuration::PATRI_PRIO;
+        $showpatri = Validator::parsedBody($request)->string('showpatri', $patri_prio);
 
         return redirect(route('module', [
             'module'        => $this->name(),
             'action'        => 'Chart',
             'tree'          => $tree->name(),
-            'xref'          => $params['xref'] ?? '',
-            'generations'   => $params['generations'] ?? '4',
-            'showpatri'     => $params['showpatri'] ?? Configuration::PATRI_PRIO,
+            'xref'          => $xref,
+            'generations'   => $generations,
+            'showpatri'     => $showpatri,
             ]));
     }
 
