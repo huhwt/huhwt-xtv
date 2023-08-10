@@ -1,9 +1,7 @@
 <?php
 
 /**
- * HuH Extensions for webtrees - Extended Treeview
- * Extension for webtrees - a Treeview with single step expand and fold on/fold off a branch 
- * Copyright (C) 2020-2022 EW.Heinrich
+ * See LICENSE.md file for further details.
  */
 
 declare(strict_types=1);
@@ -23,12 +21,14 @@ use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\Http\ViewResponseTrait;
 use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\FlashMessages;
-// use Fisharebest\Webtrees\Individual;
+use Fisharebest\Webtrees\Individual;
 // use Fisharebest\Webtrees\Menu;
 use Fisharebest\Webtrees\Module\AbstractModule;
 use Fisharebest\Webtrees\Module\ModuleGlobalInterface;
 use Fisharebest\Webtrees\Module\ModuleChartInterface;
 use Fisharebest\Webtrees\Module\ModuleCustomInterface;
+use Fisharebest\Webtrees\Module\ModuleTabInterface;
+// use Fisharebest\Webtrees\Module\ModuleTabTrait;
 use Fisharebest\Webtrees\Module\ModuleThemeInterface;
 use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Tree;
@@ -42,6 +42,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use HuHwt\WebtreesMods\InteractiveTreeXT\InteractiveTreeXTmod;
 use HuHwt\WebtreesMods\InteractiveTreeXT\Module\TreeViewXTmod;
 use HuHwt\WebtreesMods\InteractiveTreeXT\Traits\ModuleChartTrait;
+use HuHwt\WebtreesMods\InteractiveTreeXT\Traits\ModuleTabTrait;
 use HuHwt\WebtreesMods\InteractiveTreeXT\Configuration;
 
 use intval;
@@ -53,10 +54,12 @@ use intval;
  * @link    https://github.com/huhwt/huhwt-xtv/
  */
 
-class InteractiveTreeXT extends AbstractModule implements ModuleGlobalInterface, ModuleCustomInterface, ModuleChartInterface
+class InteractiveTreeXT extends AbstractModule implements ModuleGlobalInterface, ModuleCustomInterface, 
+    ModuleChartInterface, ModuleTabInterface
 {
     use ModuleCustomTrait;
     use ModuleChartTrait;
+    use ModuleTabTrait;
     use ViewResponseTrait;
     // use IndividualTrait;
 
@@ -84,11 +87,11 @@ class InteractiveTreeXT extends AbstractModule implements ModuleGlobalInterface,
      * Check for UksusoFF/webtrees-tree_view_full_screen done?
      * @var boolean
      */
-    private $wtfs_checked;
+    // private $wtfs_checked;
 
     public function __construct() {
       $this->huh = json_decode('"\u210D"') . "&" . json_decode('"\u210D"') . "wt";
-      $this->wtfs_checked = false;
+    //   $this->wtfs_checked = false;
     }
 
     /**
@@ -109,7 +112,7 @@ class InteractiveTreeXT extends AbstractModule implements ModuleGlobalInterface,
      * @return string
      */
     public function customModuleVersion(): string {
-        return '2.1.12.0';
+        return '2.1.17.0';
     }
 
     /**
@@ -197,7 +200,14 @@ class InteractiveTreeXT extends AbstractModule implements ModuleGlobalInterface,
         $html_CSS = view("{$this->name()}::style", [
             'path' => $this->assetUrl('css/huhwt.min.css'),
         ]);
-        return $html_CSS;
+        $html_JSx = view("{$this->name()}::script", [
+            'path' => $this->assetUrl('js/huhwtXT.min.js'),
+        ]);
+        $html_JSh = view("{$this->name()}::script", [
+            'path' => $this->assetUrl('js/html2canvas.js'),
+        ]);
+        $html_ = $html_CSS . " " . $html_JSx . " " . $html_JSh;
+        return $html_;
     }
 
     /**
@@ -208,7 +218,7 @@ class InteractiveTreeXT extends AbstractModule implements ModuleGlobalInterface,
      */
     public function bodyContent(): string
     {
-        return "";
+        return '';
     }
 
     /**
@@ -236,25 +246,110 @@ class InteractiveTreeXT extends AbstractModule implements ModuleGlobalInterface,
         // Register a namespace for our views.
         View::registerNamespace($this->name(), $this->resourcesFolder() . 'views/');
 
+        View::registerCustomView('::modules/treeviewXT/tab', $this->name() . '::modules/treeviewXT/tab');
         View::registerCustomView('::modules/treeviewXT/chart', $this->name() . '::modules/treeviewXT/chart');
         View::registerCustomView('::modules/treeviewXT/page', $this->name() . '::modules/treeviewXT/page');
         View::registerCustomView('::modules/treeviewXT/pageh2', $this->name() . '::modules/treeviewXT/pageh2');
         View::registerCustomView('::modules/treeviewXT/pageh3', $this->name() . '::modules/treeviewXT/pageh3');
 
         //dependency check
-        if (!$this->wtfs_checked) {
-            $ok = class_exists("UksusoFF\WebtreesModules\TreeViewFullScreen\Modules\TreeViewFullScreenModule", true);
-            if (!$ok) {
-                $wtfs_link = '(https://github.com/UksusoFF/webtrees-tree_view_full_screen)';
-                $wtfs_missing = I18N::translate('Missing dependency - Install UksusoFF/webtrees-tree_view_full_screen!');
-                $theMessage = $wtfs_missing . ' -> ' . $wtfs_link;
-                FlashMessages::addMessage($theMessage);
-            }
-            $this->wtfs_checked = true;
-        }
+        // if (!$this->wtfs_checked) {
+        //     $ok = class_exists("UksusoFF\WebtreesModules\TreeViewFullScreen\Modules\TreeViewFullScreenModule", true);
+        //     if (!$ok) {
+        //         $wtfs_link = '(https://github.com/UksusoFF/webtrees-tree_view_full_screen)';
+        //         $wtfs_missing = I18N::translate('Missing dependency - Install UksusoFF/webtrees-tree_view_full_screen!');
+        //         $theMessage = $wtfs_missing . ' -> ' . $wtfs_link;
+        //         FlashMessages::addMessage($theMessage);
+        //     }
+        //     $this->wtfs_checked = true;
+        // }
     }
 
     /**
+     * Actions Tab-Context
+     */
+
+#region     Tab-Context
+
+    /**
+     * The default position for this tab.  It can be changed in the control panel.
+     *
+     * @return int
+     */
+    public function defaultTabOrder(): int
+    {
+        return 7;
+    }
+
+    /**
+     * Generate the HTML content of this tab.
+     *
+     * @param Individual $individual
+     *
+     * @return string
+     */
+    public function getTabContent(Individual $individual): string
+    {
+        $showpatri = intval((string) Configuration::PATRI_PRIO);
+        $generations = intval((string) Configuration::DEFAULT_GENERATIONS);
+        $module = $this->name();
+
+        $tvPref = 'tv' . 'T';
+        $treeview = new TreeViewXTmod($tvPref, $module, $showpatri);
+
+        $subtitleAr[] = $this->chartSubTitle($individual);
+        [$html, $js] = $treeview->drawViewport($individual, 'T', $generations, false);
+
+        return view('modules/treeviewXT/tab', [
+            'html'  => $html,
+            'js'    => $js,
+        ]);
+    }
+
+    /**
+     * Is this tab empty? If so, we don't always need to display it.
+     *
+     * @param Individual $individual
+     *
+     * @return bool
+     */
+    public function hasTabContent(Individual $individual): bool
+    {
+        return $individual->facts(['FAMC', 'FAMS'])->isNotEmpty();
+    }
+
+    /**
+     * A greyed out tab has no actual content, but may perhaps have
+     * options to create content.
+     *
+     * @param Individual $individual
+     *
+     * @return bool
+     */
+    public function isGrayedOut(Individual $individual): bool
+    {
+        return false;
+    }
+
+    /**
+     * Can this tab load asynchronously?
+     *
+     * @return bool
+     */
+    public function canLoadAjax(): bool
+    {
+        return true;
+    }
+
+#endregion
+
+    /**
+     * Actions Chart-Context
+     */
+
+#region     Chart-Context
+
+     /**
      * @param ServerRequestInterface $request
      *
      * @return ResponseInterface
@@ -262,8 +357,10 @@ class InteractiveTreeXT extends AbstractModule implements ModuleGlobalInterface,
     public function getChartAction(ServerRequestInterface $request): ResponseInterface
     {
         $tree = Validator::attributes($request)->tree();
-
+        $user = Validator::attributes($request)->user();
         $xref = Validator::queryParams($request)->isXref()->string('xref');
+
+        Auth::checkComponentAccess($this, ModuleChartInterface::class, $tree, $user);
 
         $this->configuration = new Configuration($request);
 
@@ -278,9 +375,6 @@ class InteractiveTreeXT extends AbstractModule implements ModuleGlobalInterface,
             $individual = Auth::checkIndividualAccess($individual, false, true);
             $individualAr[] = $individual;
         }
-        $user = Validator::attributes($request)->user();
-
-        Auth::checkComponentAccess($this, ModuleChartInterface::class, $tree, $user);
 
         $patri_prio = (string) Configuration::PATRI_PRIO;
         $s_showpatri = Validator::parsedBody($request)->string('showpatri', $patri_prio);
@@ -297,24 +391,20 @@ class InteractiveTreeXT extends AbstractModule implements ModuleGlobalInterface,
         $subtitleAr = [];
 
         for ( $tvi = 0; $tvi < count($individualAr); $tvi++) {
-            $individual = $individualAr[$tvi];
-            $tvPref = 'tv' . $tvPrefix[$tvi];
-            $tv = new TreeViewXTmod($tvPref, $module, $showpatri);
-
-            $subtitleAr[] = $this->chartSubTitle($individual);
-            [$html, $js] = $tv->drawViewport($individual, $tvPrefix[$tvi], $generations);
-
-            $htmlAr[] = $html;
             if ($tvi == 0) {
-                $html_JS = view("{$this->name()}::script", [
-                    'path' => $this->assetUrl('js/html2canvas.js'),
-                ]);
-                $jsImp[] = $html_JS;
                 $html_JS = view("{$this->name()}::script", [
                     'path' => $this->assetUrl('js/huhwtXT.min.js'),
                 ]);
                 $jsImp[] = $html_JS;
             }
+            $individual = $individualAr[$tvi];
+            $tvPref = 'tv' . $tvPrefix[$tvi];
+            $tv = new TreeViewXTmod($tvPref, $module, $showpatri);
+
+            $subtitleAr[] = $this->chartSubTitle($individual);
+            [$html, $js] = $tv->drawViewport($individual, $tvPrefix[$tvi], $generations, true);
+
+            $htmlAr[] = $html;
             $jsAr[] = $js;
         }
 
@@ -355,5 +445,7 @@ class InteractiveTreeXT extends AbstractModule implements ModuleGlobalInterface,
             'showpatri'     => $showpatri,
             ]));
     }
+
+#endregion
 
 }

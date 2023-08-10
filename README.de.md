@@ -21,6 +21,13 @@ und wieviele Personen nun eigentlich in der Darstellung sind.
 
 Hier setzt nun die Erweiterung an:
 
+Der Ausgangzustand wird über Formular-Steuerfelder definiert. Ist die Ansicht geöffnet, kann sie weitgehend analysiert und ihr Zustand reversibel verändert werden. Man erhält zu jedem Zeitpunkt Informationen über die Anzahl der gezeigten Personen und kann in der Ansicht zu einer gewünschten Person navigieren. Die ergänzenden Funktionen können über Steuerfelder in der Ansicht ausgelöst werden.
+
+## Beschreibung der Funktionen
+------------------------------
+
+Formular-Steuerfelder:
+
 * Man kann die Anzahl der vom Start an gezeigten Generationen vorgeben
     - '-' N '+' - Option im Kopf-Formular   - Min: 2, Max: 25 - Default: 4
 - (Je mehr Generationen vorgegeben, desto länger dauert die primäre Auflösung.)
@@ -33,45 +40,66 @@ Hier setzt nun die Erweiterung an:
 * Bei den Personen-Boxen wird der Generationen-Rang in Bezug auf die Start-Person angezeigt
     - (Nachkommen < 0, Vorfahren > 0)
 
+Ansicht-Steuerfelder:
+
+* Kompaktes Layout, Klick wechselt Layout-Modus
+    - Im Standard haben die Familienboxen eine feste Breite. Je mehr Generationen in der Ansicht enthalten  sind, desto breiter wird diese und man kann sie nicht mehr in Gänze darstellen.
+    - Im kompakten Layout wird die Breite der Familenboxen dynamisch angepasst, so dass alle Generationen ohne horizontales Scrollen sichtbar sind.
+
+* Untermenü 'Nächste Verknüpfungen erweitern' - automatisch geöffnet, Klick schliesst/öffnet
+    -   Man kann gezielt um jeweils 1 Ebene erweitern.
+        - Schaltfläche 'Nächste Verknüpfungen erweitern' - Option '1 Ebene'
+        - Man kann gezielt die Ansicht komplett erweitern lassen.
+        - Schaltfläche 'Nächste Verknüpfungen erweitern' - Option 'Alle'
+    - Die Erweiterungsaktionen öffnen automatisch die Statistik-Ansicht.
+
 * Man kann die Anzahl der dargestellten Personen und der aktuell noch offenen Verknüpfungen anzeigen lassen
-    - (Statistik-Ansicht)
     - Schaltfläche 'Aktueller Zustand'      - Klick öffnet, nächster Klick schliesst
+        - Anzahl Namen in der Ansicht
+          Anzahl noch offene Verknüpfungen in der Ansicht
+          Spannweite der Generationen in der Ansicht
+          Dimensionen der Ansicht - Breite/Höhe in Pixeln
 
 * Man kann sich eine Namensliste der dargestellten Personen anzeigen lassen.
     - Schaltfläche 'Zeige Namensliste'      - Klick öffnet, nächster Klick schliesst
-    - Klick auf einen Eintrag in der Namensliste markiert die zugehörige Personen-Box und scrollt sie 
-fallweise in den sichtbaren Bereich
-    - Die Namensliste ist frei im Viewport verschiebbar
-    - Der Inhalt der Namensliste kann als txt-File heruntergeladen werden
-
-* Untermenü 'Nächste Verknüpfungen erweitern' - automatisch geöffnet, Klick schliesst/öffnet
--   Man kann gezielt um jeweils 1 Ebene erweitern.
-    - Schaltfläche 'Nächste Verknüpfungen erweitern' - Option '1 Ebene'
--   Man kann gezielt die Ansicht komplett erweitern lassen.
-    - Schaltfläche 'Nächste Verknüpfungen erweitern' - Option 'Alle'
-- Die Erweiterungsaktionen öffnen automatisch die Statistik-Ansicht.
-
-* Bei den Familienboxen werden Ein-/Aus-Falten-Schaltflächen eingeblendet
-    - Man kann den jeweils anhängigen Teil-Baum komplett aus- bzw. wieder einblenden
-    - Die jeweils letzten, noch nicht abgefragten Verbindungen werden jeweils 1 Ebene weiter per
-Ajax-Call abgefragt. Bereits vorhandene Teil-Bäume werden je nach Zustand komplett 
-sichtbar/unsichtbar gesetzt.
-    - (Noch nicht bekannte Teilbaum-Erweiterungen sind rötlich unterlegt, bekannte und
-eingeklappte werden beim Hovern grünlich eingefärbt)
+        - Klick auf einen Eintrag in der Namensliste markiert die zugehörige Personen-Box und scrollt sie fallweise in den sichtbaren Bereich
+        - Die Namensliste ist frei im Viewport verschiebbar
+        - Der Inhalt der Namensliste kann als txt-File heruntergeladen werden
 
 * Man kann den Zustand der Ansicht als PNG exportieren lassen.
     - Es wird die aktuelle Ansicht in ein PNG übersetzt. Vorsicht: Je nach Browser kann das Abbild
 unvollständig sein bzw. es fehlen gewisse Elemente (Das ist abhängig von Größe und Breite des 
 Viewports, ab 16.384 Pixeln Höhe wird es kritisch.)
 
-* Der Viewport ist scrollfähig.
+Bei den Familienboxen werden Ein-/Aus-Falten-Schaltflächen eingeblendet.
 
-* Der Viewport wird automatisch in Full-Screen-Ansicht geöffnet.
+* Man kann den jeweils anhängigen Teil-Baum komplett aus- bzw. wieder einblenden
+    - Die jeweils letzten, noch nicht abgefragten Verbindungen werden jeweils 1 Ebene weiter per
+Ajax-Call abgefragt. Bereits vorhandene Teil-Bäume werden je nach Zustand komplett 
+sichtbar/unsichtbar gesetzt.
+    - (Noch nicht bekannte Teilbaum-Erweiterungen sind rötlich unterlegt, bekannte und
+eingeklappte werden beim Hovern grünlich eingefärbt)
+
+Die Ansicht ist scrollfähig.
+
+Die Ansicht kennt 3 Zustände:
+
+1. Normalansicht
+    - Der Webtrees-Kopf mit allen Menüs und Auswahloptionen sowie die Formular-Steuerfelder des Moduls sind sichtbar, die Ansicht selbst ist nur wenige 100px hoch.
+2. Expandierter Zustand
+    - Die Ansicht überdeckt den ganzen Webtrees-Bildschirm. Der Browserkopf mit Tabs, Adressleiste und Lesezeichenleiste ist noch sichtbar.
+3. Fullscreen-Modus
+    - Die Ansicht überdeckt den ganzen Bildschirm inklusive Browserkopf.
+
+* Die Ansicht wird im expandierten Zustand geöffnet.
+
+Der expandierte Zustand wurde aus einer anderen Webtrees-Erweiterung übernommen. Der Eigner dieser Erweiterung hat dieses Modul wegen der Integration des Fullscreen-Modus ausgesetzt. Allerdings ist der expandierte Zustand aussagefähiger als die Normalansicht, es hat sich auch gezeigt, dass die Kombination von expandierter Ansicht und Fullscreen-Option das Problem abgeschnittener PNG-Inhalte vermeiden hilft. Zwischen den Zuständen kann über Schaltflächen in der Ansicht gewechselt werden.
+
+Die Ansicht ist technisch als Konstrukt von ineinandergeschachtelten Tabellen-Elementen realisiert. Dieses Verfahren ist robust und schnell, hat aber einen Nachteil: Es gibt keine Zoom-Option. 
 
 ## Abhängigkeiten
 
-* Die Erweiterung 'Tree-View-Full-Screen' von UksusoFF wird vorausgesetzt.
-* (https://github.com/UksusoFF/webtrees-tree_view_full_screen)
+* keine
 
 ## Caveat
 
@@ -102,7 +130,9 @@ Development
 
 [TODO]
 
-.. es wäre schön, wenn man im Viewport über eine Mini-Map navigieren könnte.
+.. es wäre schön, wenn man in der Ansicht über eine Mini-Map navigieren könnte.
+
+-- für den PNG-Export Schriftgröße hochsetzen.
 
 Bugs and feature requests
 -------------------------

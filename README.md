@@ -20,6 +20,13 @@ and how many people are actually in the representation.
 
 This is where the expansion comes in:
 
+The initial state is defined via form control fields. If the view is open, it can be extensively analyzed and its status can be changed reversibly. You get information about the number of people shown at any time and you can navigate to a desired person in the view. The additional functions can be triggered via control fields in the view.
+
+## Description of the functions
+------------------------------
+
+Form controls:
+
 * You can specify the number of generations shown from the start
     - '-' N '+' - option in the form's header    - Min: 2, Max: 25 - Default: 4
 - (The more generations given, the longer the primary dissolution takes.)
@@ -32,45 +39,66 @@ This is where the expansion comes in:
 * In the person boxes, the generation rank in relation to the starting person is displayed 
     - (Decedants < 0, Ancestors > 0)
 
-* You can display the number of people shown and the links that are currently still open
-    - (Statistics view )
-    - 'Current status' button               - click opens, next click closes 
+View controls:
 
-* The list of names of the persons in current view can be displayed.
-    - 'Show name list' button               - click opens, next click closes 
-    - Clicking on an entry in the name list marks the associated person box and scrolls it
-occasionally in the visible area     
-    - The list of names can be moved freely in the viewport 
-    - The contents of the name list can be downloaded as a txt file 
+* Compact layout, click toggles layout mode
+     - By default, the family boxes have a fixed width. The more generations are contained in the view, the broader it becomes and it can no longer be displayed in its entirety.
+     - In the compact layout, the width of the family boxes is dynamically adjusted so that all generations are visible without horizontal scrolling.
 
-* Submenu 'Expand next links'               - automatically opened, click closes / opens 
--   You can specifically expand by 1 level at a time.
-    - 'Expand Next Links' button    - '1 Level' option
-*   You can specifically expand the view completely .
-    - 'Expand Next Links' button    - 'All' option 
-    - The extension actions automatically open the statistics view.
+* Submenu 'Expand Next Links' - automatically opened, click closes/opens
+     - You can specifically expand by 1 level.
+         - button 'Expand next links' - option '1 level'
+         - You can specifically expand the view completely.
+         - button 'Expand next links' - option 'All'
+     - The extension actions automatically open the statistics view.
 
-* Collapse / Expand folding buttons are displayed at the family boxes 
-    - The pending subtree can be completely hidden or shown again 
-    - The last connections that have not yet been queried are each forwarded 1 level via
-Ajax call queried. Existing partial trees become complete depending on their condition
-visible / invisible set. 
-    - (Sub-tree extensions that are not yet known are highlighted in red, known and
-folded ones are colored green when hovering)
+* You can display the number of people displayed and the links that are currently still open
+     - 'Current state' button - click opens, next click closes
+         - Number of names in the view
+           Number of links still open in the view
+           Span of generations in the view
+           View dimensions - width/height in pixels
 
-* You can export the state of the view as a PNG.
-    - The current view is translated into a PNG. Caution: Depending on the browser, the image
-may be incomplete or certain elements are missing (depends on size and width of the
-viewport, from a height of 16,384 pixels it becomes critical.) 
+* You can display a list of the names of the people shown.
+     - 'Show list of names' button - click opens, next click closes
+         - Clicking on an entry in the list of names marks the associated person box and scrolls it into the visible area as the case may be
+         - The list of names can be moved freely in the viewport
+         - The content of the list of names can be downloaded as a txt file
 
-* Viewport is scrollable.
+* You can have the state of the view exported as PNG.
+     - It will translate the current view into a PNG. Caution: Depending on the browser, the image
+be incomplete or certain elements are missing (this depends on the size and width of the
+Viewports, from a height of 16,384 pixels it becomes critical.)
 
-* Viewport is automatically opened in full-screen view .
+On/off fold buttons are displayed for the family boxes.
+
+* You can completely hide or show the respective sub-tree
+     - The last connections that have not yet been queried are each 1 level further by
+Ajax call queried. Existing partial trees become complete depending on their status
+set visible/invisible.
+     - (Not yet known subtree extensions are highlighted in red, known and
+collapsed ones are colored greenish when hovering)
+
+The view is scrollable.
+
+The view knows 3 states:
+
+1. Normal view
+     - The webtrees header with all menus and selection options as well as the form control fields of the module are visible, the view itself is only a few 100px high.
+2. Expanded state
+     - The view covers the whole Webtrees screen. The browser header with tabs, address bar and bookmarks bar is still visible.
+3. Fullscreen mode
+     - The view covers the entire screen including the browser header.
+
+* The view opens in the expanded state.
+
+The expanded state was taken from another Webtrees extension. The owner of this extension has suspended this module due to the integration of fullscreen mode. However, the expanded state is more meaningful than the normal view, it has also been shown that the combination of the expanded view and the full-screen option helps to avoid the problem of truncated PNG content. You can switch between the states using buttons in the view.
+
+The view is technically implemented as a construct of nested table elements. This method is robust and fast, but has one disadvantage: there is no zoom option.
 
 ## Dependencies 
 
-* The extension 'Tree-View-Full-Screen' from UksusoFF is required.
-* (https://github.com/UksusoFF/webtrees-tree_view_full_screen)
+* None
 
 ## Caveat
 
@@ -102,6 +130,7 @@ Development
 [TODO]
 
 .. it would be nice if you could navigate in the viewport using a mini-map.
+.. Increase font size for PNG export.
 
 Bugs and feature requests
 -------------------------

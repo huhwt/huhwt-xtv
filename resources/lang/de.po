@@ -80,11 +80,14 @@ msgstr "bis"
 msgid "Click here to move"
 msgstr "Hier Klicken und Ziehen"
 
-msgid "Missing dependency - Install UksusoFF/webtrees-tree_view_full_screen!"
-msgstr "Da fehlt noch was - Bitte UksusoFF/webtrees-tree_view_full_screen installieren!"
-
 msgid "Download as textfile"
 msgstr "Namensliste herunterladen (*.txt)"
+
+msgid "Minimize View"
+msgstr "Ansicht zurücksetzen"
+
+msgid "Maximize View"
+msgstr "Ansicht expandieren"
 
 #: app/Http/RequestHandlers/InteractiveTreeViewRH.php:87
 msgid "Check tree of %s"
@@ -125,3 +128,6 @@ msgstr "Ende "
 #: resources/views/layouts/trees-duplicates.phtml:21
 msgid "count"
 msgstr "Anzahl"
+
+msgid "Yes"
+msgstr "Ja"

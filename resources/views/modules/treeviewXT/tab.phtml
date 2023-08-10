@@ -1,0 +1,21 @@
+<?php
+
+declare(strict_types=1);
+
+use Fisharebest\Webtrees\View;
+
+/**
+ * @var string $html
+ * @var string $js
+ */
+
+?>
+
+<div class="wt-tab-tree py-4">
+    <?= $html ?>
+</div>
+<?php View::push('javascript') ?>
+    <script>
+        <?= $js ?>
+    </script>
+<?php View::endpush() ?>

@@ -1,12 +1,6 @@
 <?php
 
-/**
- * HuH Extensions for webtrees - Extended Treeview
- * Extension for webtrees - a Treeview with single step expand and fold on/fold off a branch 
- * Copyright (C) 2020-2022 EW.Heinrich
- */
-
- use Fisharebest\Webtrees\I18N;
+use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\View;
 use HuHwt\WebtreesMods\InteractiveTreeXT\Configuration;
 
@@ -15,7 +9,6 @@ use HuHwt\WebtreesMods\InteractiveTreeXT\Configuration;
  * @var int           $showpatri
  * @var int           $generations
  * @var array         $htmls - [0] first treeview, [1] second treeview, ... up to [4]
- * @var array         $jsimp - relevant only when first treeview is shown -> links to own scripts
  * @var array         $jss   - [0] first treeview, [1] second treeview, ... up to [4]
  * @var string        $module   - this module's name
  * @var string        $title
@@ -85,14 +78,6 @@ use HuHwt\WebtreesMods\InteractiveTreeXT\Configuration;
         </div>
     </div>
 </form>
-<?php if (count($jsimp) > 0) {  ?>
-    <?php for ( $i = 0, $iE = count($jsimp); $i < $iE; ++$i) : ?>
-        <?php $jsi = $jsimp[$i] ?>
-        <?php View::push('javascript') ?>
-            <?= $jsi ?>
-        <?php View::endpush() ?>
-    <?php endfor ?>
-<?php } ?>
 <?= View::push('javascript') ?>
 <script>
   showgensPrep();

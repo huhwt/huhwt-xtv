@@ -13,10 +13,6 @@
  * GNU General Public License for more details.
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- * 
- * HuH Extensions for webtrees - Extended Treeview
- * Extension for webtrees - a Treeview with single step expand and fold on/fold off a branch 
- * Copyright (C) 2020-2022 EW.Heinrich
  */
 
 declare(strict_types=1);
@@ -74,7 +70,7 @@ class TreeViewXTmod
      *
      * @return string[]  HTML and Javascript
      */
-    public function drawViewport(Individual $individual, string $earmark, int $generations): array
+    public function drawViewport(Individual $individual, string $earmark, int $generations, bool $doExpand = false): array
     {
         $_name = trim($this->name);
         $html = view('modules/treeviewXT/chart', [
@@ -85,9 +81,12 @@ class TreeViewXTmod
             'tree'       => $individual->tree(),
         ]);
 
+        $_minTitle = I18N::translate('Minimize View');
+        $_maxTitle = I18N::translate('Maximize View');
+        $_doExpand = ( $doExpand ? 'true' : 'false' );
         return [
             $html,
-            'var ' . $this->name . 'Handler = new TreeViewHandlerXT("' . $this->name  .'", true);',
+            'var ' . $this->name . 'Handler = new TreeViewHandlerXT("' . $this->name  .'",'. $_doExpand . ', "' . $_minTitle . '", "' . $_maxTitle . '");',
         ];
     }
 
