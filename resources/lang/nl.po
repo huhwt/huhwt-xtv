@@ -5,11 +5,11 @@ msgstr ""
 "PO-Revision-Date: \n"
 "Last-Translator: TheDutchJewel <thedutchjewel@gmail.com>\n"
 "Language-Team: \n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: nl\n"
-"X-Generator: Poedit 2.4.3\n"
+"X-Generator: Poedit 3.3.2\n"
 
 msgid "Add a person"
 msgstr "Een persoon toevoegen"
@@ -72,6 +72,12 @@ msgstr "Generaties in eerste weergave"
 msgid "Toggle FullScreen View"
 msgstr "Weergave op volledig scherm in-/uitschakelen"
 
+msgid "Current state"
+msgstr "Huidige staat"
+
+msgid "Show all"
+msgstr "Toon alles"
+
 msgid "Decrement"
 msgstr "Verlagen"
 
@@ -84,11 +90,14 @@ msgstr "tot"
 msgid "Click here to move"
 msgstr "Klik hier om te verplaatsen"
 
-msgid "Missing dependency - Install UksusoFF/webtrees-tree_view_full_screen!"
-msgstr "Ontbrekende afhankelijkheid - Installeer UksusoFF/webtrees-tree_view_full_screen!"
-
 msgid "Download as textfile"
 msgstr "Downloaden als tekstbestand"
+
+msgid "Minimize View"
+msgstr "Weergave minimaliseren"
+
+msgid "Maximize View"
+msgstr "Weergave maximaliseren"
 
 #: app/Http/RequestHandlers/InteractiveTreeViewRH.php:87
 msgid "Check tree of %s"
@@ -129,3 +138,6 @@ msgstr "sluiten "
 #: resources/views/layouts/trees-duplicates.phtml:21
 msgid "count"
 msgstr "aantal"
+
+msgid "Yes"
+msgstr "Ja"
