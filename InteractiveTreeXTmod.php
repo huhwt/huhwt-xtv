@@ -1,17 +1,14 @@
 <?php
 
 /**
- * HuH Extensions for webtrees - Extended Treeview
- * Extension for webtrees - a Treeview with single step expand and fold on/fold off a branch 
- * Copyright (C) 2020-2022 EW.Heinrich
+ * See LICENSE.md file for further details.
  */
 
 declare(strict_types=1);
 
 namespace HuHwt\WebtreesMods\InteractiveTreeXT;
 
-use Fisharebest\Webtrees\Exceptions\IndividualAccessDeniedException;
-use Fisharebest\Webtrees\Exceptions\IndividualNotFoundException;
+use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\Module\AbstractModule;
 use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Tree;
@@ -77,15 +74,7 @@ class InteractiveTreeXTmod extends AbstractModule implements RequestHandlerInter
         $pid  = Validator::queryParams($request)->string('pid');
 
         $individual = Registry::individualFactory()->make($pid, $tree);
-
-        if ($individual === null) {
-            throw new IndividualNotFoundException();
-        }
-
-        if (!$individual->canShow()) {
-            throw new IndividualAccessDeniedException();
-        }
-
+        $individual = Auth::checkIndividualAccess($individual);
         $instance = Validator::queryParams($request)->string('instance');
         $module   = Validator::queryParams($request)->string('module');
         $treeview = new TreeViewXTmod($instance, $module);

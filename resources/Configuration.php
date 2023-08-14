@@ -1,9 +1,7 @@
 <?php
 
 /**
- * HuH Extensions for webtrees - Extended Treeview
- * Extension for webtrees - a Treeview with single step expand and fold on/fold off a branch 
- * Copyright (C) 2020-2022 EW.Heinrich
+ * See LICENSE.md file for further details.
  */
 
 declare(strict_types=1);
@@ -36,7 +34,7 @@ class Configuration
      *
      * @var int
      */
-    private const DEFAULT_GENERATIONS = 4;
+    public const DEFAULT_GENERATIONS = 4;
 
     /**
      * Minimum number of displayable generations.
@@ -76,7 +74,8 @@ class Configuration
     /**
      * Treeview prefix
      */
-    private const TV_PREFIX = [ 'M', 'U', 'L', 'T', 'V'];
+    // private const TV_PREFIX = [ 'M', 'U', 'L', 'T', 'V'];
+    private const TV_PREFIX = [ 'XT' ];
 
     /**
      * Treeview index
@@ -160,17 +159,19 @@ class Configuration
      */
     public function addTv_PREFind() : int
     {
-        if ( $this->tv_PREFind < count(self::TV_PREFIX)) {
+        if ( $this->tv_PREFind < count(self::TV_PREFIX)) 
             return $this->tv_PREFind += 1;
-        }
+        else
+            return count(self::TV_PREFIX);
     }
     /**
      * Sub tv_PREFind
      */
     public function subTv_PREFind() : int
     {
-        if ( $this->tv_PREFind > 0) {
+        if ( $this->tv_PREFind > 0)
             return $this->tv_PREFind -= 1;
-        }
+        else
+            return 0;
     }
 }

@@ -10,34 +10,23 @@ namespace HuHwt\WebtreesMods\InteractiveTreeXT;
 
 use Aura\Router\RouterContainer;
 use Aura\Router\Map;
-// use Exception;
 use Fig\Http\Message\RequestMethodInterface;
 use fisharebest\Localization\Translation;
-// use Fisharebest\Webtrees\Age;
-// use Fisharebest\Webtrees\Date;
 use Fisharebest\Webtrees\Auth;
-// use Fisharebest\Webtrees\Exceptions\IndividualAccessDeniedException;
-// use Fisharebest\Webtrees\Exceptions\IndividualNotFoundException;
 use Fisharebest\Webtrees\Http\ViewResponseTrait;
 use Fisharebest\Webtrees\I18N;
-use Fisharebest\Webtrees\FlashMessages;
 use Fisharebest\Webtrees\Individual;
-// use Fisharebest\Webtrees\Menu;
 use Fisharebest\Webtrees\Module\AbstractModule;
 use Fisharebest\Webtrees\Module\ModuleGlobalInterface;
 use Fisharebest\Webtrees\Module\ModuleChartInterface;
 use Fisharebest\Webtrees\Module\ModuleCustomInterface;
 use Fisharebest\Webtrees\Module\ModuleTabInterface;
-// use Fisharebest\Webtrees\Module\ModuleTabTrait;
-use Fisharebest\Webtrees\Module\ModuleThemeInterface;
 use Fisharebest\Webtrees\Registry;
-use Fisharebest\Webtrees\Tree;
 use Fisharebest\Webtrees\Validator;
 use Fisharebest\Webtrees\View;
 use Fisharebest\Webtrees\Module\ModuleCustomTrait;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-// use Psr\Http\Server\RequestHandlerInterface;
 
 use HuHwt\WebtreesMods\InteractiveTreeXT\InteractiveTreeXTmod;
 use HuHwt\WebtreesMods\InteractiveTreeXT\Module\TreeViewXTmod;
@@ -112,7 +101,7 @@ class InteractiveTreeXT extends AbstractModule implements ModuleGlobalInterface,
      * @return string
      */
     public function customModuleVersion(): string {
-        return '2.1.17.0';
+        return '2.1.17.1';
     }
 
     /**
@@ -294,11 +283,11 @@ class InteractiveTreeXT extends AbstractModule implements ModuleGlobalInterface,
         $generations = intval((string) Configuration::DEFAULT_GENERATIONS);
         $module = $this->name();
 
-        $tvPref = 'tv' . 'T';
+        $tvPref = 'tv' . 'XT';
         $treeview = new TreeViewXTmod($tvPref, $module, $showpatri);
 
         $subtitleAr[] = $this->chartSubTitle($individual);
-        [$html, $js] = $treeview->drawViewport($individual, 'T', $generations, false);
+        [$html, $js] = $treeview->drawViewport($individual, 'XT', $generations, false);
 
         return view('modules/treeviewXT/tab', [
             'html'  => $html,
@@ -377,9 +366,9 @@ class InteractiveTreeXT extends AbstractModule implements ModuleGlobalInterface,
         }
 
         $patri_prio = (string) Configuration::PATRI_PRIO;
-        $s_showpatri = Validator::parsedBody($request)->string('showpatri', $patri_prio);
+        $s_showpatri = Validator::queryParams($request)->string('showpatri', $patri_prio);
         $showpatri = intval($s_showpatri ?? $this->configuration->getPatriPrio());
-        $s_generations = Validator::parsedBody($request)->string('generations', '4');
+        $s_generations = Validator::queryParams($request)->string('generations', '4');
         $generations = intval($s_generations ?? $this->configuration->getGenerations());
 
         $module = Validator::attributes($request)->string('module');
@@ -390,23 +379,23 @@ class InteractiveTreeXT extends AbstractModule implements ModuleGlobalInterface,
         $jsImp = [];
         $subtitleAr = [];
 
-        for ( $tvi = 0; $tvi < count($individualAr); $tvi++) {
-            if ($tvi == 0) {
-                $html_JS = view("{$this->name()}::script", [
-                    'path' => $this->assetUrl('js/huhwtXT.min.js'),
-                ]);
-                $jsImp[] = $html_JS;
-            }
-            $individual = $individualAr[$tvi];
-            $tvPref = 'tv' . $tvPrefix[$tvi];
+        // for ( $tvi = 0; $tvi < count($individualAr); $tvi++) {
+            // if ($tvi == 0) {
+            //     $html_JS = view("{$this->name()}::script", [
+            //         'path' => $this->assetUrl('js/huhwtXT.min.js'),
+            //     ]);
+            //     $jsImp[] = $html_JS;
+            // }
+            $individual = $individualAr[0];
+            $tvPref = 'tv' . $tvPrefix[0];
             $tv = new TreeViewXTmod($tvPref, $module, $showpatri);
 
             $subtitleAr[] = $this->chartSubTitle($individual);
-            [$html, $js] = $tv->drawViewport($individual, $tvPrefix[$tvi], $generations, true);
+            [$html, $js] = $tv->drawViewport($individual, $tvPrefix[0], $generations, true);
 
             $htmlAr[] = $html;
             $jsAr[] = $js;
-        }
+        // }
 
         return $this->viewResponse('modules/treeviewXT/page', [
             'individuals'   => $individualAr,
