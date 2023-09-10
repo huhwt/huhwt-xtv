@@ -14,7 +14,6 @@ msgstr ""
 msgid "Add a person"
 msgstr "Een persoon toevoegen"
 
-#: InteractiveTreeView.php:126
 msgid "Interactive tree XT"
 msgstr "Interactieve boom XT"
 
@@ -99,43 +98,33 @@ msgstr "Weergave minimaliseren"
 msgid "Maximize View"
 msgstr "Weergave maximaliseren"
 
-#: app/Http/RequestHandlers/InteractiveTreeViewRH.php:87
 msgid "Check tree of %s"
 msgstr "Controleer boom van %s"
 
-#: app/Http/RequestHandlers/InteractiveTreeViewRH.php:94
 msgid "Tree of %s"
 msgstr "Boom van %s"
 
-#: app/Http/RequestHandlers/InteractiveTreeViewRH.php:94
 msgid "List of Individuals"
 msgstr "Lijst van personen"
 
-#: resources/views/admin/trees-duplicates.phtml:45
 msgid "Interactive check"
 msgstr "Interactieve controle"
 
-#: resources/views/layouts/default.phtml:210
 msgid "previous "
 msgstr "vorige "
 
-#: resources/views/layouts/default.phtml:211
 msgid "next "
 msgstr "volgende "
 
-#: resources/views/layouts/default.phtml:212
 msgid "Play "
 msgstr "Afspelen "
 
-#: resources/views/layouts/default.phtml:213
 msgid "Stop "
 msgstr "Stop "
 
-#: resources/views/layouts/default.phtml:214
 msgid "close "
 msgstr "sluiten "
 
-#: resources/views/layouts/trees-duplicates.phtml:21
 msgid "count"
 msgstr "aantal"
 
