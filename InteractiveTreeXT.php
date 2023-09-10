@@ -101,7 +101,7 @@ class InteractiveTreeXT extends AbstractModule implements ModuleGlobalInterface,
      * @return string
      */
     public function customModuleVersion(): string {
-        return '2.1.17.1';
+        return '2.1.17.2';
     }
 
     /**

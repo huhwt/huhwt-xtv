@@ -11,3 +11,4 @@ mix.js.map
 # others
 /_assets/
 /src/sass/images/
+*.bak

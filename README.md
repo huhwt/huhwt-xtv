@@ -3,7 +3,7 @@
 
 [![Latest Release](https://img.shields.io/github/v/release/huhwt/huhwt-xtv)][1]
 [![webtrees major version](https://img.shields.io/badge/webtrees-v2.1-green)][2]
-[![Downloads](https://img.shields.io/github/downloads/huhwt/huhwt-xtv/v2.1/total)]()
+[![Downloads](https://img.shields.io/github/downloads/huhwt/huhwt-xtv/total)]()
 
 # Extensions for web trees to check and display the contents in the database.
 

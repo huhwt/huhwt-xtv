@@ -1,0 +1,133 @@
+msgid ""
+msgstr "Project-Id-Version: 1.0\nPOT-Creation-Date: 22.10.2020\nPO-Revision-Date: \nLast-Translator: EW.H <ewh@huh-netz.de>\nLanguage-Team: \nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: de\nX-Generator: Poedit 2.4.1\n"
+
+msgid "Add a person"
+msgstr "Añadir una persona"
+
+#: InteractiveTreeView.php:126
+msgid "Interactive tree XT"
+msgstr "Árbol interactivo XT"
+
+msgid "Show all relatives"
+msgstr "Mostrar todos los familiares"
+
+msgid "Show name list"
+msgstr "Mostrar lista de nombres"
+
+msgid "Current status"
+msgstr "Situación actual"
+
+msgid "Names in view"
+msgstr "Mostrar nombres"
+
+msgid "Links in view"
+msgstr "Mostrar enlaces"
+
+msgid "Generations in view"
+msgstr "Mostrar generaciones"
+
+msgid "Chart dimensions"
+msgstr "Dimensiones del gráfico"
+
+msgid "Width:"
+msgstr "Ancho:"
+
+msgid "Height:"
+msgstr "Alto:"
+
+msgid "Expand next links"
+msgstr "Expandir los enlaces siguientes"
+
+msgid "Expand +1 Level"
+msgstr "Expandir un nivel más (+1)"
+
+msgid "Expand all"
+msgstr "Expandir todo"
+
+msgid "Expand here"
+msgstr "Expandir aquí"
+
+msgid "Click here to expand/collapse subtree"
+msgstr "Clique aquí para expandir/contraer el subárbol"
+
+msgid "Export to PNG"
+msgstr "Exportar a formato PNG"
+
+msgid "Paternal side takes precedence"
+msgstr "Prioridad en el lado paterno"
+
+msgid "Generations in first view"
+msgstr "Generaciones en primer plano"
+
+msgid "Toggle FullScreen View"
+msgstr "Conmutar a pantalla completa"
+
+msgid "Current state"
+msgstr "Estado actual"
+
+msgid "Show all"
+msgstr "Mostrar todo"
+
+msgid "Decrement"
+msgstr "Disminuir"
+
+msgid "Increment"
+msgstr "Incrementar"
+
+msgid "till"
+msgstr "hasta"
+
+msgid "Click here to move"
+msgstr "Haga clic aquí para desplazarse"
+
+msgid "Download as textfile"
+msgstr "Descargar como fichero de texto (*.txt)"
+
+msgid "Minimize View"
+msgstr "Miniminzar la vista"
+
+msgid "Maximize View"
+msgstr "Maximizar la vista"
+
+#: app/Http/RequestHandlers/InteractiveTreeViewRH.php:87
+msgid "Check tree of %s"
+msgstr "Comprobar árbol de %s"
+
+#: app/Http/RequestHandlers/InteractiveTreeViewRH.php:94
+msgid "Tree of %s"
+msgstr "Árbol de %s"
+
+#: app/Http/RequestHandlers/InteractiveTreeViewRH.php:94
+msgid "List of Individuals"
+msgstr "Lista de individuos"
+
+#: resources/views/admin/trees-duplicates.phtml:45
+msgid "Interactive check"
+msgstr "Chequeo interactivo"
+
+#: resources/views/layouts/default.phtml:210
+msgid "previous "
+msgstr "anterior "
+
+#: resources/views/layouts/default.phtml:211
+msgid "next "
+msgstr "próximo "
+
+#: resources/views/layouts/default.phtml:212
+msgid "Play "
+msgstr "Incio "
+
+#: resources/views/layouts/default.phtml:213
+msgid "Stop "
+msgstr "Detener "
+
+#: resources/views/layouts/default.phtml:214
+msgid "close "
+msgstr "cerrar "
+
+#: resources/views/layouts/trees-duplicates.phtml:21
+msgid "count"
+msgstr "recuento"
+
+msgid "Yes"
+msgstr "Ja"

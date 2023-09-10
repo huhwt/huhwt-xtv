@@ -160,7 +160,7 @@ class Configuration
     public function addTv_PREFind() : int
     {
         if ( $this->tv_PREFind < count(self::TV_PREFIX)) 
-            return $this->tv_PREFind += 1;
+            return (int) $this->tv_PREFind += 1;
         else
             return count(self::TV_PREFIX);
     }
@@ -170,7 +170,7 @@ class Configuration
     public function subTv_PREFind() : int
     {
         if ( $this->tv_PREFind > 0)
-            return $this->tv_PREFind -= 1;
+            return (int) $this->tv_PREFind -= 1;
         else
             return 0;
     }

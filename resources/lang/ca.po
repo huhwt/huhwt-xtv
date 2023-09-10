@@ -1,0 +1,133 @@
+msgid ""
+msgstr "Project-Id-Version: 1.0\nPOT-Creation-Date: 22.10.2020\nPO-Revision-Date: \nLast-Translator: EW.H <ewh@huh-netz.de>\nLanguage-Team: \nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: de\nX-Generator: Poedit 2.4.1\n"
+
+msgid "Add a person"
+msgstr "Afegir una persona"
+
+#: InteractiveTreeView.php:126
+msgid "Interactive tree XT"
+msgstr "Arbre interactiu XT"
+
+msgid "Show all relatives"
+msgstr "Mostrar tots els familiars"
+
+msgid "Show name list"
+msgstr "Mostrar lista de noms"
+
+msgid "Current status"
+msgstr "Situació actual"
+
+msgid "Names in view"
+msgstr "Mostrar noms"
+
+msgid "Links in view"
+msgstr "Mostrar enllaços"
+
+msgid "Generations in view"
+msgstr "Mostrar generacions"
+
+msgid "Chart dimensions"
+msgstr "Dimensiones del gràfic"
+
+msgid "Width:"
+msgstr "Ample:"
+
+msgid "Height:"
+msgstr "Alt:"
+
+msgid "Expand next links"
+msgstr "Expandir els enllaços següents"
+
+msgid "Expand +1 Level"
+msgstr "Expandir un nivel més (+1)"
+
+msgid "Expand all"
+msgstr "Expandir tot"
+
+msgid "Expand here"
+msgstr "Expandir aquí"
+
+msgid "Click here to expand/collapse subtree"
+msgstr "Clique aquí para expandir/contraure el subarbre"
+
+msgid "Export to PNG"
+msgstr "Exportar a formato PNG"
+
+msgid "Paternal side takes precedence"
+msgstr "Prioridad en la banda paterna"
+
+msgid "Generations in first view"
+msgstr "Generacions en primer pla"
+
+msgid "Toggle FullScreen View"
+msgstr "Commutar a pantalla completa"
+
+msgid "Current state"
+msgstr "Estat actual"
+
+msgid "Show all"
+msgstr "Mostrar tot"
+
+msgid "Decrement"
+msgstr "Disminuir"
+
+msgid "Increment"
+msgstr "Incrementar"
+
+msgid "till"
+msgstr "fins a"
+
+msgid "Click here to move"
+msgstr "Haga clic aquí per desplaçar-se"
+
+msgid "Download as textfile"
+msgstr "Descarregar como a fitxer de text (*.txt)"
+
+msgid "Minimize View"
+msgstr "Miniminzar la vista"
+
+msgid "Maximize View"
+msgstr "Maximitzar la vista"
+
+#: app/Http/RequestHandlers/InteractiveTreeViewRH.php:87
+msgid "Check tree of %s"
+msgstr "Comprovar arbre de %s"
+
+#: app/Http/RequestHandlers/InteractiveTreeViewRH.php:94
+msgid "Tree of %s"
+msgstr "Arbre de %s"
+
+#: app/Http/RequestHandlers/InteractiveTreeViewRH.php:94
+msgid "List of Individuals"
+msgstr "Llista d'individus"
+
+#: resources/views/admin/trees-duplicates.phtml:45
+msgid "Interactive check"
+msgstr "Comprovació interactiva"
+
+#: resources/views/layouts/default.phtml:210
+msgid "previous "
+msgstr "anterior "
+
+#: resources/views/layouts/default.phtml:211
+msgid "next "
+msgstr "pròxim "
+
+#: resources/views/layouts/default.phtml:212
+msgid "Play "
+msgstr "Inci "
+
+#: resources/views/layouts/default.phtml:213
+msgid "Stop "
+msgstr "Detindre "
+
+#: resources/views/layouts/default.phtml:214
+msgid "close "
+msgstr "tancar "
+
+#: resources/views/layouts/trees-duplicates.phtml:21
+msgid "count"
+msgstr "recompte"
+
+msgid "Yes"
+msgstr "Ja"
