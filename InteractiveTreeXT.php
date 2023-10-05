@@ -16,15 +16,17 @@ use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\Http\ViewResponseTrait;
 use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Individual;
-use Fisharebest\Webtrees\Module\AbstractModule;
+use Fisharebest\Webtrees\Module\InteractiveTreeModule;
 use Fisharebest\Webtrees\Module\ModuleGlobalInterface;
 use Fisharebest\Webtrees\Module\ModuleChartInterface;
+use Fisharebest\Webtrees\Module\ModuleBlockInterface;
 use Fisharebest\Webtrees\Module\ModuleCustomInterface;
 use Fisharebest\Webtrees\Module\ModuleTabInterface;
 use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Validator;
 use Fisharebest\Webtrees\View;
 use Fisharebest\Webtrees\Module\ModuleCustomTrait;
+use Fisharebest\Webtrees\Module\ModuleBlockTrait;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -43,13 +45,13 @@ use intval;
  * @link    https://github.com/huhwt/huhwt-xtv/
  */
 
-class InteractiveTreeXT extends AbstractModule implements ModuleGlobalInterface, ModuleCustomInterface, 
+class InteractiveTreeXT extends InteractiveTreeModule implements ModuleGlobalInterface, ModuleCustomInterface, 
     ModuleChartInterface, ModuleTabInterface
 {
     use ModuleCustomTrait;
     use ModuleChartTrait;
     use ModuleTabTrait;
-    use ViewResponseTrait;
+    // use ViewResponseTrait;
     // use IndividualTrait;
 
     private const ROUTE_DEFAULT = 'treeXTV';
@@ -101,7 +103,7 @@ class InteractiveTreeXT extends AbstractModule implements ModuleGlobalInterface,
      * @return string
      */
     public function customModuleVersion(): string {
-        return '2.1.17.2';
+        return '2.1.17.3';
     }
 
     /**
