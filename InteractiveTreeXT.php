@@ -103,7 +103,7 @@ class InteractiveTreeXT extends InteractiveTreeModule implements ModuleGlobalInt
      * @return string
      */
     public function customModuleVersion(): string {
-        return '2.1.17.3';
+        return '2.1.17.4';
     }
 
     /**
