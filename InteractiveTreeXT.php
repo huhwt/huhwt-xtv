@@ -1,7 +1,9 @@
 <?php
 
 /**
- * See LICENSE.md file for further details.
+ * HuH Extensions for webtrees - Treeview-Extended
+ * Interactive Treeview with add-ons
+ * Copyright (C) 2020-2023 EW.Heinrich
  */
 
 declare(strict_types=1);
@@ -103,7 +105,7 @@ class InteractiveTreeXT extends InteractiveTreeModule implements ModuleGlobalInt
      * @return string
      */
     public function customModuleVersion(): string {
-        return '2.1.17.4';
+        return '2.1.18.0';
     }
 
     /**
@@ -191,13 +193,16 @@ class InteractiveTreeXT extends InteractiveTreeModule implements ModuleGlobalInt
         $html_CSS = view("{$this->name()}::style", [
             'path' => $this->assetUrl('css/huhwt.min.css'),
         ]);
+        $html_CSScee = view("{$this->name()}::style", [
+            'path' => $this->assetUrl('css/CCEadapter-actions.css'),
+        ]);
         $html_JSx = view("{$this->name()}::script", [
             'path' => $this->assetUrl('js/huhwtXT.min.js'),
         ]);
         $html_JSh = view("{$this->name()}::script", [
             'path' => $this->assetUrl('js/html2canvas.js'),
         ]);
-        $html_ = $html_CSS . " " . $html_JSx . " " . $html_JSh;
+        $html_ = $html_CSS . " " . $html_CSScee . " " . $html_JSx . " " . $html_JSh;
         return $html_;
     }
 

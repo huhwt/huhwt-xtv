@@ -5,17 +5,28 @@ namespace HuHwt\WebtreesMods\InteractiveTreeXT;
 // use HuHwt\WebtreesMods\InteractiveTreeXT\Module\TreeViewXTmod;
 
 use Fisharebest\Webtrees\I18N;
-use Fisharebest\Webtrees\Individual;
 use Fisharebest\Webtrees\Tree;
 
 /**
- * @var Individual    $individual
- * @var Tree          $tree
+ * @var Tree        $tree
+ * @var string      $XREFindi
+ * @var string      $innerHTML
+ * @var string      $name
+ * @var string      $module
+ * @var bool        $withCCE
  */
+
+    $classCCEadapter = 'noCCEadapter';              // there is no CCE instance active ...      -> display: none
+    $urlCCEadapter = '';                            // ... so is no need to define a data-definition
+    if ($withCCE) {
+        $classCCEadapter = '';
+        $urlCCEadapter = 'data-url-Cceadapter="' . e(route(InteractiveTreeXTmod::class, ['module' => $module, 'action' => 'CCEadapter', 'tree' => $tree->name(), 'XREFindi' => $XREFindi])) . '"';
+    }
+
 ?>
 
 <div class="wt-chart wt-chart-interactive">
-    <div id="<?= $name ?>_out" class="tv_out" data-url-details="<?= e(route(InteractiveTreeXTmod::class, ['module' => $module, 'action' => 'Details', 'tree' => $tree->name()])) ?>" data-url-individuals="<?= e(route(InteractiveTreeXTmod::class, ['module' => $module, 'action' => 'Individuals', 'tree' => $tree->name()])) ?>" style="height: 300px">
+    <div id="<?= $name ?>_out" class="tv_out" data-url-details="<?= e(route(InteractiveTreeXTmod::class, ['module' => $module, 'action' => 'Details', 'tree' => $tree->name()])) ?>" data-url-individuals="<?= e(route(InteractiveTreeXTmod::class, ['module' => $module, 'action' => 'Individuals', 'tree' => $tree->name()])) ?>" <?= $urlCCEadapter ?> style="height: 300px">
         <div id="<?= $name ?>_tools" class="tv_tools">
             <ul>
                 <li id="<?= $name ?>bCompact" class="tv_button tvbcompact" title="<?= I18N::translate('Use compact layout') ?>">
@@ -35,6 +46,8 @@ use Fisharebest\Webtrees\Tree;
                     </a>
                 </li>
                 <li id="<?= $name ?>bexportPNG" class="tv_button tvbexportpng" title="<?= I18N::translate('Export to PNG') ?>">
+                </li>
+                <li id="<?= $name ?>bClipping" class="tv_button <?= $classCCEadapter ?>" title="<?= I18N::translate('Add this records to the clippings cart') ?>">
                 </li>
                 <li id="<?= $name ?>_loading" class="tv_button">
                     <i class="icon-loading-small"></i>
@@ -79,7 +92,7 @@ use Fisharebest\Webtrees\Tree;
             </ul>
         </div>
         <div id="<?= $name ?>_in" class="tvXT_in" dir="ltr">
-            <?= $individual ?>
+            <?= $innerHTML ?>
         </div>
     </div>
 </div>

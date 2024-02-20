@@ -1,7 +1,9 @@
 <?php
 
 /**
- * See LICENSE.md file for further details.
+ * HuH Extensions for webtrees - Treeview-Extended
+ * Interactive Treeview with add-ons
+ * Copyright (C) 2020-2024 EW.Heinrich
  */
 
 declare(strict_types=1);
@@ -11,6 +13,7 @@ namespace HuHwt\WebtreesMods\InteractiveTreeXT;
 use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\Module\AbstractModule;
 use Fisharebest\Webtrees\Registry;
+use Fisharebest\Webtrees\Session;
 use Fisharebest\Webtrees\Tree;
 use Fisharebest\Webtrees\Validator;
 use Psr\Http\Message\ResponseInterface;
@@ -19,6 +22,9 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 use HuHwt\WebtreesMods\InteractiveTreeXT\Module\TreeViewXTmod;
 use HuHwt\WebtreesMods\InteractiveTreeXT\Exceptions\TreeViewXTactionNotFoundException;
+
+use HuHwt\WebtreesMods\ClippingsCartEnhanced\ClippingsCartEnhancedModule;
+
 /**
  * Class InteractiveTreeXT
  * 
@@ -60,6 +66,10 @@ class InteractiveTreeXTmod extends AbstractModule implements RequestHandlerInter
             return $this->getIndividualsAction($request);
         }
 
+        if ( $action == 'CCEadapter' ) {
+            return $this->getCCEadapterAction($request);
+        }
+
         throw new TreeViewXTactionNotFoundException($action);
     }
 
@@ -99,4 +109,32 @@ class InteractiveTreeXTmod extends AbstractModule implements RequestHandlerInter
 
         return response($treeview->getIndividuals($tree, $earmark, $q));
     }
+
+    /**
+     * @param ServerRequestInterface $request
+     *
+     * @return ResponseInterface
+     * 
+     * perform ClippingsCart
+     */
+    public function getCCEadapterAction(ServerRequestInterface $request): ResponseInterface
+    {
+
+        $tree       = Validator::attributes($request)->tree();
+        $XREFindi   = Validator::queryParams($request)->string('XREFindi', '');
+        $xrefs = Validator::queryParams($request)->string('xrefs', '');
+
+        $CCEok = class_exists("HuHwt\WebtreesMods\ClippingsCartEnhanced\ClippingsCartEnhancedModule", true);
+        if (!$CCEok) {
+            $cart = Session::get('cart', []);
+            $xrefs = $cart[$tree->name()] ?? [];
+            $countXREFcold = count($xrefs);
+            return response((string) $countXREFcold);
+        }
+
+        $CCEadapter = new ClippingsCartEnhancedModule();
+
+        return response($CCEadapter->clip_xtv($request));
+    }
+
 }

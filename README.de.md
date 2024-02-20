@@ -71,6 +71,9 @@ Ansicht-Steuerfelder:
 unvollständig sein bzw. es fehlen gewisse Elemente (Das ist abhängig von Größe und Breite des 
 Viewports, ab 16.384 Pixeln Höhe wird es kritisch.)
 
+* Optionales Feature: CCE-Export.
+    - Wenn das Erweiterungs-Modul HuHwt-CCE ab der Version 
+
 Bei den Familienboxen werden Ein-/Aus-Falten-Schaltflächen eingeblendet.
 
 * Man kann den jeweils anhängigen Teil-Baum komplett aus- bzw. wieder einblenden

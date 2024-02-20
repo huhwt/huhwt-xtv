@@ -1,18 +1,9 @@
 <?php
 
 /**
- * webtrees: online genealogy
- * Copyright (C) 2020 webtrees development team
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * HuH Extensions for webtrees - Treeview-Extended
+ * Interactive Treeview with add-ons
+ * Copyright (C) 2020-2024 EW.Heinrich
  */
 
 declare(strict_types=1);
@@ -46,6 +37,9 @@ class TreeViewXTmod
     /** @var int glevel-Stradonitz number */
     private $glevel;
 
+    private $CCEok;
+
+
     /**
      * Treeview Constructor
      *
@@ -56,6 +50,8 @@ class TreeViewXTmod
         $this->name = $name;
         $this->showpatri = $showpatri;
         $this->module = $module;
+
+        $this->CCEok = class_exists("HuHwt\WebtreesMods\ClippingsCartEnhanced\ClippingsCartEnhancedModule", true);
 
     }
 
@@ -77,8 +73,10 @@ class TreeViewXTmod
             'module'     => $this->module,                  // EW.H - MOD ... put own Module here!
             'name'       => $_name,
             'earmark'    => $earmark,
-            'individual' => $this->drawPerson($individual, $earmark, $generations, 0, null, '', true),
+            'XREFindi'   => $individual->xref(),
+            'innerHTML'  => $this->drawPerson($individual, $earmark, $generations, 0, null, '', true),
             'tree'       => $individual->tree(),
+            'withCCE'    => $this->CCEok,
         ]);
 
         $_minTitle = I18N::translate('Minimize View');
@@ -475,7 +473,7 @@ class TreeViewXTmod
         $pIDdom = ' name="' . $this->name . 'xref' . $xref . '" ';
         $Glevel = ' Glevel="' . $this->glevel . '"';
 
-        return '<div class="tv' . $sex . ' ' . $dashed . '"' . $title . $pID . $Glevel . $pIDdom .'><a href="' . e($individual->url()) . '"></a>' . $individual->fullName() . ' <span class="dates">' . $individual->lifespan() . '</span></div>';
+        return '<div class="tv' . $sex . ' tv_Person ' . $dashed . '"' . $title . $pID . $Glevel . $pIDdom .'><a href="' . e($individual->url()) . '"></a>' . $individual->fullName() . ' <span class="dates">' . $individual->lifespan() . '</span></div>';
     }
 
     /**
