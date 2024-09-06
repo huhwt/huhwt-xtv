@@ -53,8 +53,8 @@ msgstr "Klick hier: Teilbaum erweitern/einfalten"
 msgid "Export to PNG"
 msgstr "Als PNG darstellen"
 
-msgid "Paternal side takes precedence"
-msgstr "Väterliche Seite hat Vorrang"
+msgid "Maternal side takes precedence"
+msgstr "Mütterliche Seite hat Vorrang"
 
 msgid "Generations in first view"
 msgstr "Generationen in Ausgangs-Ansicht"
@@ -89,45 +89,59 @@ msgstr "Ansicht zurücksetzen"
 msgid "Maximize View"
 msgstr "Ansicht expandieren"
 
-#: app/Http/RequestHandlers/InteractiveTreeViewRH.php:87
 msgid "Check tree of %s"
 msgstr "Vergleich Sanduhrdiagramm von %s"
 
-#: app/Http/RequestHandlers/InteractiveTreeViewRH.php:94
 msgid "Tree of %s"
 msgstr "Sanduhrdiagramm von %s"
 
-#: app/Http/RequestHandlers/InteractiveTreeViewRH.php:94
 msgid "List of Individuals"
 msgstr "Übersicht Personen"
 
-#: resources/views/admin/trees-duplicates.phtml:45
 msgid "Interactive check"
 msgstr "Interaktiver Vergleich"
 
-#: resources/views/layouts/default.phtml:210
 msgid "previous "
 msgstr "vorheriges "
 
-#: resources/views/layouts/default.phtml:211
 msgid "next "
 msgstr "nächstes "
 
-#: resources/views/layouts/default.phtml:212
 msgid "Play "
 msgstr "Abspielen "
 
-#: resources/views/layouts/default.phtml:213
 msgid "Stop "
 msgstr "Stop "
 
-#: resources/views/layouts/default.phtml:214
 msgid "close "
 msgstr "Ende "
 
-#: resources/views/layouts/trees-duplicates.phtml:21
 msgid "count"
 msgstr "Anzahl"
 
 msgid "Yes"
 msgstr "Ja"
+
+msgid "Implex detected"
+msgstr "Implex erkannt"
+
+msgid "Center on root"
+msgstr "Auf Ausgangsperson zentrieren"
+
+msgid "Show Implex"
+msgstr "Implex anzeigen"
+
+msgid "Suppress Implex"
+msgstr "Implex unterdrücken"
+
+msgid "Checked -> Implex-affected relations will not be pursued further"
+msgstr "Checked -> Implex-betroffene Beziehungen werden nicht weiter verfolgt"
+
+msgid "Show separated"
+msgstr "Getrennt anzeigen"
+
+msgid "Checked -> Multiple relationships are resolved separately"
+msgstr "Checked -> Mehrfach-Beziehungen werden getrennt aufgelöst"
+
+msgid "Click here to hide/show partial subtree - Ctrl-Click -> collapse/expand"
+msgstr "Klick hier: Teilbaum ausblenden/anzeigen - Strg-Klick -> einfalten/erweitern"

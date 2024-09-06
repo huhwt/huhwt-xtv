@@ -27,8 +27,8 @@ class Configuration
      *  
      * @var int
      */
-    public const PATRI_PRIO  = 0;
-    public const MATRI_PRIO  = 1;
+    public const PATRI_PRIO  = 0;               // Mothers first
+
     /**
      * The default number of generations to display.
      *
@@ -41,7 +41,7 @@ class Configuration
      *
      * @var int
      */
-    public const MIN_GENERATIONS = 2;
+    public const MIN_GENERATIONS = 1;
 
     /**
      * Maximum number of displayable generations.
@@ -55,14 +55,14 @@ class Configuration
      *
      * @var ServerRequestInterface
      */
-    private $request;
+    private $suppImplex; 
 
     /**
      * Expansion level.
      *
      * @var int
      */
-    private const DEFAULT_LEVEL = self::PATRI_PRIO;
+    private $request;
 
     /**
      * Rootname
@@ -81,6 +81,13 @@ class Configuration
      * Treeview index
      */
     private $tv_PREFind;
+
+    /**
+     * Display modes
+     */
+    private const MODES = [ 'default', 'separated'];
+
+
     /**
      * Configuration constructor.
      *
@@ -114,6 +121,39 @@ class Configuration
     public function getPatriPrio(): int
     {
         return $this->request->getQueryParams()['patriprio'] ?? self::PATRI_PRIO;
+    }
+
+    /**
+     * In case of Implex - shall this be shown?
+     *
+     * @return bool
+     */
+    public function getShowImplex(): bool
+    {
+        $showImplex = (int) $this->request->getQueryParams()['showImplex'] ?? 0;
+        return boolval($showImplex);
+    }
+
+    /**
+     * In case of Implex - shall all instances be expanded?
+     *
+     * @return bool
+     */
+    public function getSuppImplex(): bool
+    {
+        $suppImplex = (int) $this->request->getQueryParams()['suppImplex'] ?? 0;
+        return boolval($suppImplex);
+    }
+
+    /**
+     * In case of Implex - shall all instances be expanded?
+     *
+     * @return string
+     */
+    public function getMode(): string
+    {
+        $mode = (int) $this->request->getQueryParams()['showseparated'] ?? 0;
+        return self::MODES[$mode];
     }
 
     /**

@@ -3,7 +3,7 @@
 /**
  * HuH Extensions for webtrees - Treeview-Extended
  * Interactive Treeview with add-ons
- * Copyright (C) 2020-2023 EW.Heinrich
+ * Copyright (C) 2020-2024 EW.Heinrich
  */
 
 declare(strict_types=1);
@@ -25,6 +25,7 @@ use Fisharebest\Webtrees\Module\ModuleBlockInterface;
 use Fisharebest\Webtrees\Module\ModuleCustomInterface;
 use Fisharebest\Webtrees\Module\ModuleTabInterface;
 use Fisharebest\Webtrees\Registry;
+use Fisharebest\Webtrees\Session;
 use Fisharebest\Webtrees\Validator;
 use Fisharebest\Webtrees\View;
 use Fisharebest\Webtrees\Module\ModuleCustomTrait;
@@ -76,15 +77,8 @@ class InteractiveTreeXT extends InteractiveTreeModule implements ModuleGlobalInt
      */
     private $huh;
 
-    /**
-     * Check for UksusoFF/webtrees-tree_view_full_screen done?
-     * @var boolean
-     */
-    // private $wtfs_checked;
-
     public function __construct() {
       $this->huh = json_decode('"\u210D"') . "&" . json_decode('"\u210D"') . "wt";
-    //   $this->wtfs_checked = false;
     }
 
     /**
@@ -105,7 +99,7 @@ class InteractiveTreeXT extends InteractiveTreeModule implements ModuleGlobalInt
      * @return string
      */
     public function customModuleVersion(): string {
-        return '2.1.18.0';
+        return '2.1.20.0';
     }
 
     /**
@@ -191,18 +185,24 @@ class InteractiveTreeXT extends InteractiveTreeModule implements ModuleGlobalInt
     public function headContent(): string
     {
         $html_CSS = view("{$this->name()}::style", [
-            'path' => $this->assetUrl('css/huhwt.min.css'),
+            'path' => $this->assetUrl('css/huhwtXT.css'),
         ]);
         $html_CSScee = view("{$this->name()}::style", [
             'path' => $this->assetUrl('css/CCEadapter-actions.css'),
         ]);
+        $html_CSSpmap = view("{$this->name()}::style", [
+            'path' => $this->assetUrl('css/page-map.css'),
+        ]);
         $html_JSx = view("{$this->name()}::script", [
-            'path' => $this->assetUrl('js/huhwtXT.min.js'),
+            'path' => $this->assetUrl('js/huhwtXT.js'),
         ]);
         $html_JSh = view("{$this->name()}::script", [
-            'path' => $this->assetUrl('js/html2canvas.js'),
+            'path' => $this->assetUrl('js/html2canvas.1.4.js'),
         ]);
-        $html_ = $html_CSS . " " . $html_CSScee . " " . $html_JSx . " " . $html_JSh;
+        $html_JSpmap = view("{$this->name()}::script", [
+            'path' => $this->assetUrl('js/pagemap-1.4.0.mod.js'),
+        ]);
+        $html_ = $html_CSS . " " . $html_CSScee . " ". $html_CSSpmap . " " . $html_JSpmap . " " . $html_JSx . " " . $html_JSh ;
         return $html_;
     }
 
@@ -248,17 +248,14 @@ class InteractiveTreeXT extends InteractiveTreeModule implements ModuleGlobalInt
         View::registerCustomView('::modules/treeviewXT/pageh2', $this->name() . '::modules/treeviewXT/pageh2');
         View::registerCustomView('::modules/treeviewXT/pageh3', $this->name() . '::modules/treeviewXT/pageh3');
 
-        //dependency check
-        // if (!$this->wtfs_checked) {
-        //     $ok = class_exists("UksusoFF\WebtreesModules\TreeViewFullScreen\Modules\TreeViewFullScreenModule", true);
-        //     if (!$ok) {
-        //         $wtfs_link = '(https://github.com/UksusoFF/webtrees-tree_view_full_screen)';
-        //         $wtfs_missing = I18N::translate('Missing dependency - Install UksusoFF/webtrees-tree_view_full_screen!');
-        //         $theMessage = $wtfs_missing . ' -> ' . $wtfs_link;
-        //         FlashMessages::addMessage($theMessage);
-        //     }
-        //     $this->wtfs_checked = true;
-        // }
+        $dump_dir = __DIR__ . DIRECTORY_SEPARATOR . '_doku';
+        // EW.H mod ... we want a subdir for storing dumps and so on
+        // - test for and create it if it not exists
+        if(!is_dir($dump_dir)){
+            //Directory does not exist, so lets create it.
+            mkdir($dump_dir, 0755);
+        }
+        Session::put('XTV_dumpDir', $dump_dir);
     }
 
     /**
@@ -286,12 +283,15 @@ class InteractiveTreeXT extends InteractiveTreeModule implements ModuleGlobalInt
      */
     public function getTabContent(Individual $individual): string
     {
-        $showpatri = intval((string) Configuration::PATRI_PRIO);
+        $showmatri = intval((string) Configuration::PATRI_PRIO);
         $generations = intval((string) Configuration::DEFAULT_GENERATIONS);
         $module = $this->name();
 
+        $tree = $individual->tree();
+
         $tvPref = 'tv' . 'XT';
-        $treeview = new TreeViewXTmod($tvPref, $module, $showpatri);
+        $treeview = new TreeViewXTmod($tvPref, $module, $tree, $individual->xref(), 'default', $showmatri );
+        $treeview->init();
 
         $subtitleAr[] = $this->chartSubTitle($individual);
         [$html, $js] = $treeview->drawViewport($individual, 'XT', $generations, false);
@@ -372,11 +372,16 @@ class InteractiveTreeXT extends InteractiveTreeModule implements ModuleGlobalInt
             $individualAr[] = $individual;
         }
 
-        $patri_prio = (string) Configuration::PATRI_PRIO;
-        $s_showpatri = Validator::queryParams($request)->string('showpatri', $patri_prio);
-        $showpatri = intval($s_showpatri ?? $this->configuration->getPatriPrio());
+        $s_showpatri = Validator::queryParams($request)->string('showmatri', '0');
+        $showmatri = intval($s_showpatri ?? $this->configuration->getPatriPrio());
         $s_generations = Validator::queryParams($request)->string('generations', '4');
         $generations = intval($s_generations ?? $this->configuration->getGenerations());
+        $s_showImplex = Validator::queryParams($request)->string('showimplex', '0');
+        $showimplex = boolval($s_showImplex ?? $this->configuration->getShowImplex());
+        $s_suppImplex = Validator::queryParams($request)->string('suppimplex', '0');
+        $suppimplex = boolval($s_suppImplex ?? $this->configuration->getSuppImplex());
+        $s_showseparated = Validator::queryParams($request)->string('showseparated', '0');
+        $showseparated = $s_showseparated == '1' ? 'separated' : 'default';
 
         $module = Validator::attributes($request)->string('module');
 
@@ -389,13 +394,15 @@ class InteractiveTreeXT extends InteractiveTreeModule implements ModuleGlobalInt
         // for ( $tvi = 0; $tvi < count($individualAr); $tvi++) {
             // if ($tvi == 0) {
             //     $html_JS = view("{$this->name()}::script", [
-            //         'path' => $this->assetUrl('js/huhwtXT.min.js'),
+            //         'path' => $this->assetUrl('js/huhwtXT.js'),
             //     ]);
             //     $jsImp[] = $html_JS;
             // }
             $individual = $individualAr[0];
             $tvPref = 'tv' . $tvPrefix[0];
-            $tv = new TreeViewXTmod($tvPref, $module, $showpatri);
+            $XREFroot = $individual->xref();
+            $tv = new TreeViewXTmod($tvPref, $module, $tree, $XREFroot, $showseparated, $showmatri, $showimplex, $suppimplex);
+            $tv->init();
 
             $subtitleAr[] = $this->chartSubTitle($individual);
             [$html, $js] = $tv->drawViewport($individual, $tvPrefix[0], $generations, true);
@@ -406,7 +413,10 @@ class InteractiveTreeXT extends InteractiveTreeModule implements ModuleGlobalInt
 
         return $this->viewResponse('modules/treeviewXT/page', [
             'individuals'   => $individualAr,
-            'showpatri'     => $showpatri,
+            'showmatri'     => $showmatri,
+            'showimplex'    => $s_showImplex,
+            'suppimplex'    => $s_suppImplex,
+            'showseparated' => $s_showseparated,
             'generations'   => $generations,
             'htmls'         => $htmlAr,
             'jsimp'         => $jsImp,
@@ -429,8 +439,10 @@ class InteractiveTreeXT extends InteractiveTreeModule implements ModuleGlobalInt
 
         $xref = Validator::parsedBody($request)->string('xref', '');
         $generations = Validator::parsedBody($request)->string('generations', '4');
-        $patri_prio = (string) Configuration::PATRI_PRIO;
-        $showpatri = Validator::parsedBody($request)->string('showpatri', $patri_prio);
+        $showmatri = Validator::parsedBody($request)->string('showmatri', '0');
+        $showimplex = Validator::parsedBody($request)->string('showimplex', '0');
+        $suppimplex = Validator::parsedBody($request)->string('suppimplex', '0');
+        $showseparated = Validator::parsedBody($request)->string('showseparated', '0');
 
         return redirect(route('module', [
             'module'        => $this->name(),
@@ -438,7 +450,10 @@ class InteractiveTreeXT extends InteractiveTreeModule implements ModuleGlobalInt
             'tree'          => $tree->name(),
             'xref'          => $xref,
             'generations'   => $generations,
-            'showpatri'     => $showpatri,
+            'showmatri'     => $showmatri,
+            'showimplex'    => $showimplex,
+            'suppimplex'    => $suppimplex,
+            'showseparated' => $showseparated,
             ]));
     }
 

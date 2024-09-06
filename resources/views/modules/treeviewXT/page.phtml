@@ -6,7 +6,10 @@ use HuHwt\WebtreesMods\InteractiveTreeXT\Configuration;
 
 /**
  * @var array         $individuals - [0] first individual, [1] second individual, ... up to [4]
- * @var int           $showpatri
+ * @var int           $showmatri
+ * @var int           $showimplex
+ * @var int           $suppimplex
+ * @var int           $showseparated
  * @var int           $generations
  * @var array         $htmls - [0] first treeview, [1] second treeview, ... up to [4]
  * @var array         $jss   - [0] first treeview, [1] second treeview, ... up to [4]
@@ -38,25 +41,19 @@ use HuHwt\WebtreesMods\InteractiveTreeXT\Configuration;
     <?php   $indiRequired = false; ?>
     <?php } ?>
 
-    <div class="row form-group">
+    <div class="row form-group" id="XToptions">
         <div class="col-sm-3 wt-page-options-label"></div>
         <div class="col-sm-1 wt-page-options-value">
             <input class="btn btn-primary" type="submit" value="<?= I18N::translate('view') ?>">
         </div>
-        <div class="col-sm-3 wt-page-options-value" id="shownext">
-                <span> <?= I18N::translate('Paternal side takes precedence') ?> &nbsp;&nbsp; </span>
+        <div class="col-sm-1-10 wt-page-options-value pt-2" id="shownext">
+            <?php $label_sm = I18N::translate('Maternal side takes precedence') . '&nbsp;&nbsp;' ?>
             <?=
-                view('components/radios-inline', [
-                'name' => 'showpatri',
-                    'options' => [
-                        I18N::translate('Yes'),
-                        I18N::translate('No'),
-                    ],
-                    'selected' => $showpatri,
-                ])
+                view('components/checkbox', [
+                'name' => 'showmatri', 'id' => 'cb_smatri', 'value' => $showmatri, 'checked' => ($showmatri > 0), 'label' => $label_sm ])
             ?>
         </div>
-        <div class="col-sm-3 huhwt_buttongroup">
+        <div class="col-sm-3-20 huhwt_buttongroup pt-2">
             <span> <?= I18N::translate('Generations in first view') ?> &nbsp;&nbsp; </span>
             <div id="showgens" class="huhwt_buttongroup">
                 <div class="huhwt_button"><i id="showgensSub" class="bMinus huhwt_button" title="<?= I18N::translate('Decrement') ?>"></i></div>
@@ -74,7 +71,26 @@ use HuHwt\WebtreesMods\InteractiveTreeXT\Configuration;
                 <div class="huhwt_button"><i<i id="showgensAdd" class="bPlus huhwt_button" title="<?= I18N::translate('Increment') ?>"></i></div>
             </div>
         </div>
-        <div class="col-sm-2 wt-page-options-value">
+        <div class="col-sm-1-10 wt-page-options-value pt-2" id="showimplex" title="<?= I18N::translate('Checked -> Implex-affected relations will be explicitly marked') ?>">
+            <?php $label_swi = I18N::translate('Show Implex'); ?>
+            <?=
+                view('components/checkbox', [
+                'name' => 'showimplex', 'id' => 'cb_swimplex', 'value' => $showimplex, 'checked' => ($showimplex > 0), 'label' => $label_swi ])
+            ?>
+        </div>
+        <div class="col-sm-1-10 wt-page-options-value pt-2" id="suppimplex" title="<?= I18N::translate('Checked -> Implex-affected relations will not be pursued further') ?>">
+            <?php $label_spi = I18N::translate('Suppress Implex'); ?>
+            <?=
+                view('components/checkbox', [
+                'name' => 'suppimplex', 'id' => 'cb_spimplex', 'value' => $suppimplex, 'checked' => ($suppimplex > 0), 'label' => $label_spi ])
+            ?>
+        </div>
+        <div class="col-sm-1-10 wt-page-options-value pt-2" id="showseparated" title="<?= I18N::translate('Checked -> Multiple relationships are resolved separately') ?>">
+            <?php $label_sg = I18N::translate('Show separated'); ?>
+            <?=
+                view('components/checkbox', [
+                'name' => 'showseparated', 'id' => 'cb_mode', 'value' => $showseparated, 'checked' => ($showseparated > 0), 'label' => $label_sg ])
+            ?>
         </div>
     </div>
 </form>

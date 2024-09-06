@@ -9,26 +9,31 @@ use Fisharebest\Webtrees\Tree;
 
 /**
  * @var Tree        $tree
- * @var string      $XREFindi
+ * @var string      $XREFroot
  * @var string      $innerHTML
  * @var string      $name
  * @var string      $module
  * @var bool        $withCCE
+ * @var string      $showseparated
  */
 
     $classCCEadapter = 'noCCEadapter';              // there is no CCE instance active ...      -> display: none
     $urlCCEadapter = '';                            // ... so is no need to define a data-definition
     if ($withCCE) {
         $classCCEadapter = '';
-        $urlCCEadapter = 'data-url-Cceadapter="' . e(route(InteractiveTreeXTmod::class, ['module' => $module, 'action' => 'CCEadapter', 'tree' => $tree->name(), 'XREFindi' => $XREFindi])) . '"';
+        $urlCCEadapter = 'data-url-Cceadapter="' . e(route(InteractiveTreeXTmod::class, ['module' => $module, 'action' => 'CCEadapter', 'tree' => $tree->name(), 'XREFindi' => $XREFroot])) . '"';
     }
+
+    $urlDetails = 'data-url-details="' . e(route(InteractiveTreeXTmod::class, ['module' => $module, 'action' => 'Details', 'tree' => $tree->name(), 'XREFroot' => $XREFroot])) . '"';
+
+    $urlIndividuals = 'data-url-individuals="' . e(route(InteractiveTreeXTmod::class, ['module' => $module, 'action' => 'Individuals', 'tree' => $tree->name(), 'XREFroot' => $XREFroot, 'showseparated' => $showseparated])) . '"';
 
 ?>
 
 <div class="wt-chart wt-chart-interactive">
-    <div id="<?= $name ?>_out" class="tv_out" data-url-details="<?= e(route(InteractiveTreeXTmod::class, ['module' => $module, 'action' => 'Details', 'tree' => $tree->name()])) ?>" data-url-individuals="<?= e(route(InteractiveTreeXTmod::class, ['module' => $module, 'action' => 'Individuals', 'tree' => $tree->name()])) ?>" <?= $urlCCEadapter ?> style="height: 300px">
+    <div id="<?= $name ?>_out" class="tv_out"  <?= $urlDetails ?>  <?= $urlIndividuals ?>  <?= $urlCCEadapter ?> style="height: 300px">
         <div id="<?= $name ?>_tools" class="tv_tools">
-            <ul>
+            <ul class="ul1">
                 <li id="<?= $name ?>bCompact" class="tv_button tvbcompact" title="<?= I18N::translate('Use compact layout') ?>">
                 </li>
                 <li id="<?= $name ?>bShowNext" class="tv_button tvbshownext tvPressed" title="<?= I18N::translate('Expand next links') ?>">
@@ -52,7 +57,11 @@ use Fisharebest\Webtrees\Tree;
                 <li id="<?= $name ?>_loading" class="tv_button">
                     <i class="icon-loading-small"></i>
                 </li>
-            </ul>
+            </ul> <!--
+            <ul class="ul2">
+                <li id="< ?= $name ?>bCenter" class="tv_center tv_button tvbcenter" title="< ?=I18N::translate('Center on root')?>">
+                </li>
+            </ul> -->
         </div>
         <div id="<?= $name ?>_shownext" class="tv_shownext">
             <ul>
@@ -91,8 +100,17 @@ use Fisharebest\Webtrees\Tree;
             <ul id="<?= $name ?>_namelistul" class="tv_namelistul">
             </ul>
         </div>
-        <div id="<?= $name ?>_in" class="tvXT_in" dir="ltr">
+        <div id="<?= $name ?>_in" class="tv_in" dir="ltr">
             <?= $innerHTML ?>
         </div>
-    </div>
+        <canvas id="page-map"></canvas>
+        </div>
 </div>
+<script>
+        pagemap(document.querySelector('#page-map'), {
+            viewport: document.querySelector('.tv_in'),
+            interval: 100,
+            // styles: { 'div.tv_box.def': 'rgba(0,0,0,0.1)', 'div.tv_box.rootPerson': 'rbga(108,155,242,1.0)', 'div.tv_box.selectedID': 'rbga(108,155,242,0.8)' },
+            // back: 'rgba(255,255,255,1)'
+        });
+</script>

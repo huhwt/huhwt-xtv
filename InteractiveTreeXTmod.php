@@ -81,13 +81,20 @@ class InteractiveTreeXTmod extends AbstractModule implements RequestHandlerInter
     public function getDetailsAction(ServerRequestInterface $request): ResponseInterface
     {
         $tree = Validator::attributes($request)->tree();
+        $XREFroot = Validator::queryParams($request)->string('XREFroot');
+
         $pid  = Validator::queryParams($request)->string('pid');
 
         $individual = Registry::individualFactory()->make($pid, $tree);
         $individual = Auth::checkIndividualAccess($individual);
         $instance = Validator::queryParams($request)->string('instance');
         $module   = Validator::queryParams($request)->string('module');
-        $treeview = new TreeViewXTmod($instance, $module);
+
+        $s_showseparated = Validator::queryParams($request)->string('showseparated', '0');
+        $showseparated = $s_showseparated == '1' ? 'separated' : 'default';
+
+        $treeview = new TreeViewXTmod($instance, $module, $tree, $XREFroot, $showseparated);
+        $treeview->reload();
 
         return response($treeview->getDetails($individual));
     }
@@ -100,12 +107,18 @@ class InteractiveTreeXTmod extends AbstractModule implements RequestHandlerInter
     public function getIndividualsAction(ServerRequestInterface $request): ResponseInterface
     {
         $tree = Validator::attributes($request)->tree();
+        $XREFroot = Validator::queryParams($request)->string('XREFroot');
 
         $q        = Validator::queryParams($request)->string('q');
         $instance = Validator::queryParams($request)->string('instance');
         $earmark  = substr($instance, 2);
         $module   = Validator::queryParams($request)->string('module');
-        $treeview = new TreeViewXTmod($instance, $module);
+
+        $s_showseparated = Validator::queryParams($request)->string('showseparated', '0');
+        $showseparated = $s_showseparated == '1' ? 'separated' : 'default';
+
+        $treeview = new TreeViewXTmod($instance, $module, $tree, $XREFroot, $showseparated);
+        $treeview->reload();
 
         return response($treeview->getIndividuals($tree, $earmark, $q));
     }

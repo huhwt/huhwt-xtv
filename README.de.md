@@ -12,16 +12,23 @@ Dies ist ein webtrees 2.1 Modul - kann nicht mit webtrees 1.x benutzt werden.
 ## Einführung
 -------------
 
-Das Interaktive Sanduhrdiagramm in Webtrees ist ein großartiges Tool, um die vorhandenen 
-Beziehungen kompakt auf einen Blick darzustellen.
+Das Interaktive Sanduhrdiagramm in Webtrees ist ein großartiges Tool, um Beziehungen rund um eine Person auf einen Blick darzustellen.
 
-Bei der Nutzung ist es allerdings manchmal irritierend, dass man nicht so genau weiß, ob
-der Baum jetzt komplett ist und es wäre auch angenehm, wenn man einen Überblick hätte, welche
-und wieviele Personen nun eigentlich in der Darstellung sind.
+Bei der Nutzung ist es allerdings manchmal irritierend, dass man nicht so genau weiß, ob der Baum jetzt komplett ist und es wäre auch angenehm, wenn man einen Überblick hätte, welche und wieviele Personen nun eigentlich in der Darstellung sind. Der Bildschirm zeigt auch immer nur einen Teil des Gesamtbaums und man weiß nicht so genau, wo im Baum der aktuelle Ausschnitt eigentlich zu verorten sein mag. Hat eine Person mehrere Beziehungen, wird zwischen diesen nicht differenziert. Treten Personen mehrfach an verschiedenen Stellen im Baum auf - Implex -, kann man diese Situation nicht direkt erkennen.
 
 Hier setzt nun die Erweiterung an:
 
 Der Ausgangzustand wird über Formular-Steuerfelder definiert. Ist die Ansicht geöffnet, kann sie weitgehend analysiert und ihr Zustand reversibel verändert werden. Man erhält zu jedem Zeitpunkt Informationen über die Anzahl der gezeigten Personen und kann in der Ansicht zu einer gewünschten Person navigieren. Die ergänzenden Funktionen können über Steuerfelder in der Ansicht ausgelöst werden.
+
+Man kann ganze Teilbereiche der Ansicht oder auch nur einzelne Familienzweige gezielt nachladen und auch wieder ausblenden.
+
+Man kann sich Implex-Zustände hervorheben lassen.
+
+Man kann im Implex-Fall das Nachladen unterdrücken.
+
+Man kann Mehrfach-Beziehungen getrennt auflösen und darstellen.
+
+Der gesamte Baum wird jederzeit abstrahiert als Pagemap angezeigt, man kann über die Pagemap direkt zu jedem Bereich des Baums navigieren und die Position des aktuellen Bildschirm-Ausschnitts ist in der Pagemap unmittelbar erkannbar.
 
 ## Beschreibung der Funktionen
 ------------------------------
@@ -29,27 +36,34 @@ Der Ausgangzustand wird über Formular-Steuerfelder definiert. Ist die Ansicht g
 Formular-Steuerfelder:
 
 * Man kann die Anzahl der vom Start an gezeigten Generationen vorgeben
-    - '-' N '+' - Option im Kopf-Formular   - Min: 2, Max: 25 - Default: 4
+    - '-' N '+' - Option im Kopf-Formular   - Min: 1, Max: 25 - Default: 4
 - (Je mehr Generationen vorgegeben, desto länger dauert die primäre Auflösung.)
 
 * Man kann steuern, ob bei der Eltern-Auflösung Patri- oder Matri-linear vorgegangen wird
     - Patri-linear -> Vater-Seite hat Vorrang / Matri-linear -> Mutter-Seite hat Vorrang
     - (Gibt es keinen Treffer auf der vorrangigen Linie, wird automatisch die andere Linie aufgerufen)
-- Checkbox 'Väterliche Seite hat Vorrang' im Kopf-Formular   - Default: Patri-linear (webtrees-Standard)
+- Checkbox 'Mütterliche Seite hat Vorrang' im Kopf-Formular   - Default: Patri-linear (webtrees-Standard)
 
-* Bei den Personen-Boxen wird der Generationen-Rang in Bezug auf die Start-Person angezeigt
-    - (Nachkommen < 0, Vorfahren > 0)
+* Option 'Implex anzeigen'
+    - Wenn aktiv, werden Personen, für welche Implex erkannt wurde, mit einem Rahmen hervorgehoben (Standard: aus).
 
-Ansicht-Steuerfelder:
+* Option 'Implex unterdrücken'
+    - Wenn aktiv, werden Teilbäume ausgehend von Personen/Familien, für welche Implex erkant wurde, nicht weiter aufgelöst bzw. keine Erweiterungsboxen eingebaut (Standard: aus).
+
+* Option 'Getrennt anzeigen'
+    - Wenn aktiv, werden Mehrfach-Beziehungen - 1 Person mit mehreren Partnern - als jeweils eigene Familienboxen angezeigt, welche optisch mit Strichlinien ober- und unterhalb hervorgehoben sind (Standard: aus).
+    - Ist die Start-Person selbst betroffen, wird die ganze Ansicht in 2 oder mehr Bereiche aufgeteilt. Dabei wird versucht, die allgemeine Ausrichtung der Bereiche synchron zu halten. Start-Person wie auch Generationen-Spalten in den Bereichen sollten auf gleichen Achsen liegen (Standard: aus).
+
+Steuerfelder in der Ansicht-Toolbox:
 
 * Kompaktes Layout, Klick wechselt Layout-Modus
     - Im Standard haben die Familienboxen eine feste Breite. Je mehr Generationen in der Ansicht enthalten  sind, desto breiter wird diese und man kann sie nicht mehr in Gänze darstellen.
     - Im kompakten Layout wird die Breite der Familenboxen dynamisch angepasst, so dass alle Generationen ohne horizontales Scrollen sichtbar sind.
 
 * Untermenü 'Nächste Verknüpfungen erweitern' - automatisch geöffnet, Klick schliesst/öffnet
-    -   Man kann gezielt um jeweils 1 Ebene erweitern.
+    - Man kann die Ansicht global um jeweils 1 Ebene erweitern, wirkt sowohl auf Vorfahren- wie auch Nachkommen-Seite.
         - Schaltfläche 'Nächste Verknüpfungen erweitern' - Option '1 Ebene'
-        - Man kann gezielt die Ansicht komplett erweitern lassen.
+    - Man kann die Ansicht komplett erweitern lassen, wirkt sowohl auf Vorfahren- wie auch Nachkommen-Seite.
         - Schaltfläche 'Nächste Verknüpfungen erweitern' - Option 'Alle'
     - Die Erweiterungsaktionen öffnen automatisch die Statistik-Ansicht.
 
@@ -62,28 +76,35 @@ Ansicht-Steuerfelder:
 
 * Man kann sich eine Namensliste der dargestellten Personen anzeigen lassen.
     - Schaltfläche 'Zeige Namensliste'      - Klick öffnet, nächster Klick schliesst
+        - Mehrfach auftretende Namen werden hervorgehoben
         - Klick auf einen Eintrag in der Namensliste markiert die zugehörige Personen-Box und scrollt sie fallweise in den sichtbaren Bereich
         - Die Namensliste ist frei im Viewport verschiebbar
         - Der Inhalt der Namensliste kann als txt-File heruntergeladen werden
 
+* Ansicht expandieren / Ansicht im Fullscreen-Modus (siehe unten).
+
 * Man kann den Zustand der Ansicht als PNG exportieren lassen.
     - Es wird die aktuelle Ansicht in ein PNG übersetzt. Vorsicht: Je nach Browser kann das Abbild
 unvollständig sein bzw. es fehlen gewisse Elemente (Das ist abhängig von Größe und Breite des 
-Viewports, ab 16.384 Pixeln Höhe wird es kritisch.)
+Viewports).
 
 * Optionales Feature: CCE-Export.
-    - Wenn das Erweiterungs-Modul HuHwt-CCE ab der Version 
+    - Wenn das Erweiterungs-Modul HuHwt-CCE ab der Version 2.20 installiert ist, kann man die aktuell in XTV angezeigten Personen und Familien in den Sammelbehälter übernehmen.
 
-Bei den Familienboxen werden Ein-/Aus-Falten-Schaltflächen eingeblendet.
+Steuerfelder in der Ansicht selbst:
 
-* Man kann den jeweils anhängigen Teil-Baum komplett aus- bzw. wieder einblenden
-    - Die jeweils letzten, noch nicht abgefragten Verbindungen werden jeweils 1 Ebene weiter per
-Ajax-Call abgefragt. Bereits vorhandene Teil-Bäume werden je nach Zustand komplett 
-sichtbar/unsichtbar gesetzt.
-    - (Noch nicht bekannte Teilbaum-Erweiterungen sind rötlich unterlegt, bekannte und
-eingeklappte werden beim Hovern grünlich eingefärbt)
+Bei den Personen-Boxen wird der Generationen-Rang in Bezug auf die Start-Person angezeigt
+  - (Nachkommen < 0, Vorfahren > 0)
+
+* Bei den Familienboxen werden Ein-/Aus-Falten-Schaltflächen für die jeweils nächste Ebene eingeblendet, das entspricht den jeweils anhängenden kompletten Teilbäumen. Über diese Schaltflächen kann die Anzeige gezielt erweitert werden, die Aktion lädt nur die jeweils relevanten Vorfahren bzw. Nachkommen. Noch nicht geöffnete Anschlusspunkte sind rot hinterlegt. Offene Anschlusspunkte sind transparent. Faltet man einen bereits geöffneten Teilbaum wieder ein, ist der Anschlusspunkt gelb hinterlegt.
+
+* Innerhalb einer Ebene/ eines Teilbaums gibt es darüberhinaus die Option, jeweils einen Zweig inaktiv zu setzen. Im Ausgangzustand sind alle Zweige sichtbar, die Schaltflächen sind transparent. Ein Klick darauf macht den Zweig unsichtbar, die Geometrie der Darstellung bleibt erhalten, die Schaltfläche wird gelb hinterlegt. Ein Strg-Klick (Ctrl-Click) blendet den Zweig komplett aus, die Geometrie der Darstellung ordnet sich entsprechend um und die Schaltfläche wird rot hinterlegt.
 
 Die Ansicht ist scrollfähig.
+
+Die Pagemap:
+
+Die Pagemap zeigt jederzeit den gesamten Baum. Der sichtbare Ausschnitt ist klar hervorgehoben. Beim Klick auf eine nicht im aktuellen Ausschnitt liegenden Bereich des Baums wechselt die Ansicht unmittelbar zu diesem Bereich. Man kann die Markierung "sichtbarer Ausschnitt" in der Pagemap verschieben, der Baumausschnitt in der Ansicht wandert entsprechend mit. Die Position(en) der primären Person sowie der fallweise über die Namensliste ausgewählte Person(en) werden deutlich farbig markiert und hervorgehoben.
 
 Die Ansicht kennt 3 Zustände:
 
@@ -98,7 +119,7 @@ Die Ansicht kennt 3 Zustände:
 
 Der expandierte Zustand wurde aus einer anderen Webtrees-Erweiterung übernommen. Der Eigner dieser Erweiterung hat dieses Modul wegen der Integration des Fullscreen-Modus ausgesetzt. Allerdings ist der expandierte Zustand aussagefähiger als die Normalansicht, es hat sich auch gezeigt, dass die Kombination von expandierter Ansicht und Fullscreen-Option das Problem abgeschnittener PNG-Inhalte vermeiden hilft. Zwischen den Zuständen kann über Schaltflächen in der Ansicht gewechselt werden.
 
-Die Ansicht ist technisch als Konstrukt von ineinandergeschachtelten Tabellen-Elementen realisiert. Dieses Verfahren ist robust und schnell, hat aber einen Nachteil: Es gibt keine Zoom-Option. 
+Die Ansicht ist technisch als Konstrukt von ineinandergeschachtelten Tabellen-Elementen realisiert. Dieses Verfahren ist robust und schnell, hat aber auch Nachteile: Es gibt keine Zoom-Option und die Technik erlaubt nur die vorliegende Darstellungs-Technik - Start-Person in der Mitte, Expansion horizontal links Nachfahren, rechts Vorfahren - Alternativen wie vertikale Expansion sind nicht darstellbar.
 
 ## Abhängigkeiten
 
@@ -116,8 +137,11 @@ kommen.
 ## Danksagung
 
 * Für die Umsetzung des Viewports in PNG wird die html2canvas-Bibliothek genutzt.
-*   ( https://html2canvas.hertzen.com/ | Apache License, Version 2.0 )
+*   ( https://html2canvas.hertzen.com/ | MIT License )
 * Die Bibliothek wird bei der HuHwt-Installation automatisch mit kopiert.
+
+* Die Pagemap ist abgeleitet von
+*   ( https://github.com/lrsjng/pagemap | MIT License) als fork ( https://github.com/PiSaucer/pagemap | MIT License )
 
 * Für Test, Anregung und Kritik besonderen Dank an Hermann Harthentaler. -> https://github.com/hartenthaler
 

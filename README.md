@@ -12,32 +12,46 @@ This is a webtrees 2.1 module - It cannot be used with webtrees 1.x.
 ## Introduction
 -------------
 
-The 'Interactive Treeview' in webtrees is a great tool to visualize the existing relationships in a compact way at a glance. 
+The 'Interactive Treev' diagram in Webtrees is a great tool for displaying relationships around a person at a glance.
 
-When using it, however, it is sometimes irritating that you don't really know whether
-the tree is now complete and it would be nice to have an overview of which
-and how many people are actually in the representation.
+When using it, however, it is sometimes irritating that you don't know exactly whether the tree is now complete and it would also be nice to have an overview of which and how many people are actually in the diagram. The screen also only ever shows part of the overall tree and you don't know exactly where in the tree the current section is actually located. If a person has several relationships, no differentiation is made between them. If persons appear several times in different places in the tree - implex - this situation cannot be recognized directly.
 
 This is where the expansion comes in:
 
-The initial state is defined via form control fields. If the view is open, it can be extensively analyzed and its status can be changed reversibly. You get information about the number of people shown at any time and you can navigate to a desired person in the view. The additional functions can be triggered via control fields in the view.
+The initial state is defined via form control fields. Once the view is open, it can be analyzed to a large extent and its status can be reversibly changed. Information about the number of people shown is available at any time and you can navigate to a desired person in the view. The additional functions can be triggered via control fields in the view.
 
+You can reload entire sections of the view or just individual family branches and hide them again.
+
+Implex states can be highlighted.
+
+You can suppress reloading in the implex case.
+
+Multiple relationships can be resolved and displayed separately.
+
+The entire tree is displayed as an abstracted pagemap at any time, you can navigate directly to any area of the tree via the pagemap and the position of the current screen section can be immediately recognized in the pagemap.
 ## Description of the functions
 ------------------------------
 
 Form controls:
 
 * You can specify the number of generations shown from the start
-    - '-' N '+' - option in the form's header    - Min: 2, Max: 25 - Default: 4
-- (The more generations given, the longer the primary dissolution takes.)
+    - '-' N '+' - option in the header form - Min: 1, Max: 25 - Default: 4
+- (The more generations specified, the longer the primary resolution takes).
 
-* You can control whether the patri- or matri-linear approach is used for the parent resolution 
-    - Patri-linear -> father's side takes precedence  / Matri-linear -> mother's side takes precedence
-    - (If there is no hit on the priority line, the other line is called automatically)
-- Checkbox 'Paternal side takes precedence' in header   - Default: Paternal (webtrees-Standard)
+* You can control whether the parent resolution is patri-linear or matri-linear
+    - Patri-linear -> Father side has priority / Matri-linear -> Mother side has priority
+    - (If there is no match on the priority line, the other line is automatically called up)
+- Checkbox 'Maternal side has priority' in the header form - Default: Patri-linear (webtrees standard)
 
-* In the person boxes, the generation rank in relation to the starting person is displayed 
-    - (Decedants < 0, Ancestors > 0)
+* Option 'Show Implex'
+    - If active, persons for whom implex was recognized are highlighted with a frame (default: off).
+
+* Option 'Suppress Implex'
+    - If active, subtrees based on persons/families for which Implex has been recognized are not expanded further or no extension boxes are added (default: off).
+
+* Option 'Show separately'
+    - If active, multiple relationships - 1 person with several partners - are displayed as separate family boxes, which are visually highlighted with dashed lines above and below (default: off).
+    - If the start person is affected, the entire view is divided into 2 or more areas. An attempt is made to keep the general alignment of the areas synchronized. The start person and generation columns in the areas should be on the same axes (default: off).
 
 View controls:
 
@@ -50,7 +64,7 @@ View controls:
          - button 'Expand next links' - option '1 level'
          - You can specifically expand the view completely.
          - button 'Expand next links' - option 'All'
-     - The extension actions automatically open the statistics view.
+    - The extension actions automatically open the statistics view.
 
 * You can display the number of people displayed and the links that are currently still open
      - 'Current state' button - click opens, next click closes
@@ -70,16 +84,23 @@ View controls:
 be incomplete or certain elements are missing (this depends on the size and width of the
 Viewports, from a height of 16,384 pixels it becomes critical.)
 
-On/off fold buttons are displayed for the family boxes.
+* Optional feature: CCE export.
+    - If the extension module HuHwt-CCE from version 2.20 is installed, the persons and families currently displayed in XTV can be transferred to the collection container.On/off fold buttons are displayed for the family boxes.
 
-* You can completely hide or show the respective sub-tree
-     - The last connections that have not yet been queried are each 1 level further by
-Ajax call queried. Existing partial trees become complete depending on their status
-set visible/invisible.
-     - (Not yet known subtree extensions are highlighted in red, known and
-collapsed ones are colored greenish when hovering)
+Control fields in the view itself:
+
+In the person boxes, the generation rank is displayed in relation to the start person
+  - (descendants < 0, ancestors > 0)
+
+* In the family boxes, fold-in/fold-out buttons are displayed for the next level, which corresponds to the complete sub-trees attached in each case. These buttons can be used to selectively expand the display; the action only loads the relevant ancestors or descendants. Connection points that are not yet open are highlighted in red. Open connection points are transparent. If an already opened subtree is folded again, the connection point is highlighted in yellow.
+
+* Within a level/sub-tree, there is also the option to set one branch inactive at a time. In the initial state, all branches are visible, the buttons are transparent. Clicking on it makes the branch invisible, the geometry of the display is retained and the button is highlighted in yellow. A Ctrl-click hides the branch completely, the geometry of the display is rearranged accordingly and the button is highlighted in red.
 
 The view is scrollable.
+
+The page map:
+
+The page map shows the entire tree at all times. The visible section is clearly highlighted. If you click on an area of the tree that is not in the current section, the view immediately switches to this area. You can move the “visible section” marker in the page map; the tree section in the view moves accordingly. The position(s) of the primary person and the person(s) selected via the name list are clearly marked in color and highlighted.
 
 The view knows 3 states:
 
@@ -111,13 +132,16 @@ other theme.
 
 ## Thanks
 
-* The html2canvas library is used to implement exporting the viewport to PNG .
-*   ( https://html2canvas.hertzen.com/ | Apache License, Version 2.0 )
-* The library is automatically copied with the HuHwt installation.
+* The html2canvas library is used to convert the viewport to PNG.
+* ( https://html2canvas.hertzen.com/ | MIT License )
+* The library is automatically copied during the HuHwt installation.
 
+* The pagemap is derived from
+* ( https://github.com/lrsjng/pagemap | MIT License ) as fork ( https://github.com/PiSaucer/pagemap | MIT License )
 * Special thanks to Hermann Harthentaler for test, suggestion and criticism. -> https://github.com/hartenthaler
 
 * Translation into Dutch - thanks to TheDutchJewel. 
+* Translation into Catalan and Spanish - many thanks to BernatBanyuls
 
 ## Installation and upgrading
 --------------------------
