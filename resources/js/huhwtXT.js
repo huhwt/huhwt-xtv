@@ -493,8 +493,9 @@ TreeViewHandlerXT.prototype.CCEadapter = function (button, treeHome) {
         tv.setLoading();
         jQuery.ajax({
             url: tv.ajaxCCE,
+            method: 'POST',
             dataType: 'json',
-            data: 'xrefs=' + XREF_ar.join(';'),
+            data: { xrefs: JSON.stringify(XREF_ar) },
             success: function (ret) {
                 var _ret = ret;
                 updateCCEcount(_ret, treeHome);
