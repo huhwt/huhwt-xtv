@@ -12,8 +12,7 @@ declare(strict_types=1);
 namespace HuHwt\WebtreesMods\InteractiveTreeXT;
 
 use Fisharebest\Webtrees\Webtrees;
-use Fisharebest\Webtrees\I18N;
-use function app;
+use Fisharebest\Webtrees\Registry;
 
 //webtrees major version switch
 if (defined("WT_VERSION"))
@@ -26,8 +25,6 @@ if (defined("WT_VERSION"))
 
 // Register our namespace
 require_once __DIR__ . '/autoload.php';
-  
-require __DIR__ . '/InteractiveTreeXT.php';
 
 // Create and return instance of the module
-return app(InteractiveTreeXT::class);
+return Registry::container()->get(InteractiveTreeXT::class);

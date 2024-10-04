@@ -2,12 +2,14 @@
 ==========================================================
 
 [![Latest Release](https://img.shields.io/github/v/release/huhwt/huhwt-xtv)][1]
-[![webtrees major version](https://img.shields.io/badge/webtrees-v2.1-green)][2]
+[![webtrees major version](https://img.shields.io/badge/webtrees-v2.2-green)][2]
 [![Downloads](https://img.shields.io/github/downloads/huhwt/huhwt-xtv/total)]()
 
 # Erweiterungen für Webtrees zur Prüfung und Anzeige von Inhalten in der Datenbank.
 
-Dies ist ein webtrees 2.1 Modul - kann nicht mit webtrees 1.x benutzt werden.
+Dies ist ein webtrees 2.2 Modul - kann nicht mit webtrees 2.1 benutzt werden.
+
+Für Systeme mit webtrees 2.1 bitte huhwt-xtv Release v2.1.20.0 bzw. huhwt-xtv Branch 2.1 verwenden.
 
 ## Einführung
 -------------

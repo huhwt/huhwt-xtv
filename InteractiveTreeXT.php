@@ -99,7 +99,7 @@ class InteractiveTreeXT extends InteractiveTreeModule implements ModuleGlobalInt
      * @return string
      */
     public function customModuleVersion(): string {
-        return '2.1.20.0';
+        return '2.2.0.0';
     }
 
     /**
@@ -223,7 +223,7 @@ class InteractiveTreeXT extends InteractiveTreeModule implements ModuleGlobalInt
      */
     public function boot(): void 
     {
-        $router_container = app(RouterContainer::class);
+        $router_container = Registry::container()->get(RouterContainer::class);
         assert($router_container instanceof RouterContainer);
 
         $router = $router_container->getMap();
