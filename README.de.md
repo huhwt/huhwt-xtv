@@ -9,7 +9,7 @@
 
 Dies ist ein webtrees 2.2 Modul - kann nicht mit webtrees 2.1 benutzt werden.
 
-Für Systeme mit webtrees 2.1 bitte huhwt-xtv Release v2.1.20.0 bzw. huhwt-xtv Branch 2.1 verwenden.
+Für Systeme mit webtrees 2.1 bitte das letzte Release aus huhwt-xtv Branch 2.1 verwenden.
 
 ## Einführung
 -------------
@@ -158,8 +158,6 @@ Development
 -------------------------
 
 [TODO]
-
-.. es wäre schön, wenn man in der Ansicht über eine Mini-Map navigieren könnte.
 
 -- für den PNG-Export Schriftgröße hochsetzen.
 

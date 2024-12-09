@@ -63,7 +63,7 @@ class TreeViewXTmod
      *
      * @param string $name the name of the TreeView object’s instance
      */
-    public function __construct(string $name = 'tvX', string $module, Tree $tree, string $XREFroot, string $mode,
+    public function __construct(string $name, string $module, Tree $tree, string $XREFroot, string $mode,
                                 int $showmatri = 0, bool $showImplex = false, bool $suppImplex = false)
     {
         $this->tree = $tree;
@@ -533,7 +533,7 @@ class TreeViewXTmod
      *
      * @return string
      */
-    private function drawChildren_default(Collection $familyList, string $earmark, int $gen = 1, int $state, bool $ajax = false): string
+    private function drawChildren_default(Collection $familyList, string $earmark, int $gen, int $state, bool $ajax = false): string
     {
         $html          = '';
         $children2draw = [];
@@ -846,7 +846,7 @@ class TreeViewXTmod
      *
      * @return string
      */
-    private function drawChildren_separated(Family $Cfamily, string $earmark, int $gen = 1, int $state, bool $ajax = false, string $ajOps = '', string $rcLfd = ''): string
+    private function drawChildren_separated(Family $Cfamily, string $earmark, int $gen, int $state, bool $ajax = false, string $ajOps = '', string $rcLfd = ''): string
     {
         $html          = '';
         $children2draw = [];
@@ -1225,7 +1225,7 @@ class TreeViewXTmod
      *
      * @return string
      */
-    private function drawPerson_self(Individual $person, string $Pxref, string $fID, string $_fID, int $state, string $line = '', bool $isRoot, string $rcLfd = '', int $isImplexI)
+    private function drawPerson_self(Individual $person, string $Pxref, string $fID, string $_fID, int $state, string $line, bool $isRoot, string $rcLfd, int $isImplexI)
     {
 
         $A_glevel = ' glevel="' . $this->glevel . '"';

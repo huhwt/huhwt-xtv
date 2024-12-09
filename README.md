@@ -9,7 +9,7 @@
 
 This is a webtrees 2.2 module - It cannot be used with webtrees 2.1.
 
-For webtrees 2.1 use the huhwt-xtv Release v2.1.20.0 respectively the huhwt-xtv Branch 2.1.
+For webtrees 2.1 use the the latest release of the huhwt-xtv Branch 2.1.
 
 ## Introduction
 -------------
@@ -87,7 +87,7 @@ be incomplete or certain elements are missing (this depends on the size and widt
 Viewports, from a height of 16,384 pixels it becomes critical.)
 
 * Optional feature: CCE export.
-    - If the extension module HuHwt-CCE from version 2.20 is installed, the persons and families currently displayed in XTV can be transferred to the collection container.On/off fold buttons are displayed for the family boxes.
+    - If the extension module HuHwt-CCE from version 2.20 is installed, the persons and families currently displayed in XTV can be transferred to the collection container.
 
 Control fields in the view itself:
 
@@ -155,7 +155,6 @@ Development
 
 [TODO]
 
-.. it would be nice if you could navigate in the viewport using a mini-map.
 .. Increase font size for PNG export.
 
 Bugs and feature requests
