@@ -139,12 +139,11 @@ kommen.
 ## Danksagung
 
 * Für die Umsetzung des Viewports in PNG wird die html2canvas-Bibliothek genutzt.
-*   ( https://html2canvas.hertzen.com/ | MIT License )
-* Die Bibliothek wird bei der HuHwt-Installation automatisch mit kopiert.
-
+ ( https://html2canvas.hertzen.com/ | MIT License )
+ Die Bibliothek wird bei der HuHwt-Installation automatisch mit kopiert.
 * Die Pagemap ist abgeleitet von
-*   ( https://github.com/lrsjng/pagemap | MIT License) als fork ( https://github.com/PiSaucer/pagemap | MIT License )
-
+   ( https://github.com/lrsjng/pagemap | MIT License)
+   als fork ( https://github.com/PiSaucer/pagemap | MIT License )
 * Für Test, Anregung und Kritik besonderen Dank an Hermann Harthentaler. -> https://github.com/hartenthaler
 
 * Übersetzung in Niederländische - Dank an TheDutchJewel

@@ -59,7 +59,7 @@ msgstr "Mütterliche Seite hat Vorrang"
 msgid "Generations in first view"
 msgstr "Generationen in Ausgangs-Ansicht"
 
-msgid "Toggle FullScreen View"
+msgid "Toggle Expanded View"
 msgstr "Im Vollbild anzeigen/Zurück"
 
 msgid "Current state"
@@ -145,3 +145,6 @@ msgstr "Checked -> Mehrfach-Beziehungen werden getrennt aufgelöst"
 
 msgid "Click here to hide/show partial subtree - Ctrl-Click -> collapse/expand"
 msgstr "Klick hier: Teilbaum ausblenden/anzeigen - Strg-Klick -> einfalten/erweitern"
+
+msgid "Show pagemap"
+msgstr "Zeige PageMap"

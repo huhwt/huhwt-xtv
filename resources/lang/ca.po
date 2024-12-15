@@ -59,7 +59,7 @@ msgstr "Prioridad en la banda paterna"
 msgid "Generations in first view"
 msgstr "Generacions en primer pla"
 
-msgid "Toggle FullScreen View"
+msgid "Toggle Expanded View"
 msgstr "Commutar a pantalla completa"
 
 msgid "Current state"

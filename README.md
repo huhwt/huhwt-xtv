@@ -135,11 +135,10 @@ other theme.
 ## Thanks
 
 * The html2canvas library is used to convert the viewport to PNG.
-* ( https://html2canvas.hertzen.com/ | MIT License )
-* The library is automatically copied during the HuHwt installation.
-
-* The pagemap is derived from
-* ( https://github.com/lrsjng/pagemap | MIT License ) as fork ( https://github.com/PiSaucer/pagemap | MIT License )
+ ( https://html2canvas.hertzen.com/ | MIT License )
+ The library is automatically copied during the HuHwt installation.
+* The pagemap is derived from ( https://github.com/lrsjng/pagemap | MIT License )
+as fork ( https://github.com/PiSaucer/pagemap | MIT License )
 * Special thanks to Hermann Harthentaler for test, suggestion and criticism. -> https://github.com/hartenthaler
 
 * Translation into Dutch - thanks to TheDutchJewel. 

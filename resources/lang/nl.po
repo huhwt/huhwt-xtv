@@ -69,7 +69,7 @@ msgstr "Moederlijke kant heeft voorrang"
 msgid "Generations in first view"
 msgstr "Generaties in eerste weergave"
 
-msgid "Toggle FullScreen View"
+msgid "Toggle Expanded View"
 msgstr "Weergave op volledig scherm in-/uitschakelen"
 
 msgid "Current state"

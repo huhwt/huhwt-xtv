@@ -19,6 +19,8 @@
  *          (done by html2canvas  https://html2canvas.hertzen.com/)
  *      added CCEadapter - transfer XREFs to ClippingsCartEnhanced-Module
  *      collapse/expand partial trees on any level
+ *      added Page-Map
+ *          (done by https://github.com/PiSaucer/pagemap slightly modified by me)
  * makeNList
  *      list of all names in viewport, ordered by surnames
  * showgens...
@@ -29,10 +31,12 @@
  *      adding Drag-and-Drop to Namelist
  */
 
-function TreeViewHandlerXT (tv_kenn, doFullScreen, MinTitle, MaxTitle) {
+// #region TreeViewHanderXT basic definition
+
+function TreeViewHandlerXT (tv_kenn, doExpanded, MinTitle, MaxTitle) {
     var tv = this; // Store "this" for usage within jQuery functions where "this" is not this ;-)
     this.tv_kenn = tv_kenn;
-    this.doFullScreen = doFullScreen;
+    this.doExpanded = doExpanded;
   
     this.treeview       = $('#' + tv_kenn + '_in'); //[0];
     this.treeHome       = document.getElementById(tv_kenn + '_tools');
@@ -43,6 +47,7 @@ function TreeViewHandlerXT (tv_kenn, doFullScreen, MinTitle, MaxTitle) {
     this.buttons        = $('.tv_button:first', this.toolbox);
     this.names          = $('#' + tv_kenn + '_namelist');
     this.namesul        = $('#' + tv_kenn + '_namelistul');
+    this.pageMap        = $('#' + 'page-map');
     this.zoom           = 100;                              // in percent
     this.boxWidth       = 180;                              // default family box width
     this.boxExpandedWidth = 250;                            // default expanded family box width
@@ -191,19 +196,35 @@ function TreeViewHandlerXT (tv_kenn, doFullScreen, MinTitle, MaxTitle) {
             tv.exportPNG(tv_kenn);
         };
     });
-    // Toggle Viewport to Fullscreen
-    tv.toolbox.find('#' + tv_kenn + 'bfs').each(function (index, tvFullScreen) {
-        let _tvFullScreen = tvFullScreen;
-        tvFullScreen.onclick = function() {
-            tv.container.parent().toggleClass('tvfs-full-screen');
-            tv.container.closest('.wt-ajax-load').toggleClass('tvfs-full-screen');
-            tv.doFullScreen = !tv.doFullScreen;
-            if (tv.doFullScreen)
-                _tvFullScreen.title = MinTitle;
-            else
-                _tvFullScreen.title = MaxTitle;
+    // Toggle Viewport to Expanded
+    tv.toolbox.find('#' + tv_kenn + 'bfs').each(function (index, tvExpanded) {
+        let _tvExpanded = tvExpanded;
+        tvExpanded.onclick = function() {
+            tv.container.parent().toggleClass('tvfs-expand-screen');
+            tv.container.closest('.wt-ajax-load').toggleClass('tvfs-expand-screen');
+            tv.doExpanded = !tv.doExpanded;
+            // tv.pageMap.toggleClass('not-visible');
+            if (tv.doExpanded) {
+                _tvExpanded.title = MinTitle;
+                tv.PageMapToggle(tv, 'ON');
+            } else {
+                _tvExpanded.title = MaxTitle;
+                tv.PageMapToggle(tv, 'OFF');
+            }
         };
     });
+    // Toggle Page-Map
+    tv.toolbox.find('#' + tv_kenn + 'bPageMap').each(function (index, tvPageMap) {
+        let _tvPageMap = tvPageMap;
+        tvPageMap.onclick = function() {
+            if (tvPageMap.classList.contains('tvPressed')) {
+                tv.PageMapToggle(tv, 'OFF');
+            } else {
+                tv.PageMapToggle(tv, 'ON');
+            }
+        }
+    });
+
     // Center on rootperson
     // tv.toolbox.find('#' + tv_kenn + 'bCenter').each(function (index, tvCenter) {
     //     tvCenter.onclick = function () {
@@ -275,10 +296,15 @@ function TreeViewHandlerXT (tv_kenn, doFullScreen, MinTitle, MaxTitle) {
     tv.centerOnRoot();
     
     //
-    if (doFullScreen) {
-        tv.container.parent().toggleClass('tvfs-full-screen');
+    if (doExpanded) {
+        tv.container.parent().toggleClass('tvfs-expand-screen');
     }
 }
+
+// #endregion TreeViewHanderXT basic definition
+
+// #region TreeViewHanderXT prototype extensions
+
 /**
  * Class TreeView setLoading method
  */
@@ -293,7 +319,7 @@ TreeViewHandlerXT.prototype.setComplete = function () {
     this.treeview.css('cursor', 'move');
     this.loadingImage.css('display', 'none');
 };
-  
+
 /**
  * Class TreeView getSize  method
  * Store the viewport current size
@@ -308,7 +334,7 @@ TreeViewHandlerXT.prototype.getSize = function () {
     tv.topMin = offset.top;
     tv.topMax = tv.topMin + container.innerHeight();
 };
-  
+
 /**
    * Class TreeView updateTree  method
    * Perform ajax requests to complete the tree after drag
@@ -366,7 +392,7 @@ TreeViewHandlerXT.prototype.updateTree = function (center, button, doall, doloop
     });
     tv.updateTreeDo(tv, center, button, doall, doloop, elts, to_load, RC_boxleft);
   };
-  
+
 /**
  * Class TreeView updateTree  method
  * Perform ajax requests to expand the tree on demand
@@ -444,7 +470,7 @@ TreeViewHandlerXT.prototype.updateTreeDo = function (tv, center, button, doall, 
     }
     return false;
 };
-  
+
 /**
  * Class TreeView CCEadapter method
  * Perform ajax requests to send XREFs to cart
@@ -551,7 +577,7 @@ TreeViewHandlerXT.prototype.compact = function (tv_kenn) {
     tv.setComplete();
     return false;
 };
-  
+
 /**
  * Class TreeView show/hide shownext panel
  */
@@ -574,9 +600,9 @@ TreeViewHandlerXT.prototype.shownext  = function (tv_kenn, auto_close) {
     tv.setComplete();
     return false;
 };
-  
+
 /**
- * Class TreeView shownext method
+ * Class TreeView shownextDo method
  * @param tv_kenn   string      Prefix for IDs to identify individual elements
  * @param tv_kenn   nextXXX     Identifying 'Expand-1'/'Expand-All'
  */
@@ -681,7 +707,30 @@ TreeViewHandlerXT.prototype.showstatsExec  = function (tv) {
     elDt[2].textContent = tCw;
     elDt[4].textContent = tCh;
 };
-  
+
+/**
+ * Class TreeView manage pagemap
+ */
+TreeViewHandlerXT.prototype.PageMapToggle = function(tv, pmState) {
+    var b = $('#' + tv.tv_kenn + 'bPageMap', tv.toolbox);
+    if (pmState == 'ON') {
+        if (!b.hasClass('tvPressed')) {
+            b.addClass('tvPressed');
+            if (tv.pageMap.hasClass('not-visible')) {
+                tv.pageMap.toggleClass('not-visible');
+            }
+        }
+    } else {
+        if (b.hasClass('tvPressed')) {
+            b.removeClass('tvPressed');
+            if (!tv.pageMap.hasClass('not-visible')) {
+                tv.pageMap.toggleClass('not-visible');
+            }
+        }
+    }
+}
+
+
 /**
  * Class TreeView export top PNG
  */
@@ -787,7 +836,7 @@ TreeViewHandlerXT.prototype.namelistul = function (event) {
     elA.classList.add('selectedID');                  // mark list-element as selected
     tv.uliIDsel = elA;                                // save list-element
     let slA = elA.textContent;
-    let xrefID = slA.substring(slA.indexOf('(')+1);
+    let xrefID = slA.substring(slA.lastIndexOf('(')+1);
     xrefID = xrefID.substring(0, xrefID.indexOf(')'));
     xrefID = ''.concat(tv.tv_kenn, 'xref', xrefID);
     var boxes = document.getElementsByName(xrefID);
@@ -1141,6 +1190,10 @@ TreeViewHandlerXT.prototype.expandBox = function (_box, event) {
     this.getSize();
     return false;
 };
+
+// #endregion TreeViewHanderXT prototype extensions
+
+// #region Independent Functions
 
 function updateCCEcount(XREFcnt, elem_main) {
     let pto = typeof XREFcnt;
@@ -1642,3 +1695,5 @@ function doubleRoot_RC(_pref, tv, exp_toRight) {
     });
 
 }
+
+// #endregion Independent Functions

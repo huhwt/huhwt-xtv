@@ -351,7 +351,7 @@ class TreeViewXTmod
      *
      * @return string[]  HTML and Javascript
      */
-    public function drawViewport(Individual $individual, string $earmark, int $generations, bool $doExpand = false): array
+    public function drawViewport(Individual $individual, string $earmark, int $generations, bool $doExpand): array
     {
         $_name = trim($this->name);
         $_root = $individual->xref();
@@ -378,21 +378,26 @@ class TreeViewXTmod
             $this->dump_file($individual, $innerHTML);
         }
 
-        $showseparated = ( $this->mode == 'separated' ? '1' : '0' );
+        $showseparated = $this->mode == 'separated' ? '1' : '0';
 
-        $html = view('modules/treeviewXT/chart', [
-            'module'     => $this->module,                  // EW.H - MOD ... put own Module here!
-            'name'       => $_name,
-            'earmark'    => $earmark,
-            'XREFroot'   => $_root,
-            'innerHTML'  => $innerHTML,
-            'tree'       => $_tree,
-            'withCCE'    => $this->CCEok,
-            'showseparated' => $showseparated,
-        ]);
         $_minTitle = I18N::translate('Minimize View');
         $_maxTitle = I18N::translate('Maximize View');
-        $_doExpand = ( $doExpand ? 'true' : 'false' );
+        $_bfsTitle = $doExpand ? $_minTitle : $_maxTitle;
+        $pmaphide  = $doExpand ? '1' : '0';
+
+        $html = view('modules/treeviewXT/chart', [
+            'module'    => $this->module,                  // EW.H - MOD ... put own Module here!
+            'name'      => $_name,
+            'earmark'   => $earmark,
+            'XREFroot'  => $_root,
+            'innerHTML' => $innerHTML,
+            'tree'      => $_tree,
+            'withCCE'   => $this->CCEok,
+            'showseparated' => $showseparated,
+            'bfsTitle'  => $_bfsTitle,
+            'pmaphide'  => $pmaphide,
+        ]);
+        $_doExpand = $doExpand ? 'true' : 'false';
         return [
             $html,
             'var ' . $this->name . 'Handler = new TreeViewHandlerXT("' . $this->name  .'",'. $_doExpand . ', "' . $_minTitle . '", "' . $_maxTitle . '");',

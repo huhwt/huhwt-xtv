@@ -99,7 +99,7 @@ class InteractiveTreeXT extends InteractiveTreeModule implements ModuleGlobalInt
      * @return string
      */
     public function customModuleVersion(): string {
-        return '2.2.1.0';
+        return '2.2.1.1';
     }
 
     /**
@@ -179,7 +179,7 @@ class InteractiveTreeXT extends InteractiveTreeModule implements ModuleGlobalInt
      * @see \Fisharebest\Webtrees\Module\ModuleGlobalInterface::headContent()
      * CSS class for the URL.
      *
-     * EW.H - MOD ... we need our Script too, so we do a double injection
+     * EW.H - MOD ... we need our scripts too, so we do a multiple injection
      * @return string
      */
     public function headContent(): string
@@ -209,7 +209,7 @@ class InteractiveTreeXT extends InteractiveTreeModule implements ModuleGlobalInt
     /**
      * {@inheritDoc}
      * @see \Fisharebest\Webtrees\Module\ModuleGlobalInterface::bodyContent()
-     * EW.H - MOD ... - ( see headConten() )
+     * EW.H - MOD ... - ( see headContent() )
      * @return string
      */
     public function bodyContent(): string
