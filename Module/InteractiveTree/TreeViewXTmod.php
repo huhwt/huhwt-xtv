@@ -1312,9 +1312,9 @@ class TreeViewXTmod
      * 
      * @param Family $theFamily
      * 
-     * @return Individual
+     * @return Individual || null
      */
-    private function test_showmatri(Family $theFamily): Individual
+    private function test_showmatri(Family $theFamily): ?Individual
     {
         if ($this->showmatri == 1) {
             $parent = $theFamily->wife() ?? $theFamily->husband();
