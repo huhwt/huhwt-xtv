@@ -165,3 +165,6 @@ msgstr "Aangevinkt -> Meerdere relaties worden afzonderlijk afgehandeld"
 
 msgid "Click here to hide/show partial subtree - Ctrl-Click -> collapse/expand"
 msgstr "Klik hier om gedeeltelijke subboom te verbergen/tonen - Ctrl-klik -> samenvouwen/uitvouwen"
+
+msgid "Show pagemap"
+msgstr "Toon paginaoverzicht"
