@@ -16,6 +16,8 @@ For webtrees 2.1 use the the latest release of the huhwt-xtv Branch 2.1.
 
 The 'Interactive Treev' diagram in Webtrees is a great tool for displaying relationships around a person at a glance.
 
+It can be accessed from the 'Tabs' of the 'Individual page' as well as via the general 'Genealogy' sub-hierarchy 'Charts'.
+
 When using it, however, it is sometimes irritating that you don't know exactly whether the tree is now complete and it would also be nice to have an overview of which and how many people are actually in the diagram. The screen also only ever shows part of the overall tree and you don't know exactly where in the tree the current section is actually located. If a person has several relationships, no differentiation is made between them. If persons appear several times in different places in the tree - implex - this situation cannot be recognized directly.
 
 This is where the expansion comes in:
@@ -30,9 +32,12 @@ You can suppress reloading in the implex case.
 
 Multiple relationships can be resolved and displayed separately.
 
-The entire tree is displayed as an abstracted pagemap at any time, you can navigate directly to any area of the tree via the pagemap and the position of the current screen section can be immediately recognized in the pagemap.
+The entire tree is also displayed as an abstracted page map. You can use the page map to navigate directly to any area of the tree and the position of the current screen section is immediately visible in the page map.
+
 ## Description of the functions
 ------------------------------
+
+The module can be used embedded as a tab in the 'Individual page' or independently as an own 'Genealogy' chart. The form control panels described below are only accessible when used as a chart.
 
 Form controls:
 
@@ -81,6 +86,10 @@ View controls:
          - The list of names can be moved freely in the viewport
          - The content of the list of names can be downloaded as a txt file
 
+* The page map can be shown or hidden as desired.
+
+* Expand view / View in fullscreen mode (see below).
+
 * You can have the state of the view exported as PNG.
      - It will translate the current view into a PNG. Caution: Depending on the browser, the image
 be incomplete or certain elements are missing (this depends on the size and width of the
@@ -107,13 +116,15 @@ The page map shows the entire tree at all times. The visible section is clearly 
 The view knows 3 states:
 
 1. Normal view
-     - The webtrees header with all menus and selection options as well as the form control fields of the module are visible, the view itself is only a few 100px high.
+    - The Webtrees header with all menus and selection options as well as the form control fields of the module are visible, the view itself is only a few 100px high.
 2. Expanded state
      - The view covers the whole Webtrees screen. The browser header with tabs, address bar and bookmarks bar is still visible.
 3. Fullscreen mode
      - The view covers the entire screen including the browser header.
 
-* The view opens in the expanded state.
+* The view opens as a normal view when called up as a 'Individual page' tab and in an expanded state when called up from the 'Genealogy' diagrams.
+    - When called up as a person page tab, the form control fields are not accessible; 4 generations are resolved in advance.
+    - The start view - normal or expanded - can be influenced using the admin function 'Manage settings'. XTV is listed in both the 'Genealogy' diagrams and the 'Individual page' tabs; the settings for both uses are managed together.
 
 The expanded state was taken from another Webtrees extension. The owner of this extension has suspended this module due to the integration of fullscreen mode. However, the expanded state is more meaningful than the normal view, it has also been shown that the combination of the expanded view and the full-screen option helps to avoid the problem of truncated PNG content. You can switch between the states using buttons in the view.
 

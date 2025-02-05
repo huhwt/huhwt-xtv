@@ -60,7 +60,7 @@ msgid "Generations in first view"
 msgstr "Generationen in Ausgangs-Ansicht"
 
 msgid "Toggle Expanded View"
-msgstr "Im Vollbild anzeigen/Zurück"
+msgstr "Expandiert anzeigen/Zurück"
 
 msgid "Current state"
 msgstr "Aktueller Zustand"
@@ -148,3 +148,21 @@ msgstr "Klick hier: Teilbaum ausblenden/anzeigen - Strg-Klick -> einfalten/erwei
 
 msgid "Show pagemap"
 msgstr "Zeige PageMap"
+
+msgid "View preferences"
+msgstr "Einstellungen anzeigen"
+
+msgid "Options for starting XTV - primary view"
+msgstr "Optionen zum Starten von XTV - Primäransicht"
+
+msgid "XTV in Genealogy/Charts - start as ..."
+msgstr "XTV in Genealogie/Diagramme - Starten als ..."
+
+msgid "XTV in Individual page/Tabs - start as ..."
+msgstr "XTV in Personenseite/Tabs - Starten als ..."
+
+msgid "Basic view"
+msgstr "Normalansicht"
+
+msgid "Expanded view"
+msgstr "Expandierter Zustand"

@@ -16,6 +16,8 @@ Für Systeme mit webtrees 2.1 bitte das letzte Release aus huhwt-xtv Branch 2.1 
 
 Das Interaktive Sanduhrdiagramm in Webtrees ist ein großartiges Tool, um Beziehungen rund um eine Person auf einen Blick darzustellen.
 
+Es kann sowohl aus den Reitern der Personen-Ansicht als auch über die allgemeine Genealogie-Funktion 'Diagramme' aufgerufen werden.
+
 Bei der Nutzung ist es allerdings manchmal irritierend, dass man nicht so genau weiß, ob der Baum jetzt komplett ist und es wäre auch angenehm, wenn man einen Überblick hätte, welche und wieviele Personen nun eigentlich in der Darstellung sind. Der Bildschirm zeigt auch immer nur einen Teil des Gesamtbaums und man weiß nicht so genau, wo im Baum der aktuelle Ausschnitt eigentlich zu verorten sein mag. Hat eine Person mehrere Beziehungen, wird zwischen diesen nicht differenziert. Treten Personen mehrfach an verschiedenen Stellen im Baum auf - Implex -, kann man diese Situation nicht direkt erkennen.
 
 Hier setzt nun die Erweiterung an:
@@ -30,10 +32,12 @@ Man kann im Implex-Fall das Nachladen unterdrücken.
 
 Man kann Mehrfach-Beziehungen getrennt auflösen und darstellen.
 
-Der gesamte Baum wird jederzeit abstrahiert als Pagemap angezeigt, man kann über die Pagemap direkt zu jedem Bereich des Baums navigieren und die Position des aktuellen Bildschirm-Ausschnitts ist in der Pagemap unmittelbar erkannbar.
+Der gesamte Baum wird auch fallweise abstrahiert als Pagemap angezeigt, man kann über die Pagemap direkt zu jedem Bereich des Baums navigieren und die Position des aktuellen Bildschirm-Ausschnitts ist in der Pagemap unmittelbar erkannbar.
 
 ## Beschreibung der Funktionen
 ------------------------------
+
+Das Modul kann eingebettet als Reiter in der Personenseite oder unabhängig als eigenes Genealogie-Diagramm verwendet werden. Die nachstehend beschriebenen Steuerfelder sind nur bei der Verwendung als Diagramm zugänglich.
 
 Formular-Steuerfelder:
 
@@ -83,6 +87,8 @@ Steuerfelder in der Ansicht-Toolbox:
         - Die Namensliste ist frei im Viewport verschiebbar
         - Der Inhalt der Namensliste kann als txt-File heruntergeladen werden
 
+* Die Pagemap kann gezielt ein- und ausgeblendet werden.
+
 * Ansicht expandieren / Ansicht im Fullscreen-Modus (siehe unten).
 
 * Man kann den Zustand der Ansicht als PNG exportieren lassen.
@@ -111,13 +117,15 @@ Die Pagemap zeigt jederzeit den gesamten Baum. Der sichtbare Ausschnitt ist klar
 Die Ansicht kennt 3 Zustände:
 
 1. Normalansicht
-    - Der Webtrees-Kopf mit allen Menüs und Auswahloptionen sowie die Formular-Steuerfelder des Moduls sind sichtbar, die Ansicht selbst ist nur wenige 100px hoch.
+    - Der Webtrees-Kopf mit allen Menüs und Auswahloptionen sowie fallweise die Formular-Steuerfelder des Moduls sind sichtbar, die Ansicht selbst ist nur wenige 100px hoch.
 2. Expandierter Zustand
     - Die Ansicht überdeckt den ganzen Webtrees-Bildschirm. Der Browserkopf mit Tabs, Adressleiste und Lesezeichenleiste ist noch sichtbar.
 3. Fullscreen-Modus
     - Die Ansicht überdeckt den ganzen Bildschirm inklusive Browserkopf.
 
-* Die Ansicht wird im expandierten Zustand geöffnet.
+* Die Ansicht wird beim Aufruf als Personenseite-Tab als Normalansicht und beim Aufruf aus den Genealogie-Diagrammen im expandierten Zustand geöffnet.
+    - Beim Aufruf als Personenseite-Tab sind die Formular-Steuerfelder nicht zugänglich, es werden 4 Generationen vorab aufgelöst.
+    - Die Startansicht - Normal oder expandiert - kann über die Admin-Funktion 'Einstellungen verwalten' beeinflusst werden. XTV ist sowohl bei den Genealogie-Diagrammen als auch bei den Personenseite-Reitern gelistet, die Einstellungen beider Verwendungen werden gemeinsam verwaltet.
 
 Der expandierte Zustand wurde aus einer anderen Webtrees-Erweiterung übernommen. Der Eigner dieser Erweiterung hat dieses Modul wegen der Integration des Fullscreen-Modus ausgesetzt. Allerdings ist der expandierte Zustand aussagefähiger als die Normalansicht, es hat sich auch gezeigt, dass die Kombination von expandierter Ansicht und Fullscreen-Option das Problem abgeschnittener PNG-Inhalte vermeiden hilft. Zwischen den Zuständen kann über Schaltflächen in der Ansicht gewechselt werden.
 

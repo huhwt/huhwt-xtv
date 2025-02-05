@@ -3,7 +3,7 @@
 /**
  * HuH Extensions for webtrees - Treeview-Extended
  * Interactive Treeview with add-ons
- * Copyright (C) 2020-2024 EW.Heinrich
+ * Copyright (C) 2020-2025 EW.Heinrich
  */
 
 declare(strict_types=1);
@@ -19,9 +19,10 @@ use Fisharebest\Webtrees\Http\ViewResponseTrait;
 use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Individual;
 use Fisharebest\Webtrees\Module\InteractiveTreeModule;
+use Fisharebest\Webtrees\Module\ModuleConfigTrait;
 use Fisharebest\Webtrees\Module\ModuleGlobalInterface;
 use Fisharebest\Webtrees\Module\ModuleChartInterface;
-use Fisharebest\Webtrees\Module\ModuleBlockInterface;
+use Fisharebest\Webtrees\Module\ModuleConfigInterface;
 use Fisharebest\Webtrees\Module\ModuleCustomInterface;
 use Fisharebest\Webtrees\Module\ModuleTabInterface;
 use Fisharebest\Webtrees\Registry;
@@ -30,6 +31,7 @@ use Fisharebest\Webtrees\Validator;
 use Fisharebest\Webtrees\View;
 use Fisharebest\Webtrees\Module\ModuleCustomTrait;
 use Fisharebest\Webtrees\Module\ModuleBlockTrait;
+
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -37,6 +39,7 @@ use HuHwt\WebtreesMods\InteractiveTreeXT\InteractiveTreeXTmod;
 use HuHwt\WebtreesMods\InteractiveTreeXT\Module\TreeViewXTmod;
 use HuHwt\WebtreesMods\InteractiveTreeXT\Traits\ModuleChartTrait;
 use HuHwt\WebtreesMods\InteractiveTreeXT\Traits\ModuleTabTrait;
+use HuHwt\WebtreesMods\InteractiveTreeXT\Traits\XTVconfigTrait;
 use HuHwt\WebtreesMods\InteractiveTreeXT\Configuration;
 
 use intval;
@@ -49,13 +52,14 @@ use intval;
  */
 
 class InteractiveTreeXT extends InteractiveTreeModule implements ModuleGlobalInterface, ModuleCustomInterface, 
-    ModuleChartInterface, ModuleTabInterface
+    ModuleChartInterface, ModuleTabInterface, ModuleConfigInterface
 {
     use ModuleCustomTrait;
     use ModuleChartTrait;
     use ModuleTabTrait;
-    // use ViewResponseTrait;
-    // use IndividualTrait;
+    use ModuleConfigTrait;
+
+    use XTVconfigTrait;
 
     private const ROUTE_DEFAULT = 'treeXTV';
     private const ROUTE_URL = '/tree/{tree}/treeXTV';
@@ -99,7 +103,7 @@ class InteractiveTreeXT extends InteractiveTreeModule implements ModuleGlobalInt
      * @return string
      */
     public function customModuleVersion(): string {
-        return '2.2.1.1';
+        return '2.2.1.3';
     }
 
     /**
@@ -289,12 +293,15 @@ class InteractiveTreeXT extends InteractiveTreeModule implements ModuleGlobalInt
 
         $tree = $individual->tree();
 
+        /** EW.H - MOD ... check preferences */
+        $tabOption = (boolean) $this->getPreference('tab_Option', '0');
+
         $tvPref = 'tv' . 'XT';
         $treeview = new TreeViewXTmod($tvPref, $module, $tree, $individual->xref(), 'default', $showmatri );
         $treeview->init();
 
         $subtitleAr[] = $this->chartSubTitle($individual);
-        [$html, $js] = $treeview->drawViewport($individual, 'XT', $generations, false);
+        [$html, $js] = $treeview->drawViewport($individual, 'XT', $generations, $tabOption);
 
         return view('modules/treeviewXT/tab', [
             'html'  => $html,
@@ -391,6 +398,9 @@ class InteractiveTreeXT extends InteractiveTreeModule implements ModuleGlobalInt
         $jsImp = [];
         $subtitleAr = [];
 
+        /** EW.H - MOD ... check preferences */
+        $chartOption = (boolean) $this->getPreference('chart_Option', '1');
+
         // for ( $tvi = 0; $tvi < count($individualAr); $tvi++) {
             // if ($tvi == 0) {
             //     $html_JS = view("{$this->name()}::script", [
@@ -405,7 +415,7 @@ class InteractiveTreeXT extends InteractiveTreeModule implements ModuleGlobalInt
             $tv->init();
 
             $subtitleAr[] = $this->chartSubTitle($individual);
-            [$html, $js] = $tv->drawViewport($individual, $tvPrefix[0], $generations, true);
+            [$html, $js] = $tv->drawViewport($individual, $tvPrefix[0], $generations, $chartOption);
 
             $htmlAr[] = $html;
             $jsAr[] = $js;
