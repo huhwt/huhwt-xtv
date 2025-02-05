@@ -168,3 +168,21 @@ msgstr "Klik hier om gedeeltelijke subboom te verbergen/tonen - Ctrl-klik -> sam
 
 msgid "Show pagemap"
 msgstr "Toon paginaoverzicht"
+
+msgid "View preferences"
+msgstr "Toon voorkeuren"
+
+msgid "Options for starting XTV - primary view"
+msgstr "Opties voor het starten van XTV - primaire weergave"
+
+msgid "XTV in Genealogy/Charts - start as ..."
+msgstr "XTV in Genealogie/Diagrammen - starten als ..."
+
+msgid "XTV in Individual page/Tabs - start as ..."
+msgstr "XTV in Persoonspagina/Tabbladen - starten als ..."
+
+msgid "Basic view"
+msgstr "Basisweergave"
+
+msgid "Expanded view"
+msgstr "Uitgebreide weergave"
