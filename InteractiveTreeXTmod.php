@@ -3,7 +3,7 @@
 /**
  * HuH Extensions for webtrees - Treeview-Extended
  * Interactive Treeview with add-ons
- * Copyright (C) 2020-2024 EW.Heinrich
+ * Copyright (C) 2020-2025 EW.Heinrich
  */
 
 declare(strict_types=1);
@@ -135,7 +135,7 @@ class InteractiveTreeXTmod extends AbstractModule implements RequestHandlerInter
 
         $tree       = Validator::attributes($request)->tree();
         $XREFindi   = Validator::queryParams($request)->string('XREFindi', '');
-        $xrefs = Validator::queryParams($request)->string('xrefs', '');
+        $xrefs      = Validator::queryParams($request)->string('xrefs', '');
 
         $CCEok = class_exists("HuHwt\WebtreesMods\ClippingsCartEnhanced\ClippingsCartEnhancedModule", true);
         if (!$CCEok) {

@@ -1,13 +1,18 @@
 /**
  * HuH Extensions for webtrees - Treeview-Extended
  * Interactive Treeview with add-ons
- * Copyright (C) 2020-2024 EW.Heinrich
+ * Copyright (C) 2020-2025 EW.Heinrich
  * 
  * ---------------------------------------------
  * HuHwt EW.H - MOD ...
  * TreeViewHandler 
  *      added Statistics
- *      added Namelist
+ *          count of Individuals in chart as well as total name boxes -> may be higher due to Implex
+ *          count of open connections
+ *          range of generations shown in chart
+ *          width and height of complete chart
+ *          count of Individuals in every generation
+ *      added Nlist
  *      dropped AutoExpand on dragging
  *      added AutoExpand on button-action
  *          -   +1 Level
@@ -21,22 +26,25 @@
  *      collapse/expand partial trees on any level
  *      added Page-Map
  *          (done by https://github.com/PiSaucer/pagemap slightly modified by me)
- * makeNList
+ * make_NlistID
  *      list of all names in viewport, ordered by surnames
  * showgens...
  *      adding Generations-Spinner functionality to Chart-Menu
  * isInViewport
  *      test if element is currently in viewport
  * dragElement
- *      adding Drag-and-Drop to Namelist
+ *      adding Drag-and-Drop to Nlist
  */
 
 // #region TreeViewHanderXT basic definition
 
-function TreeViewHandlerXT (tv_kenn, doExpanded, MinTitle, MaxTitle) {
-    var tv = this; // Store "this" for usage within jQuery functions where "this" is not this ;-)
-    this.tv_kenn = tv_kenn;
-    this.doExpanded = doExpanded;
+function TreeViewHandlerXT (tv_kenn, doExpanded, MinTitle, MaxTitle, markDeceased=false) {
+    var tv              = this; // Store "this" for usage within jQuery functions where "this" is not this ;-)
+    this.tv_kenn        = tv_kenn;
+    this.doExpanded     = doExpanded;
+    this.ChartMode      = (tv_kenn.endsWith('C') ? true : false) || doExpanded;
+    this.markDeceased   = (markDeceased == '1');
+    this.noDeceased     = false;
   
     this.treeview       = $('#' + tv_kenn + '_in'); //[0];
     this.treeHome       = document.getElementById(tv_kenn + '_tools');
@@ -45,9 +53,14 @@ function TreeViewHandlerXT (tv_kenn, doExpanded, MinTitle, MaxTitle) {
     this.next           = $('#' + tv_kenn + '_shownext');
     this.stats          = $('#' + tv_kenn + '_showstats');
     this.buttons        = $('.tv_button:first', this.toolbox);
-    this.names          = $('#' + tv_kenn + '_namelist');
-    this.namesul        = $('#' + tv_kenn + '_namelistul');
+    this.namesID        = $('#' + tv_kenn + '_NlistID');
+    this.namesIDul      = $('#' + tv_kenn + '_NlistIDul');
+    this.namesGL        = $('#' + tv_kenn + '_NlistGL');
+    this.namesGLul      = $('#' + tv_kenn + '_NlistGLul');
     this.pageMap        = $('#' + 'page-map');
+    this.bnListID       = $('#' + tv_kenn + 'bNlistID');
+    this.bnShowStats    = $('#' + tv_kenn + 'bShowStats');
+
     this.zoom           = 100;                              // in percent
     this.boxWidth       = 180;                              // default family box width
     this.boxExpandedWidth = 250;                            // default expanded family box width
@@ -60,10 +73,19 @@ function TreeViewHandlerXT (tv_kenn, doExpanded, MinTitle, MaxTitle) {
     this.pIDsel         = null;
   
     this.container      = this.treeview.parent();           // Store the container element ("#" + tv_kenn + "_out")
+    // context NlistID
+    this.NlistID_do  = false;                            // check if NlistID is active
     this.boxIDsel       = null;                             // Store the active Box-ID
     this.uliIDsel       = null;                             // Store the selected li-element
+    // context genlist/NlistGL
+    this.hasGL          = false;                            // Store if chart has genList activated
+    this.boxGLsel       = [];                               // Store the active Box-ID
+    this.uliGLsel       = null;                             // Store the selected genList-element
+    this.NlistGL_do  = false;                            // check if NlistGL is active
+    this.boxGLIDsel     = null;                             // Store the active Box-ID
+    this.uliGLIDsel     = null;                             // Store the selected genListn-element
+
     this.auto_box_width = false;                            // check if compact-view is active
-    this.namelist_do    = false;                            // check if namelist is active
     this.updating       = false;                            // check if there are actions pending
     this.showstats_do   = false;                            // check if showstats-form is shown
     this.shownext_do    = true;                             // check if show-next-panel is shown
@@ -183,10 +205,10 @@ function TreeViewHandlerXT (tv_kenn, doExpanded, MinTitle, MaxTitle) {
             tv.showstats(tv);
         };
     });
-    // Show/Hide Namelist-Form
-    tv.toolbox.find('#' + tv_kenn + 'bNamelist').each(function (index, tvNamelist) {
-        tvNamelist.onclick = function () {
-            tv.namelist(tv_kenn);
+    // Show/Hide Nlist-Form
+    tv.toolbox.find('#' + tv_kenn + 'bNlistID').each(function (index, tvNlist) {
+        tvNlist.onclick = function () {
+            tv.NlistID(tv_kenn);
         };
     });
     // Execute 'Transform viewport-content to PNG'
@@ -194,6 +216,16 @@ function TreeViewHandlerXT (tv_kenn, doExpanded, MinTitle, MaxTitle) {
         tvExportPNG.onclick = function () {
             tv.setLoading();
             tv.exportPNG(tv_kenn);
+        };
+    });
+    // Execute 'Hide deceased persons'
+    tv.toolbox.find('#' + tv_kenn + 'bHideDeceased').each(function (index, tvHideDeceased) {
+        tvHideDeceased.onclick = function () {
+            if (tvHideDeceased.classList.contains('tvPressed')) {
+                tv.HideDeceased(tv, 'OFF');
+            } else {
+                tv.HideDeceased(tv, 'ON');
+            }
         };
     });
     // Toggle Viewport to Expanded
@@ -254,33 +286,63 @@ function TreeViewHandlerXT (tv_kenn, doExpanded, MinTitle, MaxTitle) {
             tv.showstats(tv, true);
         };
     });
-    // Add click-event to namelist to add Drag-and-Drop functionality
-    this.container.find('#' + tv_kenn + '_namelist').each(function(index, tvNamelistDrag) {
-        s_elnl = tv_kenn + '_namelist';
-        tvNamelistDrag.onclick = dragElement(document.getElementById(s_elnl), tv);
-    });
-    // Add click-event to namelist-ul to Highlight selected line and corresponding box in viewport
+    // Add click-event to NlistID-ul to Highlight selected line and corresponding box in viewport
     // Click is done on child element, therefore event will only be done when bubbling happens ...
     // Click-event will also occur when resizing element itsself, but then eventPhase == 2 - event.AT_TARGET
-    this.container.find('#' + tv_kenn + '_namelistul').each(function(index, tvNamelistUl) {
-        tvNamelistUl.onclick = function(event) {
+    this.container.find('#' + tv_kenn + 'sGenStats').each(function(index, tvNlistGl) {
+        tvNlistGl.onclick = function(event) {
             if (event.eventPhase == 3) {          // Click on li -> eventPhase == 3 - event.BUBBLING_PHASE
-                tv.namelistul(event);
+                tv.genlistnul(event);
+                event.stopPropagation();
+            } else
+                event.stopPropagation();
+        };
+    });
+    // Add click-event to NlistID to add Drag-and-Drop functionality
+    this.container.find('#' + tv_kenn + '_NlistID').each(function(index, tvNlistDrag) {
+        let s_elnl = tv_kenn + '_NlistID';
+        tvNlistDrag.onclick = dragElement(document.getElementById(s_elnl), tv);
+    });
+    this.container.find('#' + tv_kenn + '_NlistGL').each(function(index, tvNlistDrag) {
+        let s_elnl = tv_kenn + '_NlistGL';
+        tvNlistDrag.onclick = dragElement(document.getElementById(s_elnl), tv);
+    });
+    // Add click-event to NlistID-ul to Highlight selected line and corresponding box in viewport
+    // Click is done on child element, therefore event will only be done when bubbling happens ...
+    // Click-event will also occur when resizing element itsself, but then eventPhase == 2 - event.AT_TARGET
+    this.container.find('#' + tv_kenn + '_NlistIDul').each(function(index, tvNlistIDUl) {
+        tvNlistIDUl.onclick = function(event) {
+            if (event.eventPhase == 3) {          // Click on li -> eventPhase == 3 - event.BUBBLING_PHASE
+                tv.NlistID_ul(event);
                 event.preventDefault();
             } else
                 event.stopPropagation();
         };
     });
-    // Add click-event to namelist to save the list
-    this.container.find('#' + tv_kenn + '_namelistSave').each(function(index, tvNamelistSave) {
-        tvNamelistSave.onclick = function(event) {
+    this.container.find('#' + tv_kenn + '_NlistGLul').each(function(index, tvNlistGLUl) {
+        tvNlistGLUl.onclick = function(event) {
+            if (event.eventPhase == 3) {          // Click on li -> eventPhase == 3 - event.BUBBLING_PHASE
+                tv.NlistGL_ul(event);
+                event.preventDefault();
+            } else
+                event.stopPropagation();
+        };
+    });
+    // Add click-event to NlistID to save the list
+    this.container.find('#' + tv_kenn + '_NlistIDSave').each(function(index, tvNlistSave) {
+        tvNlistSave.onclick = function(event) {
             nString = dumpNlist_txt(tv);
         };
     });
-    // Add click-event to namelist to close the form
-    this.container.find('#' + tv_kenn + '_namelistClose').each(function(index, tvNamelistClose) {
-        tvNamelistClose.onclick = function(event) {
-            tv.namelist(tv_kenn);
+    // Add click-event to NlistID to close the form
+    this.container.find('#' + tv_kenn + '_NlistIDClose').each(function(index, tvNlistClose) {
+        tvNlistClose.onclick = function(event) {
+            tv.NlistID(tv_kenn);
+        };
+    });
+    this.container.find('#' + tv_kenn + '_NlistGLClose').each(function(index, tvGenlistnClose) {
+        tvGenlistnClose.onclick = function(event) {
+            tv.NlistGL(tv_kenn);
         };
     });
     // Add click-event to ClippingCart 
@@ -494,12 +556,15 @@ TreeViewHandlerXT.prototype.CCEadapter = function (button, treeHome) {
                     let elf_pid = elb.find('[pid]');
                     for(let _elx of elf_pid) {
                         let el = $(_elx, tv.treeview);
-                        XREF_ar.push(el.attr('pid'));
+                        if (!el[0].classList.contains('hidden')) {
+                            let _pid = el.attr('pid');
+                            if (_pid) { XREF_ar.push(el.attr('pid')); }
+                        }
                     }
                     if (elb[0].hasAttribute('fid')) {
                         let _fid = elb[0].getAttribute('fid');
                         if (_fid.indexOf('|') < 0) {
-                            XREF_ar.push(_fid);
+                            if (_fid) { XREF_ar.push(_fid); }
                         } else {
                             let _fids = _fid.split('|');
                             for(let _fid of _fids) {
@@ -515,6 +580,9 @@ TreeViewHandlerXT.prototype.CCEadapter = function (button, treeHome) {
       }
     // if some boxes need update, we perform an ajax request
     if (XREF_ar.length > 0) {
+        if (tv.noDeceased) {
+            XREF_ar.unshift('noDeceased');
+        }
         tv.updating = true;
         tv.setLoading();
         jQuery.ajax({
@@ -635,6 +703,13 @@ TreeViewHandlerXT.prototype.showstats  = function (tv, auto_close) {
     if (tv.showstats_do) {
         tv.showstats_do = false;
         tv.stats.toggle(false);
+        if (tv.boxGLsel) {                                  // remove adjacent outlinings
+            for (let obox of tv.boxGLsel) {
+                bGLoff = obox.firstElementChild;
+                bGLoff.classList.remove('selectedGL');
+            }
+            tv.boxGLsel.length = 0;
+        }
         b.removeClass('tvPressed');
     } else {
         tv.showstats_do = true;
@@ -650,11 +725,14 @@ TreeViewHandlerXT.prototype.showstats  = function (tv, auto_close) {
  */
 TreeViewHandlerXT.prototype.showstatsExec  = function (tv) {
     let tv_kenn = tv.tv_kenn;
+    let show_genCnt = tv.ChartMode || tv.doExpanded;
+    var genCnt = new Map();
     var n_listCount = 0;
     var to_loadCount = 0;
     tv.stateMin = 0; tv.stateMax = 0;
     // check which div with tv_box attribute are within the container bounding box
     // - they are carrying names
+    let snMap = new Map();
     var tds = tv.treeview.find('td.hasBox');
     for (let tdx of tds) {
         if (tdx.firstChild && !tdx.hidden) {
@@ -662,14 +740,31 @@ TreeViewHandlerXT.prototype.showstatsExec  = function (tv) {
             for(let bx of boxes) {
                 let elb = $(bx, tv.treeview);
                 let elbP = elb[0].parentElement;
+                let bs = parseInt(elbP.getAttribute('glevel'));
+                let _n_lC = n_listCount;
+                if (bs < tv.stateMin) { tv.stateMin = bs; }
+                if (bs > tv.stateMax) { tv.stateMax = bs; }
                 if (!elbP.classList.contains('not-visible')) {
                     if (elb[0].checkVisibility({visibilityProperty: true})) {
-                        let elNf = elb.find('.NAME');
-                        for(let _elx of elNf) {
-                            let bs = parseInt(_elx.parentNode.getAttribute('glevel'));
-                            if (bs < tv.stateMin) { tv.stateMin = bs; }
-                            if (bs > tv.stateMax) { tv.stateMax = bs; }
-                            n_listCount += 1;
+                        let elPf = elb.find('.tv_Person');
+                        for(let _elx of elPf) {
+                            if (_elx.checkVisibility({visibilityProperty: true})) {
+                                n_listCount += 1;
+                                let pid = _elx.getAttribute('pid');
+                                if (!snMap.has(pid)) { snMap.set(pid,true); }
+                            }
+                        }
+                    }
+                }
+                if (show_genCnt) {
+                    let nC = (n_listCount - _n_lC);
+                    if (n_listCount > _n_lC) {
+                        // bs += 25;
+                        if (genCnt.has(bs)) {
+                            let gC = genCnt.get(bs) + nC;
+                            genCnt.set(bs,gC);
+                        } else {
+                            genCnt.set(bs,nC);
                         }
                     }
                 }
@@ -684,6 +779,8 @@ TreeViewHandlerXT.prototype.showstatsExec  = function (tv) {
             to_loadCount += 1;
         }
     }
+    let snM_cnt = snMap.size;
+    let sNamCnt = (snM_cnt == n_listCount) ? n_listCount : snM_cnt.toString() + '   (total ' + n_listCount.toString() + ')';
     // get the viewport's canvas
     var theChart = $('#' + tv_kenn + '_in');
     theChart = theChart[0];
@@ -693,7 +790,7 @@ TreeViewHandlerXT.prototype.showstatsExec  = function (tv) {
     // update stats-form-elements
     let elN = $( '#' + tv_kenn + 'sNames');
     let elNt = elN.children();
-    elNt[1].textContent = n_listCount;
+    elNt[1].textContent = sNamCnt;
     let elL = $( '#' + tv_kenn + 'sLinks');
     let elLt = elL.children();
     let slLt = (to_loadCount > 0) ? String(to_loadCount) : '-0-';
@@ -706,6 +803,13 @@ TreeViewHandlerXT.prototype.showstatsExec  = function (tv) {
     let elDt = elD.children();
     elDt[2].textContent = tCw;
     elDt[4].textContent = tCh;
+    let elGs = $( '#' + tv_kenn + 'sGenStats');
+    elGs.empty();
+    if (show_genCnt) {
+        if (elGs && genCnt.size > 0) {
+            make_listGL(tv, elGs, genCnt);
+        }
+    }
 };
 
 /**
@@ -770,13 +874,45 @@ TreeViewHandlerXT.prototype.exportPNG = function (tv_kenn) {
 };
   
 /**
- * Class TreeView namelist method
+ * Class TreeView manage hiding deceased persons
  */
-TreeViewHandlerXT.prototype.namelist = function (tv_kenn) {
+TreeViewHandlerXT.prototype.HideDeceased = function(tv, pmState) {
+    if (tv.markDeceased) {
+        let _HDclass = 'hidden'; // 'not-visible';
+        if (!tv.showstats_do) {
+            tv.showstats(tv);
+        }
+ 
+        let b = $('#' + tv.tv_kenn + 'bHideDeceased', tv.toolbox);
+        if (pmState == 'ON') {
+            if (!b.hasClass('tvPressed')) {
+                b.addClass('tvPressed');
+                let tds = tv.treeview.find('td.hasBox:visible');
+                HideDeceased_ON(tv, tds, _HDclass);
+                tv.noDeceased = true;
+                tv.showstatsExec( tv );
+            }
+        } else {
+            if (b.hasClass('tvPressed')) {
+                b.removeClass('tvPressed');
+                let tds = tv.treeview.find('div.tv_Person.' + _HDclass);
+                HideDeceased_OFF(tv, tds, _HDclass);
+                tv.noDeceased = false;
+                tv.showstatsExec( tv );
+            }
+        }
+    }
+}
+
+
+/**
+ * Class TreeView NlistID method
+ */
+TreeViewHandlerXT.prototype.NlistID = function (tv_kenn) {
     var tv = this;
     this.getSize();
-    var b = $('#' + tv_kenn + 'bNamelist', tv.toolbox);
-    if (tv.namelist_do) {
+    var b = $('#' + tv_kenn + 'bNlistID', tv.toolbox);
+    if (tv.NlistID_do) {
         b.removeClass('tvPressed');
         if (tv.uliIDsel) {                                // there is a list-element selected ...
             let uIDoff = tv.uliIDsel;
@@ -790,23 +926,22 @@ TreeViewHandlerXT.prototype.namelist = function (tv_kenn) {
             }
             tv.boxIDsel = null;
         }
-        tv.namelist_do = false;
-        tv.names.toggle(false);
+        tv.NlistID_do = false;
+        tv.namesID.toggle(false);
     } else {
-        tv.namelist_do = true;
+        tv.NlistID_do = true;
         b.addClass('tvPressed');
         tv.setLoading();
-        makeNList(tv);
-        tv.names.toggle(true);
+        make_NlistID(tv);
+        tv.namesID.toggle(true);
     }
     tv.setComplete();
     return false;
 };
-    
 /**
- * Class TreeView namelist method
+ * Class TreeView NlistID method
 */
-TreeViewHandlerXT.prototype.namelistul = function (event) {
+TreeViewHandlerXT.prototype.NlistID_ul = function (event) {
     var tv = this;
     let bIDoff = null;
     let tvBox = null;
@@ -815,8 +950,8 @@ TreeViewHandlerXT.prototype.namelistul = function (event) {
     if (elA.classList.contains('selectedID')) {       // List-element already selected
         if (tv.boxIDsel) {                                  // remove adjacent outlinings
             for (let obox of tv.boxIDsel) {
-            bIDoff = obox.parentElement;
-            bIDoff.classList.remove('selectedID');
+                bIDoff = obox.parentElement;
+                bIDoff.classList.remove('selectedID');
             }
         }
         elA.classList.remove('selectedID');                 // remove selection
@@ -825,8 +960,8 @@ TreeViewHandlerXT.prototype.namelistul = function (event) {
     if (tv.uliIDsel) {                                // there is another list-element already selected ...
         if (tv.boxIDsel) {                                  // remove adjacent outlinings
             for (let obox of tv.boxIDsel) {
-            bIDoff = obox.parentElement;
-            bIDoff.classList.remove('selectedID');
+                bIDoff = obox.parentElement;
+                bIDoff.classList.remove('selectedID');
             }
             tv.boxIDsel = null;
         }
@@ -861,6 +996,178 @@ TreeViewHandlerXT.prototype.namelistul = function (event) {
                     inline: "center",
                 });
         }
+    }
+    return false;
+};
+  
+/**
+ * Class TreeView NlistGL method
+ */
+TreeViewHandlerXT.prototype.NlistGL = function (tv_kenn) {
+    var tv = this;
+    this.getSize();
+    if (tv.NlistGL_do) {
+        if (tv.uliGLIDsel) {                              // there is a list-element selected ...
+            let uIDoff = tv.uliGLIDsel;
+            uIDoff.classList.remove('selectedID');
+            tv.uliGLIDsel = null;
+        }
+        if (tv.boxGLIDsel) {                              // remove adjacent outlinings
+            for (let obox of tv.boxGLIDsel) {
+                let bIDoff = obox.parentElement;
+                bIDoff.classList.remove('selectedID');
+            }
+            tv.boxGLIDsel = null;
+        }
+        tv.NlistGL_do = false;
+        tv.namesGL.toggle(false);
+    } else {
+        tv.NlistGL_do = true;
+        tv.setLoading();
+        tv.namesGL.toggle(true);
+    }
+    return false;
+};
+/**
+ * Class TreeView NlistID method
+*/
+TreeViewHandlerXT.prototype.NlistGL_ul = function (event) {
+    var tv = this;
+    let bIDoff = null;
+    let tvBox = null;
+    this.getSize();
+    let elA = event.target;
+    if (elA.classList.contains('selectedID')) {       // List-element already selected
+        if (tv.boxGLIDsel) {                                  // remove adjacent outlinings
+            for (let obox of tv.boxGLIDsel) {
+                bIDoff = obox.parentElement;
+                bIDoff.classList.remove('selectedID');
+            }
+        }
+        elA.classList.remove('selectedID');                 // remove selection
+        return false;
+    }
+    if (tv.uliGLIDsel) {                                // there is another list-element already selected ...
+        if (tv.boxGLIDsel) {                                  // remove adjacent outlinings
+            for (let obox of tv.boxGLIDsel) {
+                bIDoff = obox.parentElement;
+                bIDoff.classList.remove('selectedID');
+            }
+            tv.boxGLIDsel = null;
+        }
+        let uIDoff = tv.uliGLIDsel;
+        uIDoff.classList.remove('selectedID');
+    }
+    elA.classList.add('selectedID');                  // mark list-element as selected
+    tv.uliGLIDsel = elA;                                // save list-element
+    let slA = elA.textContent;
+    let xrefID = slA.substring(slA.lastIndexOf('(')+1);
+    xrefID = xrefID.substring(0, xrefID.indexOf(')'));
+    xrefID = ''.concat(tv.tv_kenn, 'xref', xrefID);
+    var boxes = document.getElementsByName(xrefID);
+    if (boxes) {
+        if (tv.boxGLIDsel) {
+            for (let obox of tv.boxGLIDsel) {
+                bIDoff = obox.parentElement;
+                bIDoff.classList.remove('selectedID');
+            }
+        }
+        for (let abox of boxes) {
+            tvBox = abox.parentElement;
+            tvBox.classList.add('selectedID');
+        }
+        tv.boxGLIDsel = boxes;
+        let obox = boxes[0];
+        bIDoff = obox.parentElement;
+        if ( !isInViewport(bIDoff)) {
+            bIDoff.scrollIntoView({
+                behavior: "smooth",
+                block: "center",
+                inline: "center",
+            });
+        }
+    }
+    return false;
+};
+  
+    
+/**
+ * Class TreeView genlist method
+*/
+TreeViewHandlerXT.prototype.genlistnul = function (event) {
+    var tv = this;
+    let bIDoff = null;
+    let tvBox = null;
+    this.getSize();
+    let elt = event.target;
+    let elP = event.target.parentElement;
+    let elA = elP.firstElementChild;
+    if (elP.classList.contains('selectedGL')) {       // List-element already selected
+        if (tv.boxGLsel) {                                  // remove adjacent outlinings
+            for (let obox of tv.boxGLsel) {
+                bGLoff = obox.firstElementChild;
+                bGLoff.classList.remove('selectedGL');
+            }
+            tv.boxGLsel.length = 0;
+        }
+        elP.classList.remove('selectedGL');                 // remove selection
+        tv.namesGL.toggle(false);
+        tv.NlistGL_do = false;
+        return false;
+    }
+    if (tv.uliGLsel) {                                // there is another list-element already selected ...
+        if (tv.boxGLsel) {                                  // remove adjacent outlinings
+            for (let obox of tv.boxGLsel) {
+                bGLoff = obox.firstElementChild;
+                bGLoff.classList.remove('selectedGL');
+            }
+            tv.boxGLsel.length = 0;
+        }
+        let uIDoff = tv.uliGLsel;
+        uIDoff.classList.remove('selectedGL');
+        tv.namesGL.toggle(false);
+        tv.NlistGL_do = false;
+    }
+    elP.classList.add('selectedGL');                  // mark list-element as selected
+    tv.uliGLsel = elP;                                // save list-element
+    let slA = elA.textContent;
+    slA = parseInt(slA.replace('Generation:',''));
+    tv.boxGLsel = new Array();
+    var boxes = document.getElementsByClassName('hasBox');
+    if (boxes) {
+        if (tv.boxGLsel) {
+            for (let obox of tv.boxGLsel) {
+                bGLoff = obox.firstElementChild;
+                bGLoff.classList.remove('selectedGL');
+            }
+            tv.boxGLsel.length = 0;
+        }
+        for (let abox of boxes) {
+            let bxGL = abox.getAttribute('glevel');
+            if (bxGL == slA) {
+                tvBox = abox.firstElementChild;
+                tvBox.classList.add('selectedGL');
+                tv.boxGLsel.push(abox);
+            }
+        }
+        // tv.boxGLsel = boxes;
+        for (let obox of tv.boxGLsel) {
+            bIDoff = obox;
+            if (bIDoff.checkVisibility({visibilityProperty: true})) {
+                if ( !isInViewport(bIDoff)) {
+                    bIDoff.scrollIntoView({
+                        behavior: "smooth",
+                        block: "center",
+                        inline: "center",
+                    });
+                }
+                break;
+            }
+        }
+        make_NlistGL(tv, tv.boxGLsel, slA);
+        tv.namesGL.toggle(true);
+        tv.NlistGL_do = true;
+        return true;
     }
     return false;
 };
@@ -1195,6 +1502,50 @@ TreeViewHandlerXT.prototype.expandBox = function (_box, event) {
 
 // #region Independent Functions
 
+function HideDeceased_ON(tv, tds, _HDclass) {
+    //  tdx     -> td hasBox
+    for (let tdx of tds) {
+        // tvb      -> div tv_box
+        let dec_all = true;
+        for (let tvb of tdx.children) {
+            if (tvb != tdx.lastElementChild) {
+                // tvp      -> div tv_person
+                for (let tvp of tvb.children) {
+                        let c_tvp = tvp.children;
+                        let c_tvp_c2 = c_tvp[2];
+                        if (c_tvp_c2.className == 'tvbisdead') {
+                            tvp.classList.add(_HDclass);
+                        } else { dec_all = false; }
+                }
+            }
+        }
+        if (dec_all) {
+            tdx.classList.add(_HDclass);
+        }
+    }
+
+}
+function HideDeceased_OFF(tv, ds, _HDclass) {
+    //  dx     -> div tv_Person hidden
+    for (let tdx of ds) {
+        if (tdx.classList.contains(_HDclass)) {
+            let has_decd = false;
+            let sp_isdeads = $(tdx).find('span.tvbisdead');
+            for(let sp_isdead of sp_isdeads) {
+                has_decd = true;
+                // let elb = $(sp_isdead, tv.treeview);
+                //       the span div tv_person 
+            }
+            if (has_decd) {
+                if (tdx.classList.contains(_HDclass)) {tdx.classList.remove(_HDclass);}
+                let eldP = tdx.parentElement.parentElement;
+                if (eldP.classList.contains(_HDclass)) {eldP.classList.remove(_HDclass);}
+            }
+        }
+    }
+
+}
+
 function updateCCEcount(XREFcnt, elem_main) {
     let pto = typeof XREFcnt;
     switch (pto) {
@@ -1268,30 +1619,14 @@ function fadeOut(elem_fade) {
 
 
 /**
- * @param {string} name
- * @param {string} value
- * @param {number} days
- */
-// function createCookie (name, value, days) {
-// if (days) {
-//     var date = new Date();
-//     date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-//     document.cookie = name + '=' + value + '; expires=' + date.toGMTString() + '; path=/';
-// } else {
-//     document.cookie = name + '=' + value + '; path=/';
-// }
-// }
-
-/**
  * Creates a sorted overview from the names displayed in the treeview.
  * 
  * @param {object} tv
  */
-function makeNList(tv) {
-    var n_list = [];
-    let n_list0 = [];
+function make_NlistID(tv) {
     var to_load = [];
     var elts = [];
+    let n_list0 = [];
     // check which div with tv_box attribute are within the container bounding box
     // - they are carrying names
     var boxes = tv.treeview.find('.tv_box:visible');
@@ -1303,22 +1638,37 @@ function makeNList(tv) {
             let sID = '';
             let sNs = 'N.N.';
             elNs.each(function (index, elNf) {
-                let sNv = elNf.innerText;                 // Vorname
-                sNs = ' N.N.';
-                if (elNf.children.length > 0) {
-                    let eNs = elNf.children[0];               // Zuname in eigenem SPAN-Element
-                    sNs = eNs.innerText;
-                    let pNs = sNv.indexOf(sNs);               // unter Umständen Zunamen bereits mitgegeben ...
-                    if (pNs > 0) {                                // dann rausschneiden
-                        sNv = sNv.replace(sNs, '');
-                        sNv = sNv.trim();
+                if (elNf.checkVisibility({visibilityProperty: true})) {
+                    let sNv = elNf.innerText;                   // Vorname
+                    let sNn = '';                               // Nickname
+                    sNs = ' N.N.';
+                    if (elNf.children.length > 0) {
+                        let eNs = elNf.children[0];                 // Zuname in eigenem SPAN-Element
+                        let eNs_tN = eNs.tagName;
+                        if (eNs_tN == 'Q') {                        // ... ist aber nicht der Zuname, sondern ein Nickname ...
+                            sNn = eNs.innerText;                        // ... merken ...
+                            eNs = eNs.nextElementSibling;               // ... und das nächste Element nehmen
+                        }
+                        sNs = eNs.innerText;
+                        let pNs = sNv.indexOf(sNs);                 // unter Umständen Zunamen bereits mitgegeben ...
+                        if (pNs > 0) {                                  // dann rausschneiden
+                            sNv = sNv.replace(sNs, '');
+                            sNv = sNv.trim();
+                        }
+                        if (sNn > '') {                             // es gab einen Nickname ...
+                            let _Nn = ' ' + sNn;
+                            sNv = sNv.replace(_Nn, '');                 // ... dann rausschneiden ...
+                            sNv = sNv.trim();
+                            sNn = '&ldquor;' + sNn + '&rdquor;';        // ... dekorieren ...
+                            sNv = sNv.concat(' ', sNn);                 // ... dranhängen
+                        };
                     }
+                    let elNsp = elNf.parentElement;             // EW.H - MOD ... surrounding DIV carries the personal ID
+                    sID = elNsp.getAttribute('pID');
+                    sID = ''.concat(' (', sID, ')');
+                    let lN = sNs.concat(', ', sNv, sID);        // Listeneintrag zusammenstellen
+                    n_list0.push(lN);
                 }
-                let elNsp = elNf.parentElement;               // EW.H - MOD ... surrounding DIV carries the personal ID
-                sID = elNsp.getAttribute('pID');
-                sID = ''.concat(' (', sID, ')');
-                let lN = sNs.concat(', ', sNv, sID);      // Listeneintrag zusammenstellen
-                n_list0.push(lN);
             });
         }
     });
@@ -1326,35 +1676,7 @@ function makeNList(tv) {
         return l.toLowerCase().localeCompare(u.toLowerCase());
     });
 
-    let a_name = ''; let p_name = ''; let l_name = '';
-    let n_ln = n_list0.length;
-    let n=1;
-    for(let i = 0; i < n_ln; i++) {
-        a_name = n_list0[i];
-        if (a_name == p_name) {
-            n++;
-        } else {
-            if (p_name == '') {
-                p_name = a_name;
-            } else {
-                l_name = p_name;
-                if (n>1) {
-                    l_name = p_name + ' . . . . [' + n + ']';
-                    n = 1;
-                }
-                n_list.push(l_name);
-                p_name = a_name;
-                l_name = a_name;
-            }
-        }
-    }
-    if (n>1) {
-        l_name = p_name + ' . . . . [' + n + ']';
-        n = 1;
-    }
-    if (l_name > '') {
-        n_list.push(l_name);
-    }
+    var n_list = make_Nlist_grep(tv, n_list0);
 
     let elN = $( '#' + tv.tv_kenn + 'lNames');    // Anzahl Listeneinträge 
     let elNt = elN.children();
@@ -1372,13 +1694,9 @@ function makeNList(tv) {
     let slLt = (to_load.length > 0) ? String(to_load.length) : '-keine-';
     elLt[1].textContent = slLt;
 
-    nl = $('#' + tv.tv_kenn + '_namelistul');
-    nl.empty();
-    for(const lN of n_list) {
-        let liTag = '<li>';
-        if (lN.includes('. . . . [')) { liTag = '<li class="multName">'; }
-        nl.append(liTag + lN + '</li>');
-    }
+    let nl = $('#' + tv.tv_kenn + '_NlistIDul');
+    make_Nlist_gen_ul(tv, nl, n_list);
+    
     let nl_fCh = 12.8;
     var etvp = tv.container;
     let htv = etvp.outerHeight();
@@ -1386,19 +1704,193 @@ function makeNList(tv) {
     let hnlc = nl_fCh * n_lL + 16;
     if (hnlc < hnl)
         hnl = hnlc;
-    tv.namesul.outerHeight(hnl);
+    tv.namesIDul.outerHeight(hnl);
+}
+/**
+ * grep the names from collected boxes
+ * @param {object} tv
+ */
+function make_Nlist_grep(tv, n_list0) {
+    let n_list = [];
+    let a_name = ''; let p_name = ''; let l_name = '';
+    let n_ln = n_list0.length;
+    let n=1; let n_all = 0;
+    for(let i = 0; i < n_ln; i++) {
+        a_name = n_list0[i];
+        if (a_name == p_name) {
+            n++; n_all++;
+        } else {
+            if (p_name == '') {
+                p_name = a_name;
+            } else {
+                l_name = p_name;
+                if (n>1) {
+                    l_name = p_name + ' . . . . [' + n + ']';
+                    n = 1;
+                }
+                n_list.push(l_name);
+                p_name = a_name;
+                l_name = a_name;
+            }
+        }
+    }
+    if (n>1 || l_name == '') {
+        l_name = p_name + ' . . . . [' + n + ']';
+        n = 1;
+    }
+    if (l_name > '') {
+        n_list.push(l_name);
+    }
+    return n_list;
+}
+/**
+ * grep the names from collected boxes
+ * @param {object} tv
+ */
+function make_Nlist_gen_ul(tv, nl, n_list) {
+    nl.empty();
+    for(const lN of n_list) {
+        let liTag = '<li>';
+        if (lN.includes('. . . . [')) { liTag = '<li class="multName">'; }
+        nl.append(liTag + lN + '</li>');
+    }
+}
+
+/**
+ * Creates a sorted overview of count of individuals in generations
+ * 
+ * @param {object} tv
+ */
+function make_listGL(tv, gl, genCnt) {
+    let dtitle = gl[0].getAttribute('dtitle');
+    tv.hasGL     = true;           // genList activated
+    gl.empty();
+    let k_genCnt = Array.from(genCnt.keys());
+    k_genCnt.sort((a, b) => a-b);
+    for(const gN_k of k_genCnt) {
+        let gd = document.createElement('div'); gd.classList = 'tv_genList';
+        let gN_v = genCnt.get(gN_k);
+        let sptg = document.createElement('span'); sptg.textContent ='Generation: ' + gN_k; sptg.classList = 'col1';
+        sptg.title = dtitle;
+        gd.append(sptg);
+        let sptm = document.createElement('span'); sptm.classList = 'colm';
+        gd.append(sptm);
+        let sptv = document.createElement('span'); sptv.textContent = gN_v; sptv.classList = 'col2';
+        gd.append(sptv);
+        gl[0].append(gd);
+    }
+}
+
+
+
+/**
+ * Creates a sorted overview from the names displayed in the treeview.
+ * 
+ * @param {object} tv
+ */
+function make_Nlist_names(tv, pboxes) {
+    let n_list0 = [];
+    // check which div with tv_box attribute are within the container bounding box
+    // - they are carrying names
+    for(const el of pboxes) {
+        let elbP = $(el, tv.treeview);
+        if (!elbP[0].classList.contains('not-visible')) {
+            let elNs = elbP.find('.NAME');
+            let sID = '';
+            let sNs = 'N.N.';
+            elNs.each(function (index, elNf) {
+                if (elNf.checkVisibility({visibilityProperty: true})) {
+                    let sNv = elNf.innerText;                   // Vorname
+                    let sNn = '';                               // Nickname
+                    sNs = ' N.N.';
+                    if (elNf.children.length > 0) {
+                        let eNs = elNf.children[0];                 // Zuname in eigenem SPAN-Element
+                        let eNs_tN = eNs.tagName;
+                        if (eNs_tN == 'Q') {                        // ... ist aber nicht der Zuname, sondern ein Nickname ...
+                            sNn = eNs.innerText;                        // ... merken ...
+                            eNs = eNs.nextElementSibling;               // ... und das nächste Element nehmen
+                        }
+                        sNs = eNs.innerText;
+                        let pNs = sNv.indexOf(sNs);                 // unter Umständen Zunamen bereits mitgegeben ...
+                        if (pNs > 0) {                                  // dann rausschneiden
+                            sNv = sNv.replace(sNs, '');
+                            sNv = sNv.trim();
+                        }
+                        if (sNn > '') {                             // es gab einen Nickname ...
+                            let _Nn = ' ' + sNn;
+                            sNv = sNv.replace(_Nn, '');                 // ... dann rausschneiden ...
+                            sNv = sNv.trim();
+                            sNn = '&ldquor;' + sNn + '&rdquor;';        // ... dekorieren ...
+                            sNv = sNv.concat(' ', sNn);                 // ... dranhängen
+                        };
+                    }
+                    let elNsp = elNf.parentElement;             // EW.H - MOD ... surrounding DIV carries the personal ID
+                    sID = elNsp.getAttribute('pID');
+                    sID = ''.concat(' (', sID, ')');
+                    let lN = sNs.concat(', ', sNv, sID);        // Listeneintrag zusammenstellen
+                    n_list0.push(lN);
+                }
+            });
+        }
+    }
+    return n_list0;
+}
+
+
+
+/**
+ * Creates a sorted overview from the names displayed in the treeview.
+ * 
+ * @param {object} tv
+ */
+function make_NlistGL(tv, pboxes, slA) {
+    var to_load = [];
+    var elts = [];
+    let n_list0 = make_Nlist_names(tv, pboxes);
+    // n_list0.sort(function (l,u) {
+    //     return l.toLowerCase().localeCompare(u.toLowerCase());
+    // });
+
+    var n_list = make_Nlist_grep(tv, n_list0);
+
+    let elN = $( '#' + tv.tv_kenn + 'glNames');    // Anzahl Listeneinträge 
+    let elNt = elN.children();
+    let n_lL = n_list.length;
+    elNt[1].textContent = n_lL;
+
+    // // check which td with datafld attribute are within the container
+    // // and therefore would need to be dynamically loaded
+    // tv.treeview.find('td[abbr]').each(function (index, el) {
+    //     el = $(el, tv.treeview);
+    //     to_load.push(el.attr('abbr'));
+    // });
+    let elL = $( '#' + tv.tv_kenn + 'glGen');      // Generation
+    let elLt = elL.children();
+    elLt[1].textContent = slA;
+
+    let nl = $('#' + tv.tv_kenn + '_NlistGLul');
+    make_Nlist_gen_ul(tv, nl, n_list);
+    
+    let nl_fCh = 12.8;
+    var etvp = tv.container;
+    let htv = etvp.outerHeight();
+    let hnl = htv - 85;
+    let hnlc = nl_fCh * n_lL + 16;
+    if (hnlc < hnl)
+        hnl = hnlc;
+    tv.namesGLul.outerHeight(hnl);
 }
 
 function dumpNlist_txt(tv)
 {
     nStringAr = [];
-    nl = $('#' + tv.tv_kenn + '_namelistul')[0];
+    nl = $('#' + tv.tv_kenn + '_NlistIDul')[0];
     nlc = nl.children;
     for(const lNe of nlc) {
         nStringAr.push(lNe.textContent);
     }
     nString = nStringAr.join('\r\n');
-    downloadToFile(nString, 'webtrees-treeviewXT-NameList.txt', 'text/plain');
+    downloadToFile(nString, 'webtrees-treeviewXT-Nlist.txt', 'text/plain');
     return true;
 }
 function downloadToFile(content, filename, contentType) 

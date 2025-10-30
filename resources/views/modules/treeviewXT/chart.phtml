@@ -12,8 +12,10 @@ use Fisharebest\Webtrees\Tree;
  * @var string      $XREFroot
  * @var string      $innerHTML
  * @var string      $name
+ * @var bool        $isChart
  * @var string      $module
  * @var bool        $withCCE
+ * @var string      $markdeceased
  * @var string      $showseparated
  * @var string      $bfsTitle
  * @var string      $pmaphide
@@ -22,7 +24,7 @@ use Fisharebest\Webtrees\Tree;
     $classCCEadapter = 'noCCEadapter';              // there is no CCE instance active ...      -> display: none
     $urlCCEadapter = '';                            // ... so is no need to define a data-definition
     if ($withCCE) {
-        $classCCEadapter = '';
+        $classCCEadapter = 'tvbclipping';
         $urlCCEadapter = 'data-url-Cceadapter="' . e(route(InteractiveTreeXTmod::class, ['module' => $module, 'action' => 'CCEadapter', 'tree' => $tree->name(), 'XREFindi' => $XREFroot])) . '"';
     }
 
@@ -30,23 +32,25 @@ use Fisharebest\Webtrees\Tree;
 
     $urlIndividuals = 'data-url-individuals="' . e(route(InteractiveTreeXTmod::class, ['module' => $module, 'action' => 'Individuals', 'tree' => $tree->name(), 'XREFroot' => $XREFroot, 'showseparated' => $showseparated])) . '"';
 
-    $cl_Pmap    = $pmaphide == '0' ? ' class="not-visible"' : '';
+    $cl_Pmap        = $pmaphide == '0' ? ' class="not-visible"' : '';
 
-    $tvbpm_pressed = $pmaphide == '0' ? '' : ' tvPressed';
+    $tvbpm_pressed  = $pmaphide == '0' ? '' : ' tvPressed';
+
+    $tools_ul1      = $markdeceased ? 'ul1-10' : 'ul1-09';
 
 ?>
 
 <div class="wt-chart wt-chart-interactive">
-    <div id="<?= $name ?>_out" class="tv_out"  <?= $urlDetails ?>  <?= $urlIndividuals ?>  <?= $urlCCEadapter ?> style="height: 300px">
+    <div id="<?= $name ?>_out" class="tv_out xtv_out"  <?= $urlDetails ?>  <?= $urlIndividuals ?>  <?= $urlCCEadapter ?> style="height: 300px">
         <div id="<?= $name ?>_tools" class="tv_tools">
-            <ul class="ul1">
+            <ul class="<?= $tools_ul1 ?>">
                 <li id="<?= $name ?>bCompact" class="tv_button tvbcompact" title="<?= I18N::translate('Use compact layout') ?>">
                 </li>
                 <li id="<?= $name ?>bShowNext" class="tv_button tvbshownext tvPressed" title="<?= I18N::translate('Expand next links') ?>">
                 </li>
                 <li id="<?= $name ?>bShowStats" class="tv_button tvbshowstats" title="<?= I18N::translate('Current state') ?>">
                 </li>
-                <li id="<?= $name ?>bNamelist" class="tv_button tvbnamelist" title="<?= I18N::translate('Show name list') ?>">
+                <li id="<?= $name ?>bNlistID" class="tv_button tvbnamelist" title="<?= I18N::translate('Show name list') ?>">
                 </li>
                 <li id="<?= $name ?>bPageMap" class="tv_button tvbpagemap-tr<?= $tvbpm_pressed ?>" title="<?= I18N::translate('Show pagemap') ?>">
                 </li>
@@ -60,6 +64,10 @@ use Fisharebest\Webtrees\Tree;
                 </li>
                 <li id="<?= $name ?>bexportPNG" class="tv_button tvbexportpng" title="<?= I18N::translate('Export to PNG') ?>">
                 </li>
+                <?php if ($markdeceased): ?>
+                    <li id="<?= $name ?>bHideDeceased" class="tv_button tvbhidedeceased" title="<?= I18N::translate('Hide/show deceased individuals') ?>">
+                    </li>
+                <?php endif ?>
                 <li id="<?= $name ?>bClipping" class="tv_button <?= $classCCEadapter ?>" title="<?= I18N::translate('Add this records to the clippings cart') ?>">
                 </li>
                 <li id="<?= $name ?>_loading" class="tv_button">
@@ -89,26 +97,45 @@ use Fisharebest\Webtrees\Tree;
                 </div>
                 <div id="<?= $name ?>sDims" class="tv_showstats_li"><div><?= I18N::translate('Chart dimensions') ?></div><div><?= I18N::translate('Width:') ?></div><div>0</div><div><?= I18N::translate('Height:') ?></div><div>0</div>
                 </div>
+                <div id="<?= $name ?>sGenStats" class="tv_showstats_tab" title="<?= I18N::translate('Individuals in generations') ?>" dtitle="<?= I18N::translate('Click here to toggle highlighting') ?>">
+                </div>
             </div>
         </div>
-        <div id="<?= $name ?>_namelist" class="tv_namelist">
-            <div id="<?= $name ?>_namelistheader" class="tv_namelistheader">
+        <div id="<?= $name ?>_NlistID" class="tv_namelistID">
+            <div id="<?= $name ?>_NlistIDheader" class="tv_namelistheader">
                 <div><?= I18N::translate('Click here to move')?></div>
                 <div class="huhwt_button_tr"></div>
                 <div class="huhwt_button_tr"></div>
                 <div class="huhwt_button_tr"></div>
-                <div id="<?= $name ?>_namelistSave" class="huhwt_save bdownload_save_txt huhwt_button" title="<?= I18N::translate('Download as textfile') ?>"></div>
+                <div id="<?= $name ?>_NlistIDSave" class="huhwt_save bdownload_save_txt huhwt_button" title="<?= I18N::translate('Download as textfile') ?>"></div>
                 <div class="huhwt_button_tr"></div>
-                <div id="<?= $name ?>_namelistClose" class="huhwt_close bClose huhwt_button"></div>
+                <div id="<?= $name ?>_NlistIDClose" class="huhwt_close bClose huhwt_button" title="<?= I18N::translate('close')?>"></div>
             </div>
             <p id="<?= $name ?>lNames" > <span><?= I18N::translate('Names in view') ?></span> <span>0</span>
             </p>
             <p id="<?= $name ?>lLinks" > <span><?= I18N::translate('Links in view') ?></span> <span>0</span>
             </p>
-            <ul id="<?= $name ?>_namelistul" class="tv_namelistul">
+            <ul id="<?= $name ?>_NlistIDul" class="tv_namelistul" title="<?= I18N::translate('Click here to toggle highlighting') ?>">
             </ul>
         </div>
-        <div id="<?= $name ?>_in" class="tv_in" dir="ltr">
+        <div id="<?= $name ?>_NlistGL" class="tv_namelistGL">
+            <div id="<?= $name ?>_NlistGLheader" class="tv_namelistheader">
+                <div><?= I18N::translate('Click here to move')?></div>
+                <div class="huhwt_button_tr"></div>
+                <div class="huhwt_button_tr"></div>
+                <div class="huhwt_button_tr"></div>
+                <div class="huhwt_button_tr"></div>
+                <div class="huhwt_button_tr"></div>
+                <div id="<?= $name ?>_NlistGLClose" class="huhwt_close bClose huhwt_button" title="<?= I18N::translate('close')?>"></div>
+            </div>
+            <p id="<?= $name ?>glNames" > <span><?= I18N::translate('Names in view') ?></span> <span>0</span>
+            </p>
+            <p id="<?= $name ?>glGen" > <span><?= I18N::translate('Generation:') ?></span> <span>_</span>
+            </p>
+            <ul id="<?= $name ?>_NlistGLul" class="tv_namelistul" title="<?= I18N::translate('Click here to toggle highlighting') ?>">
+            </ul>
+        </div>
+        <div id="<?= $name ?>_in" class="xtv_in" dir="ltr">
             <?= $innerHTML ?>
         </div>
         <canvas id="page-map"<?= $cl_Pmap ?> ></canvas>
@@ -116,9 +143,7 @@ use Fisharebest\Webtrees\Tree;
 </div>
 <script>
         pagemap(document.querySelector('#page-map'), {
-            viewport: document.querySelector('.tv_in'),
+            viewport: document.querySelector('.xtv_in'),
             interval: 100,
-            // styles: { 'div.tv_box.def': 'rgba(0,0,0,0.1)', 'div.tv_box.rootPerson': 'rbga(108,155,242,1.0)', 'div.tv_box.selectedID': 'rbga(108,155,242,0.8)' },
-            // back: 'rgba(255,255,255,1)'
         });
 </script>

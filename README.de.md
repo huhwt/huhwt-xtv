@@ -18,11 +18,15 @@ Das Interaktive Sanduhrdiagramm in Webtrees ist ein großartiges Tool, um Bezieh
 
 Es kann sowohl aus den Reitern der Personen-Ansicht als auch über die allgemeine Genealogie-Funktion 'Diagramme' aufgerufen werden.
 
-Bei der Nutzung ist es allerdings manchmal irritierend, dass man nicht so genau weiß, ob der Baum jetzt komplett ist und es wäre auch angenehm, wenn man einen Überblick hätte, welche und wieviele Personen nun eigentlich in der Darstellung sind. Der Bildschirm zeigt auch immer nur einen Teil des Gesamtbaums und man weiß nicht so genau, wo im Baum der aktuelle Ausschnitt eigentlich zu verorten sein mag. Hat eine Person mehrere Beziehungen, wird zwischen diesen nicht differenziert. Treten Personen mehrfach an verschiedenen Stellen im Baum auf - Implex -, kann man diese Situation nicht direkt erkennen.
+Bei der Nutzung gibt es allerdings schnell Irritationen. Die Startperson ist bei größeren Übersichten nur noch schwer zu finden. Man weiß nicht so genau, ob und wann der Baum jetzt komplett ist. Es wäre auch angenehm, wenn man einen Überblick hätte, welche und wieviele Personen nun eigentlich in der Darstellung sind. Der Bildschirm zeigt auch immer nur einen Teil des Gesamtbaums und man weiß nicht so genau, wo im Baum der aktuelle Ausschnitt eigentlich zu verorten sein mag. Hat eine Person mehrere Beziehungen, wird zwischen diesen nicht differenziert. Treten Personen mehrfach an verschiedenen Stellen im Baum auf - Implex -, kann man diese Situation nicht direkt erkennen. Es kann es auch interessieren, welche Zweige des Baumes aktuell noch nicht verschieden sind. Will man Beziehungen analysieren, können Verzweigungen in andere Bereiche stören, weil sie einfach viel Platz einnehmen. Schließlich wäre es auch schön, wenn man den dargestellten Zustand auch anderweitig analysieren könnte.
+
+### Merkmale der Erweiterung
 
 Hier setzt nun die Erweiterung an:
 
 Der Ausgangzustand wird über Formular-Steuerfelder definiert. Ist die Ansicht geöffnet, kann sie weitgehend analysiert und ihr Zustand reversibel verändert werden. Man erhält zu jedem Zeitpunkt Informationen über die Anzahl der gezeigten Personen und kann in der Ansicht zu einer gewünschten Person navigieren. Die ergänzenden Funktionen können über Steuerfelder in der Ansicht ausgelöst werden.
+
+Die Startperson wird eindeutig markiert.
 
 Man kann ganze Teilbereiche der Ansicht oder auch nur einzelne Familienzweige gezielt nachladen und auch wieder ausblenden.
 
@@ -32,14 +36,20 @@ Man kann im Implex-Fall das Nachladen unterdrücken.
 
 Man kann Mehrfach-Beziehungen getrennt auflösen und darstellen.
 
-Der gesamte Baum wird auch fallweise abstrahiert als Pagemap angezeigt, man kann über die Pagemap direkt zu jedem Bereich des Baums navigieren und die Position des aktuellen Bildschirm-Ausschnitts ist in der Pagemap unmittelbar erkannbar.
+Der gesamte Baum wird abstrahiert als Pagemap angezeigt, man kann über die Pagemap direkt zu jedem Bereich des Baums navigieren und die Position des aktuellen Bildschirm-Ausschnitts ist in der Pagemap unmittelbar erkannbar. Die Position der Startperson ist in der Pagemap eindeutig hervorgehoben.
+
+Man kann eine Liste der im aktuellen Zustand angezeigten Personen nutzen, um über die Listeneinträge direkt an die Positionen in der Ansicht zu springen. Dabei werden mehrfach auftretende Personen (-Implex-) speziell hervorgehoben.
+
+Als Option kann man verstorbene Personen eindeutig markieren und die Ansicht auf die (nach Datenlage) noch lebenden Personen beschränken.
+
+Man kann die Kennungen der angezeigten Personen (und Familien) in den Sammelbehälter überführen.
 
 ## Beschreibung der Funktionen
 ------------------------------
 
 Das Modul kann eingebettet als Reiter in der Personenseite oder unabhängig als eigenes Genealogie-Diagramm verwendet werden. Die nachstehend beschriebenen Steuerfelder sind nur bei der Verwendung als Diagramm zugänglich.
 
-Formular-Steuerfelder:
+### Formular-Steuerfelder:
 
 * Man kann die Anzahl der vom Start an gezeigten Generationen vorgeben
     - '-' N '+' - Option im Kopf-Formular   - Min: 1, Max: 25 - Default: 4
@@ -56,11 +66,15 @@ Formular-Steuerfelder:
 * Option 'Implex unterdrücken'
     - Wenn aktiv, werden Teilbäume ausgehend von Personen/Familien, für welche Implex erkant wurde, nicht weiter aufgelöst bzw. keine Erweiterungsboxen eingebaut (Standard: aus).
 
+* Option 'Verstorbene markieren'
+    - Wenn aktiv, werden als 'Verstorben' erkannte Personen entsprechend markiert. Darüber hinaus können diese Personen in der Ansicht ausgeblendet werden, so dass man nur noch die lebenden Personen angezeigt bekommt.
+    - Anmerkung: Die Ermittlung, ob eine Person als verstorben zu betrachten ist, kann abhängig von der Datenlage aufwendig sein - u.U. werden weitreichende Analysen des Gedcom ausgeführt. Das kann die Antwortzeit merkbar verlängern (Standard: aus).
+
 * Option 'Getrennt anzeigen'
     - Wenn aktiv, werden Mehrfach-Beziehungen - 1 Person mit mehreren Partnern - als jeweils eigene Familienboxen angezeigt, welche optisch mit Strichlinien ober- und unterhalb hervorgehoben sind (Standard: aus).
     - Ist die Start-Person selbst betroffen, wird die ganze Ansicht in 2 oder mehr Bereiche aufgeteilt. Dabei wird versucht, die allgemeine Ausrichtung der Bereiche synchron zu halten. Start-Person wie auch Generationen-Spalten in den Bereichen sollten auf gleichen Achsen liegen (Standard: aus).
 
-Steuerfelder in der Ansicht-Toolbox:
+### Steuerfelder in der Ansicht-Toolbox:
 
 * Kompaktes Layout, Klick wechselt Layout-Modus
     - Im Standard haben die Familienboxen eine feste Breite. Je mehr Generationen in der Ansicht enthalten  sind, desto breiter wird diese und man kann sie nicht mehr in Gänze darstellen.
@@ -76,11 +90,16 @@ Steuerfelder in der Ansicht-Toolbox:
 * Man kann die Anzahl der dargestellten Personen und der aktuell noch offenen Verknüpfungen anzeigen lassen
     - Schaltfläche 'Aktueller Zustand'      - Klick öffnet, nächster Klick schliesst
         - Anzahl Namen in der Ansicht
-          Anzahl noch offene Verknüpfungen in der Ansicht
-          Spannweite der Generationen in der Ansicht
-          Dimensionen der Ansicht - Breite/Höhe in Pixeln
+        - Anzahl noch offene Verknüpfungen in der Ansicht
+        - Spannweite der Generationen in der Ansicht
+        - Dimensionen der Ansicht - Breite/Höhe in Pixeln
+        - Übersicht Anzahl dargestelllte Personen pro Generation
+          - (Abhängig von Aufruf und Zustand der Ansicht: als Chart -immer- | als Tab -nur wenn expandiert-)
+          - Klick auf einen Generationen-Eintrag hebt die Personen-Boxen hervor, auch öffnet sich eine Namensliste der dargestellten Personen der Generation (nach Reihenfolge in Ansicht)
+            - Klick auf einen Eintrag in der Namensliste markiert die zugehörige Personen-Box und scrollt sie fallweise in den sichtbaren Bereich
+            - Die Namensliste ist frei im Viewport verschiebbar
 
-* Man kann sich eine Namensliste der dargestellten Personen anzeigen lassen.
+* Man kann sich eine Namensliste der dargestellten Personen anzeigen lassen (sortiert Nachname, Vorname).
     - Schaltfläche 'Zeige Namensliste'      - Klick öffnet, nächster Klick schliesst
         - Mehrfach auftretende Namen werden hervorgehoben
         - Klick auf einen Eintrag in der Namensliste markiert die zugehörige Personen-Box und scrollt sie fallweise in den sichtbaren Bereich
@@ -96,10 +115,13 @@ Steuerfelder in der Ansicht-Toolbox:
 unvollständig sein bzw. es fehlen gewisse Elemente (Das ist abhängig von Größe und Breite des 
 Viewports).
 
+* Optionales Feature: Verstorbene aus-/einblenden.
+    - Diese Steuerfläche erscheint nur, wenn die Option 'Verstorbene anzeigen' im Formularkopf aktiviert ist. Anzeige-Elemente zu verstorbenen Personen werden komplett aus der Ansicht herausgenommen, es verbleiben nur noch die Verbindungslinien, so dass die Struktur an sich noch einigermaßen erkennbar bleibt.
+
 * Optionales Feature: CCE-Export.
     - Wenn das Erweiterungs-Modul HuHwt-CCE ab der Version 2.20 installiert ist, kann man die aktuell in XTV angezeigten Personen und Familien in den Sammelbehälter übernehmen.
 
-Steuerfelder in der Ansicht selbst:
+### Steuerfelder in der Ansicht selbst:
 
 Bei den Personen-Boxen wird der Generationen-Rang in Bezug auf die Start-Person angezeigt
   - (Nachkommen < 0, Vorfahren > 0)
@@ -114,6 +136,8 @@ Die Pagemap:
 
 Die Pagemap zeigt jederzeit den gesamten Baum. Der sichtbare Ausschnitt ist klar hervorgehoben. Beim Klick auf eine nicht im aktuellen Ausschnitt liegenden Bereich des Baums wechselt die Ansicht unmittelbar zu diesem Bereich. Man kann die Markierung "sichtbarer Ausschnitt" in der Pagemap verschieben, der Baumausschnitt in der Ansicht wandert entsprechend mit. Die Position(en) der primären Person sowie der fallweise über die Namensliste ausgewählte Person(en) werden deutlich farbig markiert und hervorgehoben.
 
+### Zustände der Ansicht
+
 Die Ansicht kennt 3 Zustände:
 
 1. Normalansicht
@@ -124,12 +148,12 @@ Die Ansicht kennt 3 Zustände:
     - Die Ansicht überdeckt den ganzen Bildschirm inklusive Browserkopf.
 
 * Die Ansicht wird beim Aufruf als Personenseite-Tab als Normalansicht und beim Aufruf aus den Genealogie-Diagrammen im expandierten Zustand geöffnet.
-    - Beim Aufruf als Personenseite-Tab sind die Formular-Steuerfelder nicht zugänglich, es werden 4 Generationen vorab aufgelöst.
+    - Beim Aufruf als Personenseite-Tab sind die Formular-Steuerfelder nicht zugänglich, alle Optionen auf Default; es werden 4 Generationen vorab aufgelöst.
     - Die Startansicht - Normal oder expandiert - kann über die Admin-Funktion 'Einstellungen verwalten' beeinflusst werden. XTV ist sowohl bei den Genealogie-Diagrammen als auch bei den Personenseite-Reitern gelistet, die Einstellungen beider Verwendungen werden gemeinsam verwaltet.
 
 Der expandierte Zustand wurde aus einer anderen Webtrees-Erweiterung übernommen. Der Eigner dieser Erweiterung hat dieses Modul wegen der Integration des Fullscreen-Modus ausgesetzt. Allerdings ist der expandierte Zustand aussagefähiger als die Normalansicht, es hat sich auch gezeigt, dass die Kombination von expandierter Ansicht und Fullscreen-Option das Problem abgeschnittener PNG-Inhalte vermeiden hilft. Zwischen den Zuständen kann über Schaltflächen in der Ansicht gewechselt werden.
 
-Die Ansicht ist technisch als Konstrukt von ineinandergeschachtelten Tabellen-Elementen realisiert. Dieses Verfahren ist robust und schnell, hat aber auch Nachteile: Es gibt keine Zoom-Option und die Technik erlaubt nur die vorliegende Darstellungs-Technik - Start-Person in der Mitte, Expansion horizontal links Nachfahren, rechts Vorfahren - Alternativen wie vertikale Expansion sind nicht darstellbar.
+Die Ansicht ist technisch als Konstrukt von ineinandergeschachtelten Tabellen-Elementen realisiert. Das Verfahren ist robust und schnell, hat aber auch Nachteile: Es gibt keine Zoom-Option und die Technik erlaubt nur die vorliegende Darstellungs-Technik - Start-Person in der Mitte, Expansion horizontal links Nachfahren, rechts Vorfahren - Alternativen wie vertikale Expansion sind nicht darstellbar.
 
 ## Abhängigkeiten
 
@@ -154,12 +178,16 @@ kommen.
    als fork ( https://github.com/PiSaucer/pagemap | MIT License )
 * Für Test, Anregung und Kritik besonderen Dank an Hermann Harthentaler. -> https://github.com/hartenthaler
 
-* Übersetzung in Niederländische - Dank an TheDutchJewel
+* Übersetzung ins Niederländische - Dank an TheDutchJewel
+* Übersetzung ins Spanische + Catalanische - Dank an BernatBanyuls
+* Übersetzung ins Englische - Deepl.com
 
 ## Installation and upgrading
 --------------------------
 
 ... auf die übliche Art und Weise: Laden Sie die Zip-Datei herunter, entpacken Sie sie in das modules_v4-Verzeichnis, und das war's. Man sollte die vorhandene Version vorher komplett entfernen.
+
+Hinweis: Man sollte das Zip file aus dem jeweils als "latest" markierte Release herunterladen. Der aus der Github-Ansicht herunterladbare Code entspricht der Entwicklungs-Version und kann instabil sein.
 
 Development
 -------------------------

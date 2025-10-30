@@ -35,6 +35,12 @@ msgstr "Breite:"
 msgid "Height:"
 msgstr "Höhe:"
 
+msgid "Individuals in generations"
+msgstr "Personen in Generationen"
+
+msgid "Click here to toggle highlighting"
+msgstr "Klick hier: Hervorhebung ein-/abschalten"
+
 msgid "Expand next links"
 msgstr "Nächste Verknüpfungen erweitern"
 
@@ -52,6 +58,12 @@ msgstr "Klick hier: Teilbaum erweitern/einfalten"
 
 msgid "Export to PNG"
 msgstr "Als PNG darstellen"
+
+msgid "Hide/show deceased individuals"
+msgstr "Verstorbene ausblenden/anzeigen"
+
+msgid "deceased"
+msgstr "verstorben"
 
 msgid "Maternal side takes precedence"
 msgstr "Mütterliche Seite hat Vorrang"
@@ -131,11 +143,20 @@ msgstr "Auf Ausgangsperson zentrieren"
 msgid "Show Implex"
 msgstr "Implex anzeigen"
 
+msgid "Checked -> Implex-affected relations will be explicitly marked"
+msgstr "Checked -> Implex-betroffene Beziehungen werden hervorgehoben"
+
 msgid "Suppress Implex"
 msgstr "Implex unterdrücken"
 
 msgid "Checked -> Implex-affected relations will not be pursued further"
 msgstr "Checked -> Implex-betroffene Beziehungen werden nicht weiter verfolgt"
+
+msgid "Mark Deceased"
+msgstr "Verstorbene markieren"
+
+msgid "Checked -> Deceased will be explicitely marked"
+msgstr "Checked -> Verstorbene werden erkennbar markiert"
 
 msgid "Show separated"
 msgstr "Getrennt anzeigen"

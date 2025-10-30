@@ -81,8 +81,15 @@ class InteractiveTreeXT extends InteractiveTreeModule implements ModuleGlobalInt
      */
     private $huh;
 
+    /**
+     * The label ... short version
+     * @var string
+     */
+    private $huh_short;
+
     public function __construct() {
       $this->huh = json_decode('"\u210D"') . "&" . json_decode('"\u210D"') . "wt";
+      $this->huh_short = json_decode('"\u210D"');
     }
 
     /**
@@ -103,7 +110,7 @@ class InteractiveTreeXT extends InteractiveTreeModule implements ModuleGlobalInt
      * @return string
      */
     public function customModuleVersion(): string {
-        return '2.2.1.3';
+        return '2.4.1.0';
     }
 
     /**
@@ -164,7 +171,19 @@ class InteractiveTreeXT extends InteractiveTreeModule implements ModuleGlobalInt
     public function title(): string 
     {
         $_title = I18N::translate('Interactive tree XT');
-        return $_title . ' ' . $this->huh;
+        return $this->huh . ' ' . $_title;
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see \Fisharebest\Webtrees\Module\AbstractModule::title()
+     *
+     * @return string
+     */
+    public function title_short(): string 
+    {
+        $_title = I18N::translate('Interactive tree XT');
+        return $this->huh_short . ' ' . $_title;
     }
 
     /**
@@ -296,7 +315,7 @@ class InteractiveTreeXT extends InteractiveTreeModule implements ModuleGlobalInt
         /** EW.H - MOD ... check preferences */
         $tabOption = (boolean) $this->getPreference('tab_Option', '0');
 
-        $tvPref = 'tv' . 'XT';
+        $tvPref = 'tv' . 'XTt' ;
         $treeview = new TreeViewXTmod($tvPref, $module, $tree, $individual->xref(), 'default', $showmatri );
         $treeview->init();
 
@@ -387,6 +406,8 @@ class InteractiveTreeXT extends InteractiveTreeModule implements ModuleGlobalInt
         $showimplex = boolval($s_showImplex ?? $this->configuration->getShowImplex());
         $s_suppImplex = Validator::queryParams($request)->string('suppimplex', '0');
         $suppimplex = boolval($s_suppImplex ?? $this->configuration->getSuppImplex());
+        $s_markDeceased = Validator::queryParams($request)->string('markdeceased', '0');
+        $markdeceased = boolval($s_markDeceased ?? $this->configuration->getMarkDeceased());
         $s_showseparated = Validator::queryParams($request)->string('showseparated', '0');
         $showseparated = $s_showseparated == '1' ? 'separated' : 'default';
 
@@ -409,9 +430,9 @@ class InteractiveTreeXT extends InteractiveTreeModule implements ModuleGlobalInt
             //     $jsImp[] = $html_JS;
             // }
             $individual = $individualAr[0];
-            $tvPref = 'tv' . $tvPrefix[0];
+            $tvPref = 'tv' . $tvPrefix[0] . 'C';
             $XREFroot = $individual->xref();
-            $tv = new TreeViewXTmod($tvPref, $module, $tree, $XREFroot, $showseparated, $showmatri, $showimplex, $suppimplex);
+            $tv = new TreeViewXTmod($tvPref, $module, $tree, $XREFroot, $showseparated, $showmatri, $markdeceased, $showimplex, $suppimplex);
             $tv->init();
 
             $subtitleAr[] = $this->chartSubTitle($individual);
@@ -426,6 +447,7 @@ class InteractiveTreeXT extends InteractiveTreeModule implements ModuleGlobalInt
             'showmatri'     => $showmatri,
             'showimplex'    => $s_showImplex,
             'suppimplex'    => $s_suppImplex,
+            'markdeceased'  => $s_markDeceased,
             'showseparated' => $s_showseparated,
             'generations'   => $generations,
             'htmls'         => $htmlAr,
@@ -433,6 +455,7 @@ class InteractiveTreeXT extends InteractiveTreeModule implements ModuleGlobalInt
             'jss'           => $jsAr,
             'module'        => $this->name(),
             'title'         => $this->chartTitle($individualAr[0]),
+            'ptitle'        => $this->pageTitle(),
             'subtitles'     => $subtitleAr,
             'tree'          => $tree,
             ]);
@@ -452,6 +475,7 @@ class InteractiveTreeXT extends InteractiveTreeModule implements ModuleGlobalInt
         $showmatri = Validator::parsedBody($request)->string('showmatri', '0');
         $showimplex = Validator::parsedBody($request)->string('showimplex', '0');
         $suppimplex = Validator::parsedBody($request)->string('suppimplex', '0');
+        $markdeceased = Validator::parsedBody($request)->string('markdeceased', '0');
         $showseparated = Validator::parsedBody($request)->string('showseparated', '0');
 
         return redirect(route('module', [
@@ -463,6 +487,7 @@ class InteractiveTreeXT extends InteractiveTreeModule implements ModuleGlobalInt
             'showmatri'     => $showmatri,
             'showimplex'    => $showimplex,
             'suppimplex'    => $suppimplex,
+            'markdeceased'  => $markdeceased,
             'showseparated' => $showseparated,
             ]));
     }

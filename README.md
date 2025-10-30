@@ -18,28 +18,38 @@ The 'Interactive Treev' diagram in Webtrees is a great tool for displaying relat
 
 It can be accessed from the 'Tabs' of the 'Individual page' as well as via the general 'Genealogy' sub-hierarchy 'Charts'.
 
-When using it, however, it is sometimes irritating that you don't know exactly whether the tree is now complete and it would also be nice to have an overview of which and how many people are actually in the diagram. The screen also only ever shows part of the overall tree and you don't know exactly where in the tree the current section is actually located. If a person has several relationships, no differentiation is made between them. If persons appear several times in different places in the tree - implex - this situation cannot be recognized directly.
+However, irritations quickly arise when using it. The starting person is difficult to find in larger overviews. It is not clear whether and when the tree is complete. It would also be nice to have an overview of which and how many people are actually in the display. The screen also only shows part of the entire tree, and it is not clear where in the tree the current section is located. If a person has multiple relationships, no distinction is made between them. If people appear multiple times in different places in the tree (implex), this situation cannot be directly recognized. It may also be interesting to know which branches of the tree are not yet differentiated. If you want to analyze relationships, branches into other areas can be distracting because they simply take up a lot of space. Finally, it would also be nice if the displayed status could be analyzed in other ways.
 
-This is where the expansion comes in:
+### Features of the extension
 
-The initial state is defined via form control fields. Once the view is open, it can be analyzed to a large extent and its status can be reversibly changed. Information about the number of people shown is available at any time and you can navigate to a desired person in the view. The additional functions can be triggered via control fields in the view.
+This is where the extension comes in:
+
+The initial state is defined using form control fields. Once the view is open, it can be analyzed extensively and its state can be changed reversibly. Information about the number of people shown is available at all times, and you can navigate to a specific person in the view. The additional functions can be triggered using control fields in the view.
+
+The starting person is clearly marked.
 
 You can reload entire sections of the view or just individual family branches and hide them again.
 
-Implex states can be highlighted.
+You can highlight Implex states.
 
-You can suppress reloading in the implex case.
+You can suppress reloading in the Implex case.
 
-Multiple relationships can be resolved and displayed separately.
+You can resolve and display multiple relationships separately.
 
-The entire tree is also displayed as an abstracted page map. You can use the page map to navigate directly to any area of the tree and the position of the current screen section is immediately visible in the page map.
+The entire tree is displayed abstractly as a pagemap. You can navigate directly to any area of the tree via the pagemap, and the position of the current screen section is immediately recognizable in the pagemap. The position of the starting person is clearly highlighted in the pagemap.
+
+You can use a list of the persons displayed in the current state to jump directly to the positions in the view via the list entries. Persons that appear multiple times (-Implex-) are highlighted.
+
+As an option, you can clearly mark deceased persons and limit the view to those who are still alive (according to the data).
+
+You can transfer the XREFs of the displayed persons (and families) to the Clippings Cart.
 
 ## Description of the functions
 ------------------------------
 
 The module can be used embedded as a tab in the 'Individual page' or independently as an own 'Genealogy' chart. The form control panels described below are only accessible when used as a chart.
 
-Form controls:
+### Form controls:
 
 * You can specify the number of generations shown from the start
     - '-' N '+' - option in the header form - Min: 1, Max: 25 - Default: 4
@@ -56,11 +66,15 @@ Form controls:
 * Option 'Suppress Implex'
     - If active, subtrees based on persons/families for which Implex has been recognized are not expanded further or no extension boxes are added (default: off).
 
+* Option ‘Mark deceased’
+    - When active, persons identified as ‘deceased’ are marked accordingly. In addition, these persons can be hidden in the view so that only living persons are displayed.
+    - Note: Determining whether a person is to be considered deceased can be time-consuming depending on the data available—extensive analyses of the Gedcom may be performed. This can significantly increase the response time (default: off).
+
 * Option 'Show separately'
     - If active, multiple relationships - 1 person with several partners - are displayed as separate family boxes, which are visually highlighted with dashed lines above and below (default: off).
     - If the start person is affected, the entire view is divided into 2 or more areas. An attempt is made to keep the general alignment of the areas synchronized. The start person and generation columns in the areas should be on the same axes (default: off).
 
-View controls:
+### View controls:
 
 * Compact layout, click toggles layout mode
      - By default, the family boxes have a fixed width. The more generations are contained in the view, the broader it becomes and it can no longer be displayed in its entirety.
@@ -75,12 +89,15 @@ View controls:
 
 * You can display the number of people displayed and the links that are currently still open
      - 'Current state' button - click opens, next click closes
-         - Number of names in the view
-           Number of links still open in the view
-           Span of generations in the view
-           View dimensions - width/height in pixels
+         - Number of individuals in the view      (if different: total number of name boxes too)
+         - Number of links still open in the view
+         - Span of generations in the view
+         - View dimensions - width/height in pixels
+         - Numbers of Individuals per generation
+            - (depending on application's mode and state: as Chart -always- | as Tab -only in expanded state-)
+            - when clicked: corresponding boxes will be highlighted, a list of individuals in the generation will be displayed (unsorted)
 
-* You can display a list of the names of the people shown.
+* You can display a list of the names of the people shown (sorted: Surname, Prename).
      - 'Show list of names' button - click opens, next click closes
          - Clicking on an entry in the list of names marks the associated person box and scrolls it into the visible area as the case may be
          - The list of names can be moved freely in the viewport
@@ -91,14 +108,15 @@ View controls:
 * Expand view / View in fullscreen mode (see below).
 
 * You can have the state of the view exported as PNG.
-     - It will translate the current view into a PNG. Caution: Depending on the browser, the image
-be incomplete or certain elements are missing (this depends on the size and width of the
-Viewports, from a height of 16,384 pixels it becomes critical.)
+     - It will translate the current view into a PNG. Caution: Depending on used browser and computer specs, the image may be incomplete or certain elements are missing (this depends on the size and width of the Viewports, an invalid PNG is possible.)
+
+* Optional feature: Hide deceased persons.
+    - This control only appears if the ‘Mark deceased’ option is activated in the form header. Display elements relating to deceased persons are completely removed from the view, leaving only the connecting lines so that the structure itself remains reasonably recognizable.
 
 * Optional feature: CCE export.
     - If the extension module HuHwt-CCE from version 2.20 is installed, the persons and families currently displayed in XTV can be transferred to the collection container.
 
-Control fields in the view itself:
+### Control fields in the view itself:
 
 In the person boxes, the generation rank is displayed in relation to the start person
   - (descendants < 0, ancestors > 0)
@@ -113,6 +131,8 @@ The page map:
 
 The page map shows the entire tree at all times. The visible section is clearly highlighted. If you click on an area of the tree that is not in the current section, the view immediately switches to this area. You can move the “visible section” marker in the page map; the tree section in the view moves accordingly. The position(s) of the primary person and the person(s) selected via the name list are clearly marked in color and highlighted.
 
+### View states
+
 The view knows 3 states:
 
 1. Normal view
@@ -123,12 +143,12 @@ The view knows 3 states:
      - The view covers the entire screen including the browser header.
 
 * The view opens as a normal view when called up as a 'Individual page' tab and in an expanded state when called up from the 'Genealogy' diagrams.
-    - When called up as a person page tab, the form control fields are not accessible; 4 generations are resolved in advance.
+    - When called up as a person page tab, the form control fields are not accessible, all options at default; 4 generations are resolved in advance.
     - The start view - normal or expanded - can be influenced using the admin function 'Manage settings'. XTV is listed in both the 'Genealogy' diagrams and the 'Individual page' tabs; the settings for both uses are managed together.
 
 The expanded state was taken from another Webtrees extension. The owner of this extension has suspended this module due to the integration of fullscreen mode. However, the expanded state is more meaningful than the normal view, it has also been shown that the combination of the expanded view and the full-screen option helps to avoid the problem of truncated PNG content. You can switch between the states using buttons in the view.
 
-The view is technically implemented as a construct of nested table elements. This method is robust and fast, but has one disadvantage: there is no zoom option.
+The view is technically implemented as a construct of nested table elements. This method is robust and fast, but has one disadvantage: there is no zoom option and the technology only allows for the current display technique—starting person in the middle, expansion horizontally to the left for descendants, to the right for ancestors — alternatives such as vertical expansion are not possible.
 
 ## Dependencies 
 
@@ -159,6 +179,8 @@ as fork ( https://github.com/PiSaucer/pagemap | MIT License )
 --------------------------
 
 ... in the usual way: download the zip file, extract it to the modules_v4 directory, and that's it. You should completely remove the existing version beforehand.
+
+Note: You should download the zip file from the release marked as “latest”. The code that can be downloaded from the Github view corresponds to the development version and may be unstable.
 
 Development
 -------------------------

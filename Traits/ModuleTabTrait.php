@@ -52,7 +52,7 @@ trait ModuleTabTrait
      */
     public function tabTitle(): string
     {
-        return $this->title();
+        return $this->title_short();
     }
 
     /**

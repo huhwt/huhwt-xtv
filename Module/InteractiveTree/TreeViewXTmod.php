@@ -3,7 +3,7 @@
 /**
  * HuH Extensions for webtrees - Treeview-Extended
  * Interactive Treeview with add-ons
- * Copyright (C) 2020-2024 EW.Heinrich
+ * Copyright (C) 2020-2025 EW.Heinrich
  */
 
 declare(strict_types=1);
@@ -31,6 +31,9 @@ class TreeViewXTmod
     /** @var string HTML element name */
     private $name;
 
+    /** @var bool Module is called from Diagramms Menu */
+    private $isChart;
+
     /** @var string Root module name */
     private $module;
 
@@ -46,6 +49,9 @@ class TreeViewXTmod
     /** @var bool option to suppress Implex */
     private $suppImplex;
 
+    /** @var bool option to mark Deceased */
+    private $markDeceased;
+
     private $CCEok;
 
     private Tree $tree;
@@ -58,13 +64,15 @@ class TreeViewXTmod
 
     private string $rcLfd;
 
+    private string $isDead_icon;
+
     /**
      * Treeview Constructor
      *
      * @param string $name the name of the TreeView object’s instance
      */
     public function __construct(string $name, string $module, Tree $tree, string $XREFroot, string $mode,
-                                int $showmatri = 0, bool $showImplex = false, bool $suppImplex = false)
+                                int $showmatri = 0, bool $markdeceased = false, bool $showImplex = false, bool $suppImplex = false)
     {
         $this->tree = $tree;
         $this->root = $XREFroot;
@@ -73,6 +81,7 @@ class TreeViewXTmod
         $this->showmatri = $showmatri;
         $this->showImplex = $showImplex;
         $this->suppImplex = $suppImplex;
+        $this->markDeceased = $markdeceased;
         if( $this->suppImplex ) { $this->showImplex = true; }
         $this->module = $module;
 
@@ -86,7 +95,11 @@ class TreeViewXTmod
             $this->mode = 'default';
         }
 
+        $this->isChart = str_ends_with($name,'C');
+
         $this->box_lfd = 0;
+
+        $this->isDead_icon = ' <span class="tvbisdead" title="' . I18N::translate("deceased") . '">&#x1F547;</span>';
 
     }
 
@@ -97,8 +110,9 @@ class TreeViewXTmod
         $xrefsI = Session::get('XTVxrefsI', []);
         $xrefsI[$_tname] = [];
         $xrefsI[$_tname][$this->root] = [];
-        $xrefsI[$_tname][$this->root]['_showImplex_'] = $this->showImplex;
-        $xrefsI[$_tname][$this->root]['_suppImplex_'] = $this->suppImplex;
+        $xrefsI[$_tname][$this->root]['_showImplex_']   = $this->showImplex;
+        $xrefsI[$_tname][$this->root]['_suppImplex_']   = $this->suppImplex;
+        $xrefsI[$_tname][$this->root]['_markDeceased_'] = $this->markDeceased;
         Session::put('XTVxrefsI', $xrefsI);
 
         $xrefsF = Session::get('XTVxrefsF', []);
@@ -199,6 +213,9 @@ class TreeViewXTmod
 
         $suppImplex = ($xrefsI[$_tree][$_root]['_suppImplex_'] ?? false);
         $this->suppImplex = $suppImplex;
+
+        $markDeceased = ($xrefsI[$_tree][$_root]['_markDeceased_'] ?? false);
+        $this->markDeceased = $markDeceased;
 
         $box_lfd = ($xrefsF[$_tree][$_root]['_box_lfd_'] ?? 0);
         $this->box_lfd = $box_lfd;
@@ -378,7 +395,8 @@ class TreeViewXTmod
             $this->dump_file($individual, $innerHTML);
         }
 
-        $showseparated = $this->mode == 'separated' ? '1' : '0';
+        $markdeceased   = $this->markDeceased;
+        $showseparated  = $this->mode == 'separated' ? '1' : '0';
 
         $_minTitle = I18N::translate('Minimize View');
         $_maxTitle = I18N::translate('Maximize View');
@@ -386,13 +404,15 @@ class TreeViewXTmod
         $pmaphide  = $doExpand ? '1' : '0';
 
         $html = view('modules/treeviewXT/chart', [
-            'module'    => $this->module,                  // EW.H - MOD ... put own Module here!
+            'module'    => $this->module,
             'name'      => $_name,
+            'isChart'   => $this->isChart,
             'earmark'   => $earmark,
             'XREFroot'  => $_root,
             'innerHTML' => $innerHTML,
             'tree'      => $_tree,
             'withCCE'   => $this->CCEok,
+            'markdeceased'  => (bool) $markdeceased,
             'showseparated' => $showseparated,
             'bfsTitle'  => $_bfsTitle,
             'pmaphide'  => $pmaphide,
@@ -400,7 +420,7 @@ class TreeViewXTmod
         $_doExpand = $doExpand ? 'true' : 'false';
         return [
             $html,
-            'var ' . $this->name . 'Handler = new TreeViewHandlerXT("' . $this->name  .'",'. $_doExpand . ', "' . $_minTitle . '", "' . $_maxTitle . '");',
+            'var ' . $this->name . 'Handler = new TreeViewHandlerXT("' . $this->name  .'",'. $_doExpand . ', "' . $_minTitle . '", "' . $_maxTitle . '", "' . $markdeceased . '");',
         ];
     }
 
@@ -508,6 +528,7 @@ class TreeViewXTmod
         $html = $this->getThumbnail($individual);
         $icon_indi = ($individual->sex() == 'F' ? 'huhwt-iconF' : 'huhwt-iconM');
         $html .= '<a class="tv_link" href="' . e($individual->url()) . '">' . $individual->fullName() . '</a>';
+        if ($this->markDeceased) { $_isdead = $individual->isDead() ? $html .= $this->isDead_icon : ''; }
         $html .= '<a href="' . e($chart_url) . '" title="' . I18N::translate('Interactive tree of %s', strip_tags($individual->fullName())) . '" class="' . $icon_indi . ' tv_link tv_treelink" ></a>';
         foreach ($individual->facts(Gedcom::BIRTH_EVENTS, true) as $fact) {
             $html .= $fact->summary();
@@ -694,7 +715,8 @@ class TreeViewXTmod
 
         /* draw the person. Do NOT add person or family id as an id, since a same person could appear more than once in the tree !!! */
         // we store the person's html for later use -> there might be more than 1 family -> we want each family separated       # EW.H - MOD
-        $html .= '<td class="hasBox" >';    // .hasBox CSS -> style width=1px   always because there might be more than 1 FAM-ID in GLEVEL which then would break the layout # EW.H - MOD
+        $A_glevel = ' glevel="' . $this->glevel . '"';
+        $html .= '<td class="hasBox"' . $A_glevel . ' >';    // .hasBox CSS -> style width=1px   always because there might be more than 1 FAM-ID in GLEVEL which then would break the layout # EW.H - MOD
         $html .= '<div class="tv_box' . ($isRoot ? ' rootPerson' : ' def') . '" dir="' . I18N::direction() . '" style="text-align: ' . (I18N::direction() === 'rtl' ? 'right' : 'left') . '; direction: ' . I18N::direction() . '" abbr="' . $Pxref . '" state="' . $state . '" '. $fID . ' onclick="' . $this->name . 'Handler.expandBox(this, event);">';
         $html .= $this->drawPersonName($person, '', $isImplexI);
 
@@ -1304,7 +1326,10 @@ class TreeViewXTmod
         }
         $title = ' title="' . $title_0 . '"';
 
-        return '<div class="tv' . $sex . ' tv_Person ' . $dashed . $dbolded . '"' . $title . $pID . $pIDdom .'><a href="' . e($individual->url()) . '"></a>' . $individual->fullName() . ' <span class="dates">' . $individual->lifespan() . '</span>' . $s_Implex . '</div>';
+        $_isdead = '';
+        if ($this->markDeceased) { $_isdead = $individual->isDead() ? $this->isDead_icon : ''; }
+
+        return '<div class="tv' . $sex . ' tv_Person ' . $dashed . $dbolded . '"' . $title . $pID . $pIDdom .'><a href="' . e($individual->url()) . '"></a>' . $individual->fullName() . $_isdead . ' <span class="dates">' . $individual->lifespan() . '</span>' . $s_Implex . '</div>';
     }
 
     /**

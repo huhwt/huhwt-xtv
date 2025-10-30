@@ -1,7 +1,9 @@
 <?php
 
 /**
- * See LICENSE.md file for further details.
+ * HuH Extensions for webtrees - Treeview-Extended
+ * Interactive Treeview with add-ons
+ * Copyright (C) 2020-2025 EW.Heinrich
  */
 
 declare(strict_types=1);
@@ -23,7 +25,7 @@ class Configuration
 {
 
     /**
-     *  Expansion level
+     *  Parental analysis - specify whether father or mother should be checked and displayed first
      *  
      * @var int
      */
@@ -51,16 +53,23 @@ class Configuration
     public const MAX_GENERATIONS = 25;
 
     /**
-     * The current request instance.
-     *
-     * @var ServerRequestInterface
+     * In case of Implex - shall all instances be expanded?
+     * 
+     * @var bool
      */
     private $suppImplex; 
 
     /**
-     * Expansion level.
+     * Shall deceased persons explicitely marked?
+     * 
+     * @var bool
+     */
+    private $markDeceased; 
+
+    /**
+     * The current request instance.
      *
-     * @var int
+     * @var ServerRequestInterface
      */
     private $request;
 
@@ -99,7 +108,6 @@ class Configuration
         $this->tv_PREFind = 0;
     }
 
-
     /**
      * Returns the number of generations to display.
      *
@@ -114,7 +122,7 @@ class Configuration
     }
 
     /**
-     * Returns the expansion level.
+     * Returns the priority of parental analysis.
      *
      * @return int
      */
@@ -143,6 +151,17 @@ class Configuration
     {
         $suppImplex = (int) $this->request->getQueryParams()['suppImplex'] ?? 0;
         return boolval($suppImplex);
+    }
+
+    /**
+     * Shall deceased persons explicitely marked?
+     *
+     * @return bool
+     */
+    public function getMarkDeceased(): bool
+    {
+        $markDeceased = (int) $this->request->getQueryParams()['markDeceased'] ?? 0;
+        return boolval($markDeceased);
     }
 
     /**
