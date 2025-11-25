@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.5\n"
+"X-Generator: Poedit 3.8\n"
 
 msgid "Add a person"
 msgstr "Een persoon toevoegen"
@@ -45,6 +45,12 @@ msgstr "Breedte:"
 msgid "Height:"
 msgstr "Hoogte:"
 
+msgid "Individuals in generations"
+msgstr "Personen in generaties"
+
+msgid "Click here to toggle highlighting"
+msgstr "Klik hier om markering in of uit te schakelen"
+
 msgid "Expand next links"
 msgstr "Volgende links uitvouwen"
 
@@ -62,6 +68,12 @@ msgstr "Klik hier om subboom uit te vouwen / in te klappen"
 
 msgid "Export to PNG"
 msgstr "Exporteren als PNG"
+
+msgid "Hide/show deceased individuals"
+msgstr "Toon/verberg overleden personen"
+
+msgid "deceased"
+msgstr "overleden"
 
 msgid "Maternal side takes precedence"
 msgstr "Moederlijke kant heeft voorrang"
@@ -99,43 +111,33 @@ msgstr "Weergave minimaliseren"
 msgid "Maximize View"
 msgstr "Weergave maximaliseren"
 
-#: app/Http/RequestHandlers/InteractiveTreeViewRH.php:87
 msgid "Check tree of %s"
 msgstr "Controleer boom van %s"
 
-#: app/Http/RequestHandlers/InteractiveTreeViewRH.php:94
 msgid "Tree of %s"
 msgstr "Boom van %s"
 
-#: app/Http/RequestHandlers/InteractiveTreeViewRH.php:94
 msgid "List of Individuals"
 msgstr "Lijst van personen"
 
-#: resources/views/admin/trees-duplicates.phtml:45
 msgid "Interactive check"
 msgstr "Interactieve controle"
 
-#: resources/views/layouts/default.phtml:210
 msgid "previous "
 msgstr "vorige "
 
-#: resources/views/layouts/default.phtml:211
 msgid "next "
 msgstr "volgende "
 
-#: resources/views/layouts/default.phtml:212
 msgid "Play "
 msgstr "Afspelen "
 
-#: resources/views/layouts/default.phtml:213
 msgid "Stop "
 msgstr "Stop "
 
-#: resources/views/layouts/default.phtml:214
 msgid "close "
 msgstr "sluiten "
 
-#: resources/views/layouts/trees-duplicates.phtml:21
 msgid "count"
 msgstr "aantal"
 
@@ -151,11 +153,20 @@ msgstr "Centreren op wortel"
 msgid "Show Implex"
 msgstr "Toon Implex"
 
+msgid "Checked -> Implex-affected relations will be explicitly marked"
+msgstr "Aangevinkt -> Implex-betrokken relaties worden expliciet gemarkeerd"
+
 msgid "Suppress Implex"
 msgstr "Onderdruk Implex"
 
 msgid "Checked -> Implex-affected relations will not be pursued further"
 msgstr "Aangevinkt -> Implex-betrokken relaties worden niet verder voortgezet"
+
+msgid "Mark Deceased"
+msgstr "Markeer overledenen"
+
+msgid "Checked -> Deceased will be explicitely marked"
+msgstr "Aangevinkt -> Overledenen wordt expliciet gemarkeerd"
 
 msgid "Show separated"
 msgstr "Toon afzonderlijk"
