@@ -56,6 +56,19 @@ trait ModuleChartTrait
      */
     public function chartTitle(Individual $individual): string
     {
+        $ct = $this->huh_short . ' ' . I18N::translate('Interactive tree XT'); 
+        return $ct;
+    }
+
+    /**
+     * The title on the page.
+     *
+     * @param Individual $individual
+     *
+     * @return string
+     */
+    public function pageTitle(): string
+    {
         $ct = '-' . $this->huh . '- ' . I18N::translate('Interactive tree XT'); 
         return $ct;
     }
