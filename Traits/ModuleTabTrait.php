@@ -43,7 +43,7 @@ trait ModuleTabTrait
      *
      * @return string
      */
-    abstract public function title(): string;
+    abstract public function title_long(): string;
 
     /**
      * The text that appears on the tab.
@@ -52,7 +52,7 @@ trait ModuleTabTrait
      */
     public function tabTitle(): string
     {
-        return $this->title_short();
+        return $this->title();
     }
 
     /**

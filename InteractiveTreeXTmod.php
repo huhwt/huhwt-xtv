@@ -83,10 +83,9 @@ class InteractiveTreeXTmod extends AbstractModule implements RequestHandlerInter
         $tree = Validator::attributes($request)->tree();
         $XREFroot = Validator::queryParams($request)->string('XREFroot');
 
+        $fid  = Validator::queryParams($request)->string('fid');
         $pid  = Validator::queryParams($request)->string('pid');
 
-        $individual = Registry::individualFactory()->make($pid, $tree);
-        $individual = Auth::checkIndividualAccess($individual);
         $instance = Validator::queryParams($request)->string('instance');
         $module   = Validator::queryParams($request)->string('module');
 
@@ -96,7 +95,7 @@ class InteractiveTreeXTmod extends AbstractModule implements RequestHandlerInter
         $treeview = new TreeViewXTmod($instance, $module, $tree, $XREFroot, $showseparated);
         $treeview->reload();
 
-        return response($treeview->getDetails($individual));
+        return response($treeview->getDetails($fid, $pid, $tree));
     }
 
     /**

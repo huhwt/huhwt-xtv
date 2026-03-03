@@ -17,9 +17,12 @@ use Fisharebest\Webtrees\Tree;
  * @var bool        $withCCE
  * @var string      $markdeceased
  * @var string      $showseparated
- * @var string      $bfsTitle
+ * @var string      $bseTitle
+ * @var string      $minTitle
+ * @var string      $maxTitle
  * @var string      $pmaphide
  * @var bool        $xtRmode
+ * @var bool        $doExpand
  * @var string      $xtv_in
  */
 
@@ -157,15 +160,16 @@ use Fisharebest\Webtrees\Tree;
             <ul id="<?= $name ?>_NlistGLul" class="tv_namelistul" title="<?= I18N::translate('Click here to toggle highlighting') ?>">
             </ul>
         </div>
-        <div id="<?= $name ?>_in" class="<?= $xtv_in ?>" dir="ltr">
+        <div id="<?= $name ?>_in" class="xtv_in_xtr <?= $xtv_in ?>" dir="ltr">
             <?= $innerHTML ?>
         </div>
         <canvas id="page-map<?= $name ?>"<?= $cl_Pmap ?> ></canvas>
         </div>
 </div>
+  
 <script>
-        pagemap(document.querySelector('#page-map<?= $name ?>'), {
-            viewport: document.querySelector('.' + '<?= $xtv_in ?>'),
-            interval: 100,
-        });
+    pagemap(document.querySelector('#page-map<?= $name ?>'), {
+        viewport: document.querySelector('#' + '<?= $name ?>' + '_in.xtv_in_xtr'),
+        interval: 100,
+    });
 </script>

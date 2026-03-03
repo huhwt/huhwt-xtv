@@ -24,41 +24,61 @@ However, irritations quickly arise when using it. The starting person is difficu
 
 This is where the extension comes in:
 
-The initial state is defined using form control fields. Once the view is open, it can be analyzed extensively and its state can be changed reversibly. Information about the number of people shown is available at all times, and you can navigate to a specific person in the view. The additional functions can be triggered using control fields in the view.
+- The initial state is defined using form control fields. Once the view is open, it can be analyzed extensively and its state can be changed reversibly. Information about the number of people shown is available at all times, and you can navigate to a specific person in the view. The additional functions can be triggered using control fields in the view.
 
-The starting person is clearly marked.
+- The starting person is clearly marked.
 
-You can reload entire sections of the view or just individual family branches and hide them again.
+- You can reload entire sections of the view or just individual family branches and hide them again.
 
-You can highlight Implex states.
+- You can highlight Implex states.
 
-You can suppress reloading in the Implex case.
+- You can suppress reloading in the Implex case.
 
-You can resolve and display multiple relationships separately.
+- You can resolve and display multiple relationships separately.
 
-The entire tree is displayed abstractly as a pagemap. You can navigate directly to any area of the tree via the pagemap, and the position of the current screen section is immediately recognizable in the pagemap. The position of the starting person is clearly highlighted in the pagemap.
+- You can mark deceased persons (according to the data available) with a suffix 🕇.
 
-You can use a list of the persons displayed in the current state to jump directly to the positions in the view via the list entries. Persons that appear multiple times (-Implex-) are highlighted.
+- If a marriage ends in divorce, this is indicated in the extended information on the persons involved, and the suffix <mark>⚮</mark> is added to the spouse's name.
 
-As an option, you can clearly mark deceased persons and limit the view to those who are still alive (according to the data).
+- The entire tree is displayed abstractly as a pagemap. You can navigate directly to any area of the tree via the pagemap, and the position of the current screen section is immediately recognizable in the pagemap. The position of the starting person is clearly highlighted in the pagemap.
 
-You can transfer the XREFs of the displayed persons (and families) to the Clippings Cart.
+- You can use a list of the persons displayed in the current state to jump directly to the positions in the view via the list entries. Persons that appear multiple times (-Implex-) are highlighted. This list can be filtered by name.
+
+- Statistics are kept on the persons currently displayed, including an overview of persons by generation. From this overview, persons can be filtered by generation. Persons of a generation are highlighted in color and a separate list of persons of that generation is generated. This list can also be filtered by name.
+
+- If deceased persons have been marked (according to the data), you can limit the view to persons who are still alive.
+
+- You can transfer the XREFs of the displayed persons (and families) to the Clippings Cart.
+
+And then there's one more thing...
+
+If the ‘⚶ Relationships’ module (Vesta - Extended Relationships) is installed, you can also display any chains that may exist between two people. The first common ancestor becomes the root person of the view, and only the people identified as chain links are displayed directly. Their direct relatives are only included in a hidden state. All other side branches are ignored. The display also automatically switches to ‘Detect/suppress implex’ and ‘Separate multiple relationships’ mode so that the chain is clear. The members of the chain are highlighted in color.
+
+- The option is not active by default and must be explicitly enabled in the settings.
+
+- If it is enabled and ‘⚶ Relationships’ is installed, you can specify a second person.
+
+- The analysis options ‘closest connection (prefer family relationship)’ - this option starts the function - and ‘closest connection ever’ - can be selected as an alternative after a first run.
 
 ## Description of the functions
 ------------------------------
 
 The module can be used embedded as a tab in the 'Individual page' or independently as an own 'Genealogy' chart. The form control panels described below are only accessible when used as a chart.
 
+  Note: The control fields are not shown in the expanded view.
+
 ### Form controls:
 
-* You can specify the number of generations shown from the start
-    - '-' N '+' - option in the header form - Min: 1, Max: 25 - Default: 4
-- (The more generations specified, the longer the primary resolution takes).
+* Selection of a person.
 
 * You can control whether the parent resolution is patri-linear or matri-linear
     - Patri-linear -> Father side has priority / Matri-linear -> Mother side has priority
     - (If there is no match on the priority line, the other line is automatically called up)
 - Checkbox 'Maternal side has priority' in the header form - Default: Patri-linear (webtrees standard)
+
+* You can specify the number of generations shown from the start
+    - '-' N '+' - option in the header form - Min: 1, Max: 25 - Default: 4
+- (The more generations specified, the longer the primary resolution takes).
 
 * Option 'Show Implex'
     - If active, persons for whom implex was recognized are highlighted with a frame (default: off).
@@ -152,7 +172,7 @@ The view is technically implemented as a construct of nested table elements. Thi
 
 ## Dependencies 
 
-* None
+* XTV Core function: none - Family relationships -> ‘⚶ Relationships’ (vesta_extended_relationships/the vesta package)
 
 ## Caveat
 
@@ -171,7 +191,8 @@ other theme.
 * The pagemap is derived from ( https://github.com/lrsjng/pagemap | MIT License )
 as fork ( https://github.com/PiSaucer/pagemap | MIT License )
 * Special thanks to Hermann Harthentaler for test, suggestion and criticism. -> https://github.com/hartenthaler
-
+* Family relationships – explicit as well as for some other indirectly used properties/options/functions Richard Cissée for the Vesta package (https://cissee.de/ or https://github.com/vesta-webtrees-2-custom-modules | GPL 3.0 License)
+* Expanded view taken from ( https://github.com/UksusoFF/webtrees-tree_view_full_screen )
 * Translation into Dutch - thanks to TheDutchJewel. 
 * Translation into Catalan and Spanish - many thanks to BernatBanyuls
 

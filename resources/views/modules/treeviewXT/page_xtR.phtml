@@ -20,13 +20,17 @@ use HuHwt\WebtreesMods\InteractiveTreeXT\Configuration;
  * @var string        $title
  * @var string        $ctitle
  * @var array         $subtitles - [0] first treeview, [1] second treeview, ... up to [4]
- * @var array|string  $xtstruct
+ * @var array|string  $xtStruct
+ * @var array|string  $verData
+ * @var int           $vER_find
+ * @var array|string  $vERfunctions
  */
 
     $label_VER = '(' . I18N::translate('Individual') . ' 2 -> ' . I18N::translate('Relations view') . ')';
 
     $individual = $individuals[0];
 
+    $show_path  = false;        // [EW.H] - debug option -> true: the processed path will be shown in html
 ?>
 
 <h3 class="wt-page-title">
@@ -51,6 +55,14 @@ use HuHwt\WebtreesMods\InteractiveTreeXT\Configuration;
             </label>
             <div class="col-sm-10 wt-page-options-value">
                 <?= view('components/select-individual', ['name' => 'xref2', 'individual' => $individual2, 'tree' => $individual->tree(), 'required' => false]) ?>
+            </div>
+        </div>
+        <div class="row form-group">
+            <label class="col-sm-1-10 col-form-label wt-page-options-label">
+                &nbsp;
+            </label>
+            <div class="col-sm-10 wt-page-options-value">
+                <?= view('components/radios-inline', ['name' => 'find', 'selected' => $vER_find, 'options' => $vERfunctions]) ?>
             </div>
         </div>
     <?php endif ?>
@@ -120,6 +132,19 @@ use HuHwt\WebtreesMods\InteractiveTreeXT\Configuration;
   showgensPrep();
 </script>
 <?= View::endpush() ?>
+
+<?php if ($show_path):
+    if (is_array($verData)):           // [EW.H] debug option - show the processed path
+        $xtpath = join(' | ', $verData['path']); ?>
+        <div> <?= $xtpath ?></div>
+    <?php endif ?>
+    <?php if (is_array($xtStruct)):           // [EW.H] debug option - show the processed path
+        foreach ($xtStruct['parts'] as $n => $part) { 
+            $xtpath = join(' | ', $part['path']); ?>
+            <div> <?= $xtpath ?></div>
+        <?php  } ?>
+    <?php endif ?>
+<?php endif ?>
 
 <?php for ( $i = 0, $iE = count($htmls); $i < $iE; ++$i) : ?>
     <?php $html = $subtitles[$i] ?>

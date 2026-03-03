@@ -24,41 +24,62 @@ Bei der Nutzung gibt es allerdings schnell Irritationen. Die Startperson ist bei
 
 Hier setzt nun die Erweiterung an:
 
-Der Ausgangzustand wird über Formular-Steuerfelder definiert. Ist die Ansicht geöffnet, kann sie weitgehend analysiert und ihr Zustand reversibel verändert werden. Man erhält zu jedem Zeitpunkt Informationen über die Anzahl der gezeigten Personen und kann in der Ansicht zu einer gewünschten Person navigieren. Die ergänzenden Funktionen können über Steuerfelder in der Ansicht ausgelöst werden.
+- Der Ausgangzustand wird über Formular-Steuerfelder definiert. Ist die Ansicht geöffnet, kann sie weitgehend analysiert und ihr Zustand reversibel verändert werden. Man erhält zu jedem Zeitpunkt Informationen über die Anzahl der gezeigten Personen und kann in der Ansicht zu einer gewünschten Person navigieren. Die ergänzenden Funktionen können über Steuerfelder in der Ansicht ausgelöst werden.
 
-Die Startperson wird eindeutig markiert.
+- Die Startperson wird eindeutig markiert.
 
-Man kann ganze Teilbereiche der Ansicht oder auch nur einzelne Familienzweige gezielt nachladen und auch wieder ausblenden.
+- Man kann ganze Teilbereiche der Ansicht oder auch nur einzelne Familienzweige gezielt nachladen und auch wieder ausblenden.
 
-Man kann sich Implex-Zustände hervorheben lassen.
+- Man kann sich Implex-Zustände hervorheben lassen.
 
-Man kann im Implex-Fall das Nachladen unterdrücken.
+- Man kann im Implex-Fall das Nachladen unterdrücken.
 
-Man kann Mehrfach-Beziehungen getrennt auflösen und darstellen.
+- Man kann Mehrfach-Beziehungen getrennt auflösen und darstellen.
 
-Der gesamte Baum wird abstrahiert als Pagemap angezeigt, man kann über die Pagemap direkt zu jedem Bereich des Baums navigieren und die Position des aktuellen Bildschirm-Ausschnitts ist in der Pagemap unmittelbar erkannbar. Die Position der Startperson ist in der Pagemap eindeutig hervorgehoben.
+- Man kann (nach Datenlage) verstorbene Personen markieren lassen (nachgestelltes Kennzeichen 🕇).
 
-Man kann eine Liste der im aktuellen Zustand angezeigten Personen nutzen, um über die Listeneinträge direkt an die Positionen in der Ansicht zu springen. Dabei werden mehrfach auftretende Personen (-Implex-) speziell hervorgehoben.
+- Endet eine Ehe durch Scheidung, ist dies in den erweiterten Informationen zu den beteiligten Personen mit aufgeführt, ferner wird beim Ehepartner das Kennzeichen <mark>⚮</mark> im Namen ergänzt.
 
-Als Option kann man verstorbene Personen eindeutig markieren und die Ansicht auf die (nach Datenlage) noch lebenden Personen beschränken.
+- Der gesamte Baum wird abstrahiert als Pagemap angezeigt, man kann über die Pagemap direkt zu jedem Bereich des Baums navigieren und die Position des aktuellen Bildschirm-Ausschnitts ist in der Pagemap unmittelbar erkannbar. Die Position der Startperson ist in der Pagemap eindeutig hervorgehoben.
 
-Man kann die Kennungen der angezeigten Personen (und Familien) in den Sammelbehälter überführen.
+- Man kann eine Liste der im aktuellen Zustand angezeigten Personen nutzen, um über die Listeneinträge direkt an die Positionen in der Ansicht zu springen. Dabei werden mehrfach auftretende Personen (-Implex-) speziell hervorgehoben. Man kann diese Liste nach Namen filtern.
+
+- Es wird eine Statistik der aktuell angezeigten Personen geführt, dabei wird auch eine Übersicht der Personen nach Generationen gezeigt. Aus dieser Übersicht kann man Personen nach Generationen filtern. Dabei werden die Personen einer Generation farbig hervorgehoben und eine separate Liste der Personen dieser Generation erzeugt. Auch in dieser Liste kann man nach Namen filtern.
+
+- Wenn (nach Datenlage) verstorbene Personen markiert wurden, kann man die Ansicht auf die noch lebenden Personen beschränken.
+
+- Man kann die Kennungen der angezeigten Personen und Familien in den Sammelbehälter überführen.
+
+Und dann wäre da noch etwas ...
+
+Sofern das Modul '⚶ Beziehungen' (Vesta - Erweiterte Beziehungen) installiert ist, kann man sich auch die eventuell vorhandene Kette zwischen zwei Personen darstellen lassen. Der erste gemeinsame Vorfahr wird zur Stammperson der Ansicht und nur die als Kettenglieder ermittelten Personen werden direkt angezeigt. Ihre direkten Verwandten sind nur im ausgeblendeten Zustand mitgeführt. Alle anderen Seitenzweige bleiben unberücksichtigt. Die Darstellung schaltet zudem automatisch in den 'Implex erkennen/unterdrücken'- und 'Mehrfach Beziehungen getrennt'-Modus um, damit die Kette eindeutig ist. Die Mitglieder der Kette sind farbig hervorgehoben.
+
+- Die Option ist im Standard nicht aktiv und muss über die Einstellungen explizit freigeschaltet werden.
+
+- Ist sie freigeschaltet und ist '⚶ Beziehungen' installiert, kann man eine 2. Person vorgeben.
+
+- Unterstützt werden die Analyse-Optionen 'engste Verbindung (Verwandschaft bevorzugt)' - mit dieser Option startet die Funktion - und 'engste Verbindung überhaupt' - kann nach einem ersten Durchgang alternativ gewählt werden.
+
 
 ## Beschreibung der Funktionen
 ------------------------------
 
 Das Modul kann eingebettet als Reiter in der Personenseite oder unabhängig als eigenes Genealogie-Diagramm verwendet werden. Die nachstehend beschriebenen Steuerfelder sind nur bei der Verwendung als Diagramm zugänglich.
 
+  Anmerkung: In der expandierten Ansicht werden die Steuerfelder nicht gezeigt.
+
 ### Formular-Steuerfelder:
 
-* Man kann die Anzahl der vom Start an gezeigten Generationen vorgeben
-    - '-' N '+' - Option im Kopf-Formular   - Min: 1, Max: 25 - Default: 4
-- (Je mehr Generationen vorgegeben, desto länger dauert die primäre Auflösung.)
+* Auswahl einer Person.
 
 * Man kann steuern, ob bei der Eltern-Auflösung Patri- oder Matri-linear vorgegangen wird
     - Patri-linear -> Vater-Seite hat Vorrang / Matri-linear -> Mutter-Seite hat Vorrang
     - (Gibt es keinen Treffer auf der vorrangigen Linie, wird automatisch die andere Linie aufgerufen)
-- Checkbox 'Mütterliche Seite hat Vorrang' im Kopf-Formular   - Default: Patri-linear (webtrees-Standard)
+- Checkbox 'Mütterliche Seite hat Vorrang' im Kopf-Formular   - Default: Patri-linear (webtrees-Standard), also aus
+
+* Man kann die Anzahl der vom Start an gezeigten Generationen vorgeben
+    - '-' N '+' - Option im Kopf-Formular   - Min: 1, Max: 25 - Default: 4
+    - (Je mehr Generationen vorgegeben, desto länger dauert die primäre Auflösung.)
 
 * Option 'Implex anzeigen'
     - Wenn aktiv, werden Personen, für welche Implex erkannt wurde, mit einem Rahmen hervorgehoben (Standard: aus).
@@ -151,13 +172,13 @@ Die Ansicht kennt 3 Zustände:
     - Beim Aufruf als Personenseite-Tab sind die Formular-Steuerfelder nicht zugänglich, alle Optionen auf Default; es werden 4 Generationen vorab aufgelöst.
     - Die Startansicht - Normal oder expandiert - kann über die Admin-Funktion 'Einstellungen verwalten' beeinflusst werden. XTV ist sowohl bei den Genealogie-Diagrammen als auch bei den Personenseite-Reitern gelistet, die Einstellungen beider Verwendungen werden gemeinsam verwaltet.
 
-Der expandierte Zustand wurde aus einer anderen Webtrees-Erweiterung übernommen. Der Eigner dieser Erweiterung hat dieses Modul wegen der Integration des Fullscreen-Modus ausgesetzt. Allerdings ist der expandierte Zustand aussagefähiger als die Normalansicht, es hat sich auch gezeigt, dass die Kombination von expandierter Ansicht und Fullscreen-Option das Problem abgeschnittener PNG-Inhalte vermeiden hilft. Zwischen den Zuständen kann über Schaltflächen in der Ansicht gewechselt werden.
+  Der expandierte Zustand wurde aus einer anderen Webtrees-Erweiterung übernommen. Der Eigner dieser Erweiterung hat dieses Modul wegen der Integration des Fullscreen-Modus ausgesetzt. Allerdings ist der expandierte Zustand aussagefähiger als die Normalansicht, es hat sich auch gezeigt, dass die Kombination von expandierter Ansicht und Fullscreen-Option das Problem abgeschnittener PNG-Inhalte vermeiden hilft. Zwischen den Zuständen kann über Schaltflächen in der Ansicht gewechselt werden.
 
-Die Ansicht ist technisch als Konstrukt von ineinandergeschachtelten Tabellen-Elementen realisiert. Das Verfahren ist robust und schnell, hat aber auch Nachteile: Es gibt keine Zoom-Option und die Technik erlaubt nur die vorliegende Darstellungs-Technik - Start-Person in der Mitte, Expansion horizontal links Nachfahren, rechts Vorfahren - Alternativen wie vertikale Expansion sind nicht darstellbar.
+Die Ansicht ist technisch als Konstrukt von ineinandergeschachtelten Tabellen-Elementen realisiert. Das Verfahren ist robust und schnell, hat aber auch Nachteile: Es gibt keine Zoom-Option und die Technik erlaubt nur die vorliegende Aufbereitung - Start-Person in der Mitte, Expansion horizontal zur einen Seite Nachfahren, zur anderen Seite Vorfahren - Alternativen wie vertikale Expansion sind nicht darstellbar.
 
 ## Abhängigkeiten
 
-* keine
+* Kernfunktion: keine - Verwandschaftsbeziehungen -> '⚶ Beziehungen' (vesta_extended_relationships/das vesta-Paket)
 
 ## Caveat
 
@@ -177,6 +198,8 @@ kommen.
    ( https://github.com/lrsjng/pagemap | MIT License)
    als fork ( https://github.com/PiSaucer/pagemap | MIT License )
 * Für Test, Anregung und Kritik besonderen Dank an Hermann Harthentaler. -> https://github.com/hartenthaler
+* Verwandschaftsbeziehungen - explizit wie auch für manch andere indirekt genutzte Eigenschaften/Optionen/Funktionen Richard Cissée für das Vesta-Paket ( https://cissee.de/ bzw. https://github.com/vesta-webtrees-2-custom-modules | GPL 3.0 License)
+* expandierte Ansicht übernommen aus ( https://github.com/UksusoFF/webtrees-tree_view_full_screen )
 
 * Übersetzung ins Niederländische - Dank an TheDutchJewel
 * Übersetzung ins Spanische + Catalanische - Dank an BernatBanyuls

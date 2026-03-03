@@ -24,6 +24,9 @@ msgstr "Toon alle familieleden"
 msgid "Show name list"
 msgstr "Toon namenlijst"
 
+msgid "Filter name list"
+msgstr "Namenlijst filteren"
+
 msgid "Current status"
 msgstr "Huidige status"
 

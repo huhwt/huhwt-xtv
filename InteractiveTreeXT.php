@@ -16,6 +16,7 @@ use Fig\Http\Message\RequestMethodInterface;
 use fisharebest\Localization\Translation;
 use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\Http\ViewResponseTrait;
+use Fisharebest\Webtrees\FlashMessages;
 use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Individual;
 use Fisharebest\Webtrees\Module\InteractiveTreeModule;
@@ -37,12 +38,15 @@ use Psr\Http\Message\ServerRequestInterface;
 
 use HuHwt\WebtreesMods\InteractiveTreeXT\InteractiveTreeXTmod;
 use HuHwt\WebtreesMods\InteractiveTreeXT\Module\TreeViewXTmod;
+use HuHwt\WebtreesMods\InteractiveTreeXT\Module\VestaERadapter;
 use HuHwt\WebtreesMods\InteractiveTreeXT\Traits\ModuleChartTrait;
 use HuHwt\WebtreesMods\InteractiveTreeXT\Traits\ModuleTabTrait;
 use HuHwt\WebtreesMods\InteractiveTreeXT\Traits\XTVconfigTrait;
+use HuHwt\WebtreesMods\InteractiveTreeXT\Traits\XTVcustomModuleConnect;
 use HuHwt\WebtreesMods\InteractiveTreeXT\Configuration;
 
 use intval;
+use Throwable;
 /**
  * Class InteractiveTreeXT
  * 
@@ -60,6 +64,8 @@ class InteractiveTreeXT extends InteractiveTreeModule implements ModuleGlobalInt
     use ModuleConfigTrait;
 
     use XTVconfigTrait;
+
+    use XTVcustomModuleConnect;
 
     private const ROUTE_DEFAULT = 'treeXTV';
     private const ROUTE_URL = '/tree/{tree}/treeXTV';
@@ -87,6 +93,12 @@ class InteractiveTreeXT extends InteractiveTreeModule implements ModuleGlobalInt
      */
     private $huh_short;
 
+    /**
+     * _vesta_extended_relationships_ installed?
+     * @var bool
+     */
+    private bool $vERok = false;
+
     public function __construct() {
       $this->huh = json_decode('"\u210D"') . "&" . json_decode('"\u210D"') . "wt";
       $this->huh_short = json_decode('"\u210D"');
@@ -110,7 +122,7 @@ class InteractiveTreeXT extends InteractiveTreeModule implements ModuleGlobalInt
      * @return string
      */
     public function customModuleVersion(): string {
-        return '2.4.1.1';
+        return '2.2.5.0';
     }
 
     /**
@@ -164,11 +176,11 @@ class InteractiveTreeXT extends InteractiveTreeModule implements ModuleGlobalInt
 
     /**
      * {@inheritDoc}
-     * @see \Fisharebest\Webtrees\Module\AbstractModule::title()
+     * @see \Fisharebest\Webtrees\Module\AbstractModule::title_long()
      *
      * @return string
      */
-    public function title(): string 
+    public function title_long(): string 
     {
         $_title = I18N::translate('Interactive tree XT');
         return $this->huh . ' ' . $_title;
@@ -176,16 +188,20 @@ class InteractiveTreeXT extends InteractiveTreeModule implements ModuleGlobalInt
 
     /**
      * {@inheritDoc}
-     * @see \Fisharebest\Webtrees\Module\AbstractModule::title()
+     * @see \Fisharebest\Webtrees\Module\AbstractModule::title_long()
      *
      * @return string
      */
-    public function title_short(): string 
+    public function title(): string 
     {
         $_title = I18N::translate('Interactive tree XT');
         return $this->huh_short . ' ' . $_title;
     }
 
+    public function chartTitle(Individual $individual): string
+    {
+        return $this->title();
+    }
     /**
      * {@inheritDoc}
      * @see \Fisharebest\Webtrees\Module\AbstractModule::description()
@@ -207,6 +223,8 @@ class InteractiveTreeXT extends InteractiveTreeModule implements ModuleGlobalInt
      */
     public function headContent(): string
     {
+    // <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
         $html_CSS = view("{$this->name()}::style", [
             'path' => $this->assetUrl('css/huhwtXT.css'),
         ]);
@@ -267,8 +285,11 @@ class InteractiveTreeXT extends InteractiveTreeModule implements ModuleGlobalInt
 
         View::registerCustomView('::modules/treeviewXT/tab', $this->name() . '::modules/treeviewXT/tab');
         View::registerCustomView('::modules/treeviewXT/chart', $this->name() . '::modules/treeviewXT/chart');
+        View::registerCustomView('::modules/treeviewXT/chart_xtR', $this->name() . '::modules/treeviewXT/chart_xtR');
         View::registerCustomView('::modules/treeviewXT/page', $this->name() . '::modules/treeviewXT/page');
+        View::registerCustomView('::modules/treeviewXT/page_xtR', $this->name() . '::modules/treeviewXT/page_xtR');
         View::registerCustomView('::modules/treeviewXT/pageh2', $this->name() . '::modules/treeviewXT/pageh2');
+        View::registerCustomView('::modules/treeviewXT/pageh2_2P', $this->name() . '::modules/treeviewXT/pageh2_2P');
         View::registerCustomView('::modules/treeviewXT/pageh3', $this->name() . '::modules/treeviewXT/pageh3');
 
         $dump_dir = __DIR__ . DIRECTORY_SEPARATOR . '_doku';
@@ -279,6 +300,9 @@ class InteractiveTreeXT extends InteractiveTreeModule implements ModuleGlobalInt
             mkdir($dump_dir, 0755);
         }
         Session::put('XTV_dumpDir', $dump_dir);
+
+        $this->vERok = $this->test_VER_();
+
     }
 
     /**
@@ -314,6 +338,7 @@ class InteractiveTreeXT extends InteractiveTreeModule implements ModuleGlobalInt
 
         /** EW.H - MOD ... check preferences */
         $tabOption = (boolean) $this->getPreference('tab_Option', '0');
+        $dump_dir = Session::pull('XTV_dumpDir');           // we don't want dump in Tab-mode
 
         $tvPref = 'tv' . 'XTt' ;
         $treeview = new TreeViewXTmod($tvPref, $module, $tree, $individual->xref(), 'default', $showmatri );
@@ -381,6 +406,14 @@ class InteractiveTreeXT extends InteractiveTreeModule implements ModuleGlobalInt
         $tree = Validator::attributes($request)->tree();
         $user = Validator::attributes($request)->user();
         $xref = Validator::queryParams($request)->isXref()->string('xref');
+        try {
+            $xref2 = $request->getQueryParams()['xref2'];
+        } catch (Throwable $th) {
+            $xref2 = null;
+        }
+        if ($xref2) {
+            $xref2= Validator::queryParams($request)->isXref()->string('xref2', null);
+        }
 
         Auth::checkComponentAccess($this, ModuleChartInterface::class, $tree, $user);
 
@@ -396,6 +429,15 @@ class InteractiveTreeXT extends InteractiveTreeModule implements ModuleGlobalInt
             $individual = Registry::individualFactory()->make($xref, $tree);
             $individual = Auth::checkIndividualAccess($individual, false, true);
             $individualAr[] = $individual;
+        }
+        $xtR_Option = (boolean) $this->getPreference('xtR_Option', '0');
+        $this->vERok    = $this->vERok && $xtR_Option;
+        $individual2 = null;
+        if ($this->vERok && count($individualAr) == 1) {
+            if ($xref2) {
+                $individual2 = Registry::individualFactory()->make($xref2, $tree);
+                $individual2 = Auth::checkIndividualAccess($individual2, false, true);
+            }
         }
 
         $s_showpatri = Validator::queryParams($request)->string('showmatri', '0');
@@ -413,52 +455,109 @@ class InteractiveTreeXT extends InteractiveTreeModule implements ModuleGlobalInt
 
         $module = Validator::attributes($request)->string('module');
 
-        $tvPrefix = $this->configuration->getTvPrefix();
+        [ $tvPrefix, $tvPrefLabel ] = $this->configuration->getTvPrefix();
         $htmlAr = [];
         $jsAr = [];
         $jsImp = [];
         $subtitleAr = [];
 
         /** EW.H - MOD ... check preferences */
-        $chartOption = (boolean) $this->getPreference('chart_Option', '1');
+        $chartOption    = (boolean) $this->getPreference('chart_Option', '1');
+        $dumpOption     = (boolean) $this->getPreference('dump_Option', '0');
+        if (!$dumpOption) { $dump_dir = Session::pull('XTV_dumpDir'); }  // we don't want dump 
 
-        // for ( $tvi = 0; $tvi < count($individualAr); $tvi++) {
-            // if ($tvi == 0) {
-            //     $html_JS = view("{$this->name()}::script", [
-            //         'path' => $this->assetUrl('js/huhwtXT.js'),
-            //     ]);
-            //     $jsImp[] = $html_JS;
-            // }
-            $individual = $individualAr[0];
-            $tvPref = 'tv' . $tvPrefix[0] . 'C';
-            $XREFroot = $individual->xref();
-            $tv = new TreeViewXTmod($tvPref, $module, $tree, $XREFroot, $showseparated, $showmatri, $markdeceased, $showimplex, $suppimplex);
-            $tv->init();
+        $individual     = $individualAr[0];
+        $tvPref         = 'tv' . $tvPrefix[0] . 'C';
+        $XREFroot       = $individual->xref();
 
-            $subtitleAr[] = $this->chartSubTitle($individual);
-            [$html, $js] = $tv->drawViewport($individual, $tvPrefix[0], $generations, $chartOption);
+        $tv = new TreeViewXTmod($tvPref, $module, $tree, $XREFroot, $showseparated, $showmatri, $markdeceased, $showimplex, $suppimplex);
+        $tv->init();
 
+        $vERdata        = [];
+        $XT_struct      = [];
+        $do_xtR         = false;
+        $s_vER_find     = Validator::queryParams($request)->string('find', '');
+        $vER_find       = intval($s_vER_find ?? 4);     //    5: any relationship
+        $vERfunctions   = $this->vERfunctions();
+        if ($individual2) {
+            $XREFver  = $individual2->xref();
+            $vestaERadapter = new VestaERadapter();
+            $vERdata = $vestaERadapter->make_path($individual, $individual2, $vER_find);
+            $do_xtR = is_array($vERdata) && count($vERdata) > 0;
+            if ($do_xtR) {
+                $XT_struct = $vestaERadapter->update_XTstruct($tree, $tvPrefix, $tvPrefLabel);
+            } else {
+                FlashMessages::addMessage( I18N::translate("No link between the two individuals could be found."), 'warning');
+                $chartOption    = false;
+                // TODO: show a separated chart for each person
+                // $individualX = Registry::individualFactory()->make($xref2, $tree);
+                // $individualX = Auth::checkIndividualAccess($individualX, false, true);
+                // $individualAr[] = $individualX;
+            }
+        }
+
+        $subtitle    = $this->chartSubTitle($individual);
+
+        if ($do_xtR) {
+            $tv->xtRdata_load($XT_struct);
+            $subtitle    = $this->chartSubTitle_2P($individual, $individual2);
+            [$html, $js] = $tv->drawViewport_xtR($individual, $individual2, $XT_struct, $chartOption);
             $htmlAr[] = $html;
             $jsAr[] = $js;
-        // }
+            $subtitleAr[] = $subtitle;
 
-        return $this->viewResponse('modules/treeviewXT/page', [
-            'individuals'   => $individualAr,
-            'showmatri'     => $showmatri,
-            'showimplex'    => $s_showImplex,
-            'suppimplex'    => $s_suppImplex,
-            'markdeceased'  => $s_markDeceased,
-            'showseparated' => $s_showseparated,
-            'generations'   => $generations,
-            'htmls'         => $htmlAr,
-            'jsimp'         => $jsImp,
-            'jss'           => $jsAr,
-            'module'        => $this->name(),
-            'title'         => $this->chartTitle($individualAr[0]),
-            'ptitle'        => $this->pageTitle(),
-            'subtitles'     => $subtitleAr,
-            'tree'          => $tree,
-            ]);
+            return $this->viewResponse('modules/treeviewXT/page_xtR', [
+                'individuals'   => $individualAr,
+                'individual2'   => $individual2,
+                'showmatri'     => $showmatri,
+                'showimplex'    => $s_showImplex,
+                'suppimplex'    => $s_suppImplex,
+                'markdeceased'  => $s_markDeceased,
+                'showseparated' => $s_showseparated,
+                'generations'   => $generations,
+                'do_VER'        => $this->vERok,
+                'htmls'         => $htmlAr,
+                'jsimp'         => $jsImp,
+                'jss'           => $jsAr,
+                'module'        => $this->name(),
+                'title'         => $this->chartTitle($individual),
+                'ptitle'        => $this->pageTitle(),
+                'subtitles'     => $subtitleAr,
+                'xtStruct'      => $XT_struct,
+                'verData'       => $vERdata,
+                'tree'          => $tree,
+                'vER_find'      => $vER_find,
+                'vERfunctions'  => $vERfunctions,
+                ]);
+
+        } else {
+            [$html, $js] = $tv->drawViewport($individual, $tvPrefix[0], $generations, $chartOption);
+            $htmlAr[] = $html;
+            $jsAr[] = $js;
+            $subtitleAr[] = $subtitle;
+            $XT_struct = '';
+
+            return $this->viewResponse('modules/treeviewXT/page', [
+                'individuals'   => $individualAr,
+                'individual2'   => $individual2,
+                'showmatri'     => $showmatri,
+                'showimplex'    => $s_showImplex,
+                'suppimplex'    => $s_suppImplex,
+                'markdeceased'  => $s_markDeceased,
+                'showseparated' => $s_showseparated,
+                'generations'   => $generations,
+                'do_VER'        => $this->vERok,
+                'htmls'         => $htmlAr,
+                'jsimp'         => $jsImp,
+                'jss'           => $jsAr,
+                'module'        => $this->name(),
+                'title'         => $this->chartTitle($individual),
+                'ptitle'        => $this->pageTitle(),
+                'subtitles'     => $subtitleAr,
+                'xtstruct'      => $XT_struct,
+                'tree'          => $tree,
+                ]);
+        }
     }
 
     /**
@@ -471,6 +570,14 @@ class InteractiveTreeXT extends InteractiveTreeModule implements ModuleGlobalInt
         $tree = Validator::attributes($request)->tree();
 
         $xref = Validator::parsedBody($request)->string('xref', '');
+
+        $xref2 = Validator::parsedBody($request)->string('xref2', '');
+        $_find = Validator::parsedBody($request)->string('find', '');
+        $find  = $_find ? (int) $_find : 4;
+        $xtR_Option = (boolean) $this->getPreference('xtR_Option', '0');
+        $xref2 = $xtR_Option ? $xref2 : '';
+        $find  = $xtR_Option ? $find  : '';
+
         $generations = Validator::parsedBody($request)->string('generations', '4');
         $showmatri = Validator::parsedBody($request)->string('showmatri', '0');
         $showimplex = Validator::parsedBody($request)->string('showimplex', '0');
@@ -489,6 +596,8 @@ class InteractiveTreeXT extends InteractiveTreeModule implements ModuleGlobalInt
             'suppimplex'    => $suppimplex,
             'markdeceased'  => $markdeceased,
             'showseparated' => $showseparated,
+            'xref2'         => $xref2,
+            'find'          => $find,
             ]));
     }
 

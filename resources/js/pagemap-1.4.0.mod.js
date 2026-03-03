@@ -149,10 +149,13 @@
                             // We want to set special markers for special shapes, so the most significant ones must be last in the order
                             styles: {
                                 "div.tv_box.def": [ "rgba(0,0,0,0.3)", null ],
+                                "div.tv_box.relPerson": [ "rgba(2, 33, 90, 0.8)", null ],
+                                "div.tv_box.rootPerson": [ "rgba(108, 155, 242, 0.8)", "rgb(108, 155, 242)" ],
+                                "div.tv_box.fromPerson": [ "rgb(2, 33, 90)", null ],
+                                "div.tv_box.toPerson": [ "rgb(2, 33, 90)", null ],
                                 "div.tv_box.selectedID": [ "rgb(241, 241, 11)", "rgb(241, 241, 11)" ],
                                 "div.tv_box.selectedGL": [ "rgb(203, 11, 241)", null ],
                                 "div.tv_box.selectedGL.selectedID": [ "rgb(148, 191, 19)", "rgb(148, 191, 19)" ],
-                                "div.tv_box.rootPerson": [ "rgba(108, 155, 242, 0.8)", "rgb(108, 155, 242)" ],
                             },
                             back: black(2),
                             view: black(64),

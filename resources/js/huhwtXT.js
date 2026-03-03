@@ -57,7 +57,7 @@ function TreeViewHandlerXT (tv_kenn, doExpanded, MinTitle, MaxTitle, markDecease
     this.namesIDul      = $('#' + tv_kenn + '_NlistIDul');
     this.namesGL        = $('#' + tv_kenn + '_NlistGL');
     this.namesGLul      = $('#' + tv_kenn + '_NlistGLul');
-    this.pageMap        = $('#' + 'page-map');
+    this.pageMap        = $('#' + 'page-map' + tv_kenn);
     this.bnListID       = $('#' + tv_kenn + 'bNlistID');
     this.bnShowStats    = $('#' + tv_kenn + 'bShowStats');
 
@@ -106,9 +106,9 @@ function TreeViewHandlerXT (tv_kenn, doExpanded, MinTitle, MaxTitle, markDecease
         let i = 0;
         let tree_RPs = tv.treeview.find('.tv_tree_RC').each(function (index, RC) {
             RC = $(RC, tv.treeview);
-            let min_gl, max_gl, min_gl_a, max_gl_a = 0;
+            let min_gl = 0, max_gl = 0, min_gl_a = 0, max_gl_a = 0;
             let RC_boxes    = RC.find('.hasBox').each(function (ind_hB, hB) {
-                let hB_gl = hB.getAttribute('glevel');
+                let hB_gl = parseInt(hB.getAttribute('glevel'));
                 if (hB_gl < 0) {
                     if (hB_gl < min_gl) { min_gl = hB_gl; }
                 } else {
@@ -205,7 +205,7 @@ function TreeViewHandlerXT (tv_kenn, doExpanded, MinTitle, MaxTitle, markDecease
             tv.showstats(tv);
         };
     });
-    // Show/Hide Nlist-Form
+    // Show/Hide NlistID-Form
     tv.toolbox.find('#' + tv_kenn + 'bNlistID').each(function (index, tvNlist) {
         tvNlist.onclick = function () {
             tv.NlistID(tv_kenn);
@@ -229,7 +229,7 @@ function TreeViewHandlerXT (tv_kenn, doExpanded, MinTitle, MaxTitle, markDecease
         };
     });
     // Toggle Viewport to Expanded
-    tv.toolbox.find('#' + tv_kenn + 'bfs').each(function (index, tvExpanded) {
+    tv.toolbox.find('#' + tv_kenn + 'bse').each(function (index, tvExpanded) {
         let _tvExpanded = tvExpanded;
         tvExpanded.onclick = function() {
             tv.container.parent().toggleClass('tvfs-expand-screen');
@@ -345,6 +345,23 @@ function TreeViewHandlerXT (tv_kenn, doExpanded, MinTitle, MaxTitle, markDecease
             tv.NlistGL(tv_kenn);
         };
     });
+    // Show/Hide NlistID-Filter
+    let _NlistIDinfo = document.getElementById(tv_kenn + '_NlistIDFilter');
+    let NlistIDinfo = document.getElementById(tv_kenn + '_NlistID_info');
+    let NlistIDfilter = document.getElementById(tv_kenn + '_NlistID_filter');
+    _NlistIDinfo.addEventListener('click', (event) => {
+        NlistIDinfo.classList.toggle('hidden');
+        NlistIDfilter.classList.toggle('hidden');
+    });
+    // Show/Hide NlistGL-Filter
+    let _NlistGLinfo = document.getElementById(tv_kenn + '_NlistGLFilter');
+    let NlistGLinfo = document.getElementById(tv_kenn + '_NlistGL_info');
+    let NlistGLfilter = document.getElementById(tv_kenn + '_NlistGL_filter');
+    _NlistGLinfo.addEventListener('click', (event) => {
+        NlistGLinfo.classList.toggle('hidden');
+        NlistGLfilter.classList.toggle('hidden');
+    });
+
     // Add click-event to ClippingCart 
     tv.toolbox.find('#' + tv_kenn + 'bClipping').each(function (index, tvClipping) {
         if (!tvClipping.classList.contains('noCCEadapter')) {
@@ -740,6 +757,7 @@ TreeViewHandlerXT.prototype.showstatsExec  = function (tv) {
             for(let bx of boxes) {
                 let elb = $(bx, tv.treeview);
                 let elbP = elb[0].parentElement;
+                if (elbP.tagName != 'TD') {elbP = elbP.parentElement; }
                 let bs = parseInt(elbP.getAttribute('glevel'));
                 let _n_lC = n_listCount;
                 if (bs < tv.stateMin) { tv.stateMin = bs; }
@@ -981,13 +999,14 @@ TreeViewHandlerXT.prototype.NlistID_ul = function (event) {
                 bIDoff = obox.parentElement;
                 bIDoff.classList.remove('selectedID');
             }
-            }
-            for (let abox of boxes) {
-                tvBox = abox.parentElement;
-                tvBox.classList.add('selectedID');
-            }
-            tv.boxIDsel = boxes;
-            let obox = boxes[0];
+        }
+        for (let abox of boxes) {
+            tvBox = abox.parentElement;
+            tvBox.classList.add('selectedID');
+        }
+        tv.boxIDsel = boxes;
+        let obox = boxes[0];
+        if ( obox ) {
             bIDoff = obox.parentElement;
             if ( !isInViewport(bIDoff)) {
                 bIDoff.scrollIntoView({
@@ -995,11 +1014,11 @@ TreeViewHandlerXT.prototype.NlistID_ul = function (event) {
                     block: "center",
                     inline: "center",
                 });
+            }
         }
     }
     return false;
 };
-  
 /**
  * Class TreeView NlistGL method
  */
@@ -1029,7 +1048,7 @@ TreeViewHandlerXT.prototype.NlistGL = function (tv_kenn) {
     return false;
 };
 /**
- * Class TreeView NlistID method
+ * Class TreeView NlistGL method
 */
 TreeViewHandlerXT.prototype.NlistGL_ul = function (event) {
     var tv = this;
@@ -1078,13 +1097,15 @@ TreeViewHandlerXT.prototype.NlistGL_ul = function (event) {
         }
         tv.boxGLIDsel = boxes;
         let obox = boxes[0];
-        bIDoff = obox.parentElement;
-        if ( !isInViewport(bIDoff)) {
-            bIDoff.scrollIntoView({
-                behavior: "smooth",
-                block: "center",
-                inline: "center",
-            });
+        if ( obox ) {
+            bIDoff = obox.parentElement;
+            if ( !isInViewport(bIDoff)) {
+                bIDoff.scrollIntoView({
+                    behavior: "smooth",
+                    block: "center",
+                    inline: "center",
+                });
+            }
         }
     }
     return false;
@@ -1448,7 +1469,8 @@ TreeViewHandlerXT.prototype.expandBox = function (_box, event) {
 
     var box = $(_box, this.treeview);
     var bc = box.parent();                // bc is Box Container
-    var pid = box.attr('abbr');
+    let fid = box.attr('fid');              // EW.H - MOD ... the family key is the primary information ...
+    var pid = box.attr('abbr');             // ... the person is needed for the correct sequence
     var tv = this;            // Store "this" for usage within jQuery functions where "this" is not this ;-)
     var expanded;
     var collapsed;
@@ -1472,7 +1494,7 @@ TreeViewHandlerXT.prototype.expandBox = function (_box, event) {
         tv.updating = true;
         tv.setLoading();
         // perform the Ajax request and load the result in the box - quite a lot of additional stuff
-        box.load(tv.ajaxDetails + '&pid=' + encodeURIComponent(pid), function () {
+        box.load(tv.ajaxDetails + '&fid=' + encodeURIComponent(fid) + '&pid=' + encodeURIComponent(pid), function () {
             // If Lightbox module is active, we reinitialize it for the new links
             if (typeof CB_Init === 'function') {
                 CB_Init();
@@ -1508,14 +1530,19 @@ function HideDeceased_ON(tv, tds, _HDclass) {
         // tvb      -> div tv_box
         let dec_all = true;
         for (let tvb of tdx.children) {
+            if (tvb.className == 'dPs') { tvb = tvb.firstElementChild; }
             if (tvb != tdx.lastElementChild) {
                 // tvp      -> div tv_person
                 for (let tvp of tvb.children) {
                         let c_tvp = tvp.children;
                         let c_tvp_c2 = c_tvp[2];
-                        if (c_tvp_c2.className == 'tvbisdead') {
-                            tvp.classList.add(_HDclass);
-                        } else { dec_all = false; }
+                        try {
+                            if (c_tvp_c2.className == 'tvbisdead') {
+                                tvp.classList.add(_HDclass);
+                            } else { dec_all = false; }
+                        } catch (e) {
+                            console.log(c_tvp);
+                        }
                 }
             }
         }
@@ -1637,13 +1664,15 @@ function make_NlistID(tv) {
             let elNs = elb.find('.NAME');
             let sID = '';
             let sNs = 'N.N.';
+            let lN  = '';
             elNs.each(function (index, elNf) {
                 if (elNf.checkVisibility({visibilityProperty: true})) {
                     let sNv = elNf.innerText;                   // Vorname
                     let sNn = '';                               // Nickname
                     sNs = ' N.N.';
+                    let eNs = null;
                     if (elNf.children.length > 0) {
-                        let eNs = elNf.children[0];                 // Zuname in eigenem SPAN-Element
+                        eNs = elNf.children[0];                 // Zuname in eigenem SPAN-Element
                         let eNs_tN = eNs.tagName;
                         if (eNs_tN == 'Q') {                        // ... ist aber nicht der Zuname, sondern ein Nickname ...
                             sNn = eNs.innerText;                        // ... merken ...
@@ -1663,10 +1692,19 @@ function make_NlistID(tv) {
                             sNv = sNv.concat(' ', sNn);                 // ... dranhängen
                         };
                     }
+                    if (eNs) {
+                        let elNfn = elNf.nextElementSibling;        // wenn Box expandiert, dann ist das null ... 
+                        if (elNfn == null) { let elNf_p = elNf.parentElement; elNfn = elNf_p.nextElementSibling; }  // ... also neu positionieren
+                            if (elNfn.classList.contains('tvbisdivorced')) {
+                                sNv += ' ' + elNfn.innerText;
+                        }
+                    }
                     let elNsp = elNf.parentElement;             // EW.H - MOD ... surrounding DIV carries the personal ID
+                    let elNsp_tN = elNsp.tagName;                   // wenn Box expandiert, dann passt das nicht ...
+                    if (elNsp_tN == 'A') { elNsp = elNsp.parentElement; }   // ... also neu positionieren
                     sID = elNsp.getAttribute('pID');
                     sID = ''.concat(' (', sID, ')');
-                    let lN = sNs.concat(', ', sNv, sID);        // Listeneintrag zusammenstellen
+                    lN = sNs.concat(', ', sNv, sID);        // Listeneintrag zusammenstellen
                     n_list0.push(lN);
                 }
             });
@@ -1803,8 +1841,9 @@ function make_Nlist_names(tv, pboxes) {
                     let sNv = elNf.innerText;                   // Vorname
                     let sNn = '';                               // Nickname
                     sNs = ' N.N.';
+                    let eNs = null;
                     if (elNf.children.length > 0) {
-                        let eNs = elNf.children[0];                 // Zuname in eigenem SPAN-Element
+                        eNs = elNf.children[0];                 // Zuname in eigenem SPAN-Element
                         let eNs_tN = eNs.tagName;
                         if (eNs_tN == 'Q') {                        // ... ist aber nicht der Zuname, sondern ein Nickname ...
                             sNn = eNs.innerText;                        // ... merken ...
@@ -1823,6 +1862,12 @@ function make_Nlist_names(tv, pboxes) {
                             sNn = '&ldquor;' + sNn + '&rdquor;';        // ... dekorieren ...
                             sNv = sNv.concat(' ', sNn);                 // ... dranhängen
                         };
+                    }
+                    if (eNs) {                                      // es gibt einen Namen ...
+                        let elNfn = elNf.nextElementSibling;            // ... das anschließende Element überprüfen ...
+                        if (elNfn.classList.contains('tvbisdivorced')) {    //  ... ob es eine Scheidung kennzeichnet ...
+                            sNv += ' ' + elNfn.innerText;                   //  ... dann das Kennzeichen mitnehmen
+                        }
                     }
                     let elNsp = elNf.parentElement;             // EW.H - MOD ... surrounding DIV carries the personal ID
                     sID = elNsp.getAttribute('pID');
@@ -1903,6 +1948,62 @@ function downloadToFile(content, filename, contentType)
     a.click();
 
     URL.revokeObjectURL(a.href);
+}
+
+function NlistID_filterByName(e, tv_kenn) {
+    let _Nlist_ul = document.getElementById(tv_kenn + '_NlistIDul');
+    let _counter = document.getElementById(tv_kenn + 'lNames_filter');
+    let _cnt = _Nlist_ul.childElementCount;
+    let items = document.querySelectorAll('#' + tv_kenn + '_NlistIDul li');
+    let searchTerm = e.target.value.trim();
+    let sT0 = searchTerm.substring(0, 1);
+    if (sT0 != sT0.toLowerCase()) {
+        items.forEach(item => {
+            item.style.display = 'revert';
+            if (!item.innerText.startsWith(searchTerm)) {
+                item.style.display = 'none';
+                _cnt--;
+            }
+        })
+    } else {
+        searchTerm = searchTerm.toLowerCase();
+        items.forEach(item => {
+            item.style.display = 'revert';
+            if (!item.innerText.toLowerCase().includes(searchTerm)) {
+                item.style.display = 'none';
+                _cnt--;
+            }
+        })
+    }
+    _counter.children[1].textContent = _cnt.toString();
+}
+  
+function NlistGL_filterByName(e, tv_kenn) {
+    let _Nlist_ul = document.getElementById(tv_kenn + '_NlistGLul');
+    let _counter = document.getElementById(tv_kenn + 'glNames_filter');
+    let _cnt = _Nlist_ul.childElementCount;
+    let items = document.querySelectorAll('#' + tv_kenn + '_NlistGLul li');
+    let searchTerm = e.target.value.trim();
+    let sT0 = searchTerm.substring(0, 1);
+    if (sT0 != sT0.toLowerCase()) {
+        items.forEach(item => {
+            item.style.display = 'revert';
+            if (!item.innerText.startsWith(searchTerm)) {
+                item.style.display = 'none';
+                _cnt--;
+            }
+        })
+    } else {
+        searchTerm = searchTerm.toLowerCase();
+        items.forEach(item => {
+            item.style.display = 'revert';
+            if (!item.innerText.toLowerCase().includes(searchTerm)) {
+                item.style.display = 'none';
+                _cnt--;
+            }
+        })
+    }
+    _counter.children[1].textContent = _cnt.toString();
 }
 
 function dataURItoBlob(dataURI, type) {

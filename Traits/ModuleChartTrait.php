@@ -102,6 +102,43 @@ trait ModuleChartTrait
         return $htmlTOP;
     }
 
+    /**
+     * The title for a specific instance of this chart.
+     *
+     * @param Individual $individual
+     *
+     * @return string
+     */
+    public function chartSubTitle_2P(Individual $individual1, Individual $individual2): string
+    {
+        function get_age(Individual $individual): string
+        {
+            // What is (was) the age of the individual
+            $bdate = $individual->getBirthDate();
+            $ddate = $individual->getDeathDate();
+
+            if ($individual->isDead()) {
+                // If dead, show age at death
+                $age = (string) new Age($individual->getBirthDate(), $individual->getDeathDate());
+            } else {
+                // If living, show age today
+                $today = new Date(strtoupper(date('d M Y')));
+                $age   = (string) new Age($individual->getBirthDate(), $today);
+            }
+            return $age;
+        }
+        $age1 = get_age($individual1);
+        $age2 = get_age($individual2);
+
+        $htmlTOP = view('modules/treeviewXT/pageh2_2P', [
+            'individual1' => $individual1,
+            'age1'        => $age1,
+            'individual2' => $individual2,
+            'age2'        => $age2,
+        ]);
+        return $htmlTOP;
+    }
+
     public function chartUrl(Individual $individual, array $parameters = []): string
     {
         $_name = $this->name();

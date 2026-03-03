@@ -14,6 +14,12 @@ msgstr "Zeige alle Anverwandten"
 msgid "Show name list"
 msgstr "Zeige Namensliste"
 
+msgid "Filter name list"
+msgstr "Namensliste filtern"
+
+msgid "Type here to filter the list"
+msgstr "Eingabe hier filtert die Liste"
+
 msgid "Current status"
 msgstr "Aktueller Zustand"
 
@@ -164,6 +170,9 @@ msgstr "Getrennt anzeigen"
 msgid "Checked -> Multiple relationships are resolved separately"
 msgstr "Checked -> Mehrfach-Beziehungen werden getrennt aufgelöst"
 
+msgid "not executed - %s has no family/descendants by now."
+msgstr "kann nicht ausgeführt werden - %s hat bisher keine Familie/Nachkommen"
+
 msgid "Click here to hide/show partial subtree - Ctrl-Click -> collapse/expand"
 msgstr "Klick hier: Teilbaum ausblenden/anzeigen - Strg-Klick -> einfalten/erweitern"
 
@@ -179,6 +188,9 @@ msgstr "Optionen zum Starten von XTV - Primäransicht"
 msgid "XTV in Genealogy/Charts - start as ..."
 msgstr "XTV in Genealogie/Diagramme - Starten als ..."
 
+msgid "XTV in Genealogy/Charts - dump HTML to file"
+msgstr "XTV in Genealogie/Diagramme - HTML zusätzlich auf Datei ausgeben"
+
 msgid "XTV in Individual page/Tabs - start as ..."
 msgstr "XTV in Personenseite/Tabs - Starten als ..."
 
@@ -187,3 +199,15 @@ msgstr "Normalansicht"
 
 msgid "Expanded view"
 msgstr "Expandierter Zustand"
+
+msgid "divorced"
+msgstr "geschieden"
+
+msgid "Relations view"
+msgstr "Beziehungen darstellen"
+
+msgid "Path"
+msgstr "Beziehungen Teil"
+
+msgid "XTV as Relationship Viewer (choose a 2nd person with options)"
+msgstr "XTV zur Darstellung von Beziehungen (Auswahl 2. Person mit Optionen)"

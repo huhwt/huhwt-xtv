@@ -13,6 +13,8 @@ use Illuminate\Support\Collection;
  * @var int                  $chartOption
  * @var array<int,string>    $tab_options
  * @var int                  $tabOption
+ * @var array<int,string>    $xtR_options
+ * @var int                  $xtROption
  * @var string               $title
  */
 
@@ -27,28 +29,49 @@ use Illuminate\Support\Collection;
 
 <form method="post">
     <div class="row mb-3">
-        <legend class="col-form-label col-sm-3"  for="chartOption">
+        <legend class="col-form-label col-sm-5"  for="chartOption">
             <?= /* I18N: Configuration option */
             I18N::translate("XTV in Genealogy/Charts - start as ...") ?>
         </legend>
-        <div class="col-sm-9">
+        <div class="col-sm-7">
             <?= view('components/radios', ['name' => 'chartOption', 'selected' => $chartOption, 'options' => $chart_options]) ?>
         </div>
     </div>
 
+    <div class="row mb-3">
+        <legend class="col-form-label col-sm-5"  for="dumpOption">
+            <?= /* I18N: Configuration option */
+            I18N::translate("XTV in Genealogy/Charts - dump HTML to file") ?>
+        </legend>
+        <div class="col-sm-7">
+            <?= view('components/radios', ['name' => 'dumpOption', 'selected' => $dumpOption, 'options' => $dump_options]) ?>
+        </div>
+    </div>
+
     <fieldset class="row mb-3">
-        <legend class="col-form-label col-sm-3" for="tabOption">
+        <legend class="col-form-label col-sm-5" for="tabOption">
             <?= /* I18N: Configuration option */
             I18N::translate("XTV in Individual page/Tabs - start as ...") ?>
         </legend>
-        <div class="col-sm-9">
+        <div class="col-sm-7">
             <?= view('components/radios', ['name' => 'tabOption', 'selected' => $tabOption, 'options' => $tab_options]) ?>
         </div>
 
     </fieldset>
 
+    <fieldset class="row mb-3">
+        <legend class="col-form-label col-sm-5" for="tabOption">
+            <?= /* I18N: Configuration option */
+            I18N::translate("XTV as Relationship Viewer (choose a 2nd person with options)") ?>
+        </legend>
+        <div class="col-sm-7">
+            <?= view('components/radios', ['name' => 'xtROption', 'selected' => $xtROption, 'options' => $xtR_options]) ?>
+        </div>
+
+    </fieldset>
+
     <div class="row mb-3">
-        <div class="offset-sm-3 col-sm-9">
+        <div class="offset-sm-5 col-sm-7">
             <button type="submit" class="btn btn-primary">
                 <?= view('icons/save') ?>
                 <?= I18N::translate('save') ?>

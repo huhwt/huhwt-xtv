@@ -1,7 +1,7 @@
-#page-map {
+.page-map {
     position: fixed;
     top: 0;
-    right: 6px;
+    right: 13px;
     width: 200px;
     height: 100%;
     z-index: 100;

@@ -80,11 +80,16 @@ class Configuration
      */
     private $moduleName;
 
+
     /**
-     * Treeview prefix
+     * Treeview prefix - there may be more than 1 chart to be generated 
      */
-    // private const TV_PREFIX = [ 'M', 'U', 'L', 'T', 'V'];
-    private const TV_PREFIX = [ 'XT' ];
+    private const TV_PREFIX = [ 'XT01','XT02','XT03','XT04','XT05','XT06','XT07','XT08','XT09','XT10' ];
+
+    /**
+     * Treeview prefix label - corresponding to TV_PREFIX
+     */
+    private const TV_PREFLABEL = [ 'I','II','III','IV','V','VI','VII','VIII','IX','X' ];
 
     /**
      * Treeview index
@@ -94,7 +99,12 @@ class Configuration
     /**
      * Display modes
      */
-    private const MODES = [ 'default', 'separated'];
+    private const MODES = [ 'default', 'separated', 'xtR'];
+
+    /**
+     * Do dump innerHTML
+     */
+    private $do_dump;
 
 
     /**
@@ -195,15 +205,15 @@ class Configuration
      */
     public function getTvPrefix() : array
     {
-        return self::TV_PREFIX;
+        return [ self::TV_PREFIX, self::TV_PREFLABEL ];
     }
 
     /**
      * Get the prefix for actual treeview
      */
-    public function getTvPrefixI(int $tvi=0) : string
+    public function getTvPrefixI(int $tvi=0) : array
     {
-        return self::TV_PREFIX[$tvi];
+        return [ self::TV_PREFIX[$tvi], self::TV_PREFLABEL[$tvi] ];
     }
 
     /**
