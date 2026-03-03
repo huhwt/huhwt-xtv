@@ -27,6 +27,9 @@ msgstr "Toon namenlijst"
 msgid "Filter name list"
 msgstr "Namenlijst filteren"
 
+msgid "Type here to filter the list"
+msgstr "Typ hier om de lijst te filteren"
+
 msgid "Current status"
 msgstr "Huidige status"
 
@@ -177,6 +180,9 @@ msgstr "Toon afzonderlijk"
 msgid "Checked -> Multiple relationships are resolved separately"
 msgstr "Aangevinkt -> Meerdere relaties worden afzonderlijk afgehandeld"
 
+msgid "not executed - %s has no family/descendants by now."
+msgstr "niet uitgevoerd - %s heeft op dit moment geen familie/nakomelingen."
+
 msgid "Click here to hide/show partial subtree - Ctrl-Click -> collapse/expand"
 msgstr "Klik hier om gedeeltelijke subboom te verbergen/tonen - Ctrl-klik -> samenvouwen/uitvouwen"
 
@@ -192,6 +198,9 @@ msgstr "Opties voor het starten van XTV - primaire weergave"
 msgid "XTV in Genealogy/Charts - start as ..."
 msgstr "XTV in Genealogie/Diagrammen - starten als ..."
 
+msgid "XTV in Genealogy/Charts - dump HTML to file"
+msgstr "XTV in Genealogie/Diagrammen - HTML opslaan als bestand"
+
 msgid "XTV in Individual page/Tabs - start as ..."
 msgstr "XTV in Persoonspagina/Tabbladen - starten als ..."
 
@@ -200,3 +209,15 @@ msgstr "Basisweergave"
 
 msgid "Expanded view"
 msgstr "Uitgebreide weergave"
+
+msgid "divorced"
+msgstr "gescheiden"
+
+msgid "Relations view"
+msgstr "Relatiesweergave"
+
+msgid "Path"
+msgstr "Pad"
+
+msgid "XTV as Relationship Viewer (choose a 2nd person with options)"
+msgstr "XTV als relatieviewer (kies een tweede persoon met opties)"
